@@ -511,15 +511,23 @@ local function clickRuleWidget(desc, col, mx, my, y0, y1)
     return false
 end
 
+-- Page-turn control: same 65px-wide arrow hit boxes as the rule rows, but
+-- centered on the full screen width and given plenty of clearance from both
+-- the message line below (drawn at y=620) and the first rule row above it.
+local PAGE_ARROW_L, PAGE_ARROW_L_END = 560, 625
+local PAGE_ARROW_R, PAGE_ARROW_R_END = 975, 1040
+local PAGE_ROW_Y = 540
+local PAGE_ROW_HIT_Y0 = 504
+
 --- Render the current rule-settings page (called only when sAdjustOptions
 -- and the game is not in progress).
 local function drawRulePage()
     -- Page turn control
     local label = i18n.label_settingsPage(sSettingsPage, RULE_PAGES)
 
-    putText(i18n.label_leftArrow(), 700, 596)
-    putText(label, 800 - idiv(getTextWidth(label), 2), 596)
-    putText(i18n.label_rightArrow(), 835, 596)
+    putText(i18n.label_leftArrow(), PAGE_ARROW_L, PAGE_ROW_Y)
+    putText(label, 800 - idiv(getTextWidth(label), 2), PAGE_ROW_Y)
+    putText(i18n.label_rightArrow(), PAGE_ARROW_R, PAGE_ROW_Y)
 
     local rows = rulePages()[sSettingsPage]
 
@@ -541,11 +549,11 @@ end
 -- one of the current page's widgets).
 -- @return true if the click was handled.
 local function clickRulePage(mx, my)
-    if 560 <= my and my <= 596 then
-        if 700 <= mx and mx <= 765 then
+    if PAGE_ROW_HIT_Y0 <= my and my <= PAGE_ROW_Y then
+        if PAGE_ARROW_L <= mx and mx <= PAGE_ARROW_L_END then
             sSettingsPage = math.max(1, sSettingsPage - 1)
             return true
-        elseif 835 <= mx and mx <= 900 then
+        elseif PAGE_ARROW_R <= mx and mx <= PAGE_ARROW_R_END then
             sSettingsPage = math.min(RULE_PAGES, sSettingsPage + 1)
             return true
         end
@@ -880,9 +888,12 @@ function refreshScreen(message, area)
             drawPie(BRUSH[GREEN], -90, 120)
             putText("E", 472 - idiv(getTextWidth("E"), 2), 440)
 
-            -- Draw north sector (yellow)
-            drawPie(BRUSH[YELLOW], 150, -120)
-            putText("N", 405 - idiv(getTextWidth("N"), 2), 360)
+            if sUno:getPlayers() == 4 then
+                -- Draw north sector (yellow) - there is no north player in
+                -- a 3-player game, so it's not offered as a target there
+                drawPie(BRUSH[YELLOW], 150, -120)
+                putText("N", 405 - idiv(getTextWidth("N"), 2), 360)
+            end
         end
     end
 
