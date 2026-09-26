@@ -140,6 +140,19 @@ function Uno.new(assets, seed)
     -- Whether the 7-0 rule is enabled
     self.sevenZeroRule = false
 
+    -- Whether the "draw to match" rule is enabled: when you draw a card by
+    -- yourself (not a forced draw from a +2/+4) and it is not legal to play,
+    -- keep drawing until you draw a legal card, or you cannot draw any more.
+    self.drawToMatchRule = false
+
+    -- Whether the "Wild +4 anytime" rule is enabled: a Wild +4 can never be
+    -- challenged, so it is always safe to play regardless of your hand.
+    self.wildDraw4NoChallengeRule = false
+
+    -- Whether the Bullseye rule is enabled: a +2 or Skip's effect targets a
+    -- player chosen by whoever played it, instead of always the next player.
+    self.bullseyeRule = false
+
     -- 0: No cards can be stacked.
     -- 1: Only +2 cards can be stacked.
     -- 2: +2 & +4 cards can be stacked.
@@ -356,6 +369,53 @@ function Uno:setSevenZeroRule(enabled)
     if enabled then
         self.players = 4
         self._2vs2 = false
+    end
+end
+
+--- @return Whether the "draw to match" rule is enabled. See the field
+--         comment in Uno.new() for what it does.
+function Uno:isDrawToMatchRule()
+    return self.drawToMatchRule
+end
+
+--- Enable/Disable the "draw to match" rule.
+function Uno:setDrawToMatchRule(enabled)
+    self.drawToMatchRule = enabled
+end
+
+--- @return Whether the "Wild +4 anytime" rule is enabled. See the field
+--         comment in Uno.new() for what it does.
+function Uno:isWildDraw4NoChallengeRule()
+    return self.wildDraw4NoChallengeRule
+end
+
+--- Enable/Disable the "Wild +4 anytime" rule.
+function Uno:setWildDraw4NoChallengeRule(enabled)
+    self.wildDraw4NoChallengeRule = enabled
+end
+
+--- @return Whether the Bullseye rule is enabled. See the field comment in
+--         Uno.new() for what it does.
+function Uno:isBullseyeRule()
+    return self.bullseyeRule
+end
+
+--- Enable/Disable the Bullseye rule.
+function Uno:setBullseyeRule(enabled)
+    self.bullseyeRule = enabled
+end
+
+--- Directly set whose turn it is, bypassing the normal direction-based
+-- getNext() computation. Used by the Bullseye rule to redirect a +2/Skip's
+-- effect to a chosen target instead of the automatic next player.
+-- NOTE: Unlike swap()/cycle(), this is not written to the replay log: it
+-- does not change any player's hand, and the next drawn/played card already
+-- carries its own player id, which is enough for forwardReplay() to
+-- re-establish the correct turn owner on playback.
+-- @param who New player in turn (0 ~ 3).
+function Uno:setNow(who)
+    if YOU <= who and who <= COM3 then
+        self.now = who
     end
 end
 

@@ -237,13 +237,29 @@ follow-up planning conversation, not to be the final plan.
 7-0, 2vs2, Stack (`src/uno.lua`).
 
 ### Tier 1 — Easy: small, independent card-effect additions
-Jump-In (from Deluxe House Rules) · Bullseye targeting · Swap Pack (swap 1, refresh hand, force-trade,
-pass-all-hands) · Reverse Pack (reverse+draw, reverse+skip, reflect-penalty) · Stack Pack (stack 3,
-random-N via flipped card) · novelty fixed-N draws (73/100/all-opponents-4) · Team Attack multi-discard
-· WWE "Locked Up" duel · Nascar Drafting bonus plays · X Games renamed action set · All Wild deck mode
-· Pocket reduced-deck mode · Junior/tiered-difficulty presets · Fandom NFL-style "one themed bonus
-wild" toggle · H2O Splash best-of-3 match structure · colorblind-safe card icons and screen-reader
-labels (the real, useful half of the accessibility editions).
+**Implemented** (as a first pass at the toggle plumbing itself): **Draw to match** (keep drawing until a
+legal card turns up), **Wild +4 challenge** (an on/off toggle — off means it can never be challenged), and
+**Bullseye targeting** (+2/Skip's target is chosen instead of automatic). These needed no new card art, so
+they were used to validate the settings-page plumbing (`rulePages()` in `src/game.lua`) end to end; adding
+another toggle is now a matter of one more descriptor entry plus (for Bullseye-style redirection) a small
+resolver function, not new hardcoded layout/click-handling code. Jump-In was scoped for this batch too but
+turned out to need real turn-order-interruption plumbing (out-of-turn play), not just a card-effect tweak —
+deferred, see the note in Part A1.
+
+Still open in this tier: Jump-In (from Deluxe House Rules) · Swap Pack (swap 1, refresh hand, force-trade,
+pass-all-hands — blocked on new card art/content, see the note below) · Reverse Pack (reverse+draw,
+reverse+skip, reflect-penalty) · Stack Pack (stack 3, random-N via flipped card) · novelty fixed-N draws
+(73/100/all-opponents-4) · Team Attack multi-discard · WWE "Locked Up" duel · Nascar Drafting bonus plays ·
+X Games renamed action set · All Wild deck mode · Pocket reduced-deck mode · Junior/tiered-difficulty
+presets · Fandom NFL-style "one themed bonus wild" toggle · H2O Splash best-of-3 match structure ·
+colorblind-safe card icons and screen-reader labels (the real, useful half of the accessibility editions).
+
+Note on new card art: this codebase draws every card face from a pre-rendered PNG (`resource/front_*.png`,
+sourced from a public-domain-style Wikipedia SVG per the README) — there's no code path that draws a card
+face from text/data yet. Any mechanic that needs a genuinely new card type (Swap Pack, Reverse Pack, X
+Games, and eventually Flip's dark side) is blocked on building a small procedural placeholder-card
+renderer first (reusing the existing font/text pipeline) — agreed as the direction to take rather than
+trying to reproduce Mattel's proprietary card designs.
 
 *Recommended starting point*, since these compose cleanly with the existing rule-toggle system and
 don't require new rendering or AI work beyond what 7-0/Stack already needed.

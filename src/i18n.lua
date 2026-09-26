@@ -50,6 +50,7 @@ do
         end,
         act_playWild = function(i1, i2) return fmt("%s: Change color to %s", p(i1), c(i2)) end,
         act_playWildDraw4 = function(i1, i2) return fmt("%s: Change color & let %s draw 4", p(i1), p(i2)) end,
+        ask_bullseyeTarget = function() return "^ Choose who this card targets" end,
         ask_challenge = function(i) return fmt("^ Do you think your previous player still has %s?", c(i)) end,
         ask_color = function() return "^ Specify the following legal color" end,
         ask_keep_play = function() return "^ Play the drawn card?" end,
@@ -99,24 +100,29 @@ do
                 or fmt("Stack a +2/+4 card, or draw %d cards", i1)
         end,
         label_bgm = function() return "BGM" end,
+        label_bullseye = function(active) return "Bullseye targeting: " .. (active and "[G]ON" or "[R]OFF") end,
+        label_drawToMatch = function(active) return "Draw to match: " .. (active and "[G]ON" or "[R]OFF") end,
         label_forcePlay = function() return "When you draw a playable card:" end,
-        label_gameMode = function(i)
-            return i == 1 and "How to play:  7-0" or i == 2 and "How to play: 2vs2"
-                or i == 3 and "How to play:   3P" or "How to play:   4P"
-        end,
         label_initialCards = function(i) return fmt("Initial cards: %02d", i) end,
         label_lacks = function(n, e, w, s) return lacks("LACK:", n, e, w, s) end,
         label_leftArrow = function() return "[Y]＜－" end,
         label_level = function(i) return i == 0 and "Level: EASY" or "Level: HARD" end,
         label_no = function() return "NO" end,
+        label_players = function(i) return i == 3 and "Players:   3P" or "Players:   4P" end,
         label_remain_used = function(i1, i2) return fmt("[Y]R%d[W]/[G]U%d", i1, i2) end,
         label_rightArrow = function() return "[Y]＋＞" end,
         label_score = function() return "SCORE" end,
+        label_settingsPage = function(i1, i2) return fmt("PAGE %d/%d", i1, i2) end,
+        label_sevenZeroRule = function(active) return "7-0 Rule: " .. (active and "[G]ON" or "[R]OFF") end,
         label_snd = function() return "SND" end,
         label_speed = function() return "SPEED" end,
         label_stackRule = function(i)
             return i == 0 and "Stackable cards: NONE" or i == 1 and "Stackable cards:   +2"
                 or "Stackable cards: +2+4"
+        end,
+        label_twoVsTwoRule = function(active) return "2vs2 Rule: " .. (active and "[G]ON" or "[R]OFF") end,
+        label_wildDraw4Challenge = function(active)
+            return "Wild +4 challenge: " .. (active and "[G]ON" or "[R]OFF")
         end,
         label_yes = function() return "YES" end,
     }
@@ -142,6 +148,7 @@ do
         act_playSkip = function(i1, i2) return fmt("%s: 跳过%s的回合", p(i1), p(i2)) end,
         act_playWild = function(i1, i2) return fmt("%s: 将接下来的合法颜色改为%s", p(i1), c(i2)) end,
         act_playWildDraw4 = function(i1, i2) return fmt("%s: 变色 & 令%s摸 4 张牌", p(i1), p(i2)) end,
+        ask_bullseyeTarget = function() return "^ Choose who this card targets" end,
         ask_challenge = function(i) return fmt("^ 你是否认为你的上家仍有%s牌?", c(i)) end,
         ask_color = function() return "^ 指定接下来的合法颜色" end,
         ask_keep_play = function() return "^ 是否打出摸到的牌?" end,
@@ -186,24 +193,29 @@ do
                 or fmt("叠加一张 +2/+4, 或从发牌堆摸 %d 张牌", i1)
         end,
         label_bgm = function() return "音乐" end,
+        label_bullseye = function(active) return "Bullseye targeting: " .. (active and "[G]ON" or "[R]OFF") end,
+        label_drawToMatch = function(active) return "Draw to match: " .. (active and "[G]ON" or "[R]OFF") end,
         label_forcePlay = function() return "摸到可出的牌时, 是否打出:" end,
-        label_gameMode = function(i)
-            return i == 1 and "玩法:  7-0" or i == 2 and "玩法: 2vs2"
-                or i == 3 and "玩法:   3P" or "玩法:   4P"
-        end,
         label_initialCards = function(i) return fmt("发牌张数: %02d", i) end,
         label_lacks = function(n, e, w, s) return lacks("缺色:", n, e, w, s) end,
         label_leftArrow = function() return "[Y]＜－" end,
         label_level = function(i) return i == 0 and "难易度: 简单" or "难易度: 困难" end,
         label_no = function() return "否" end,
+        label_players = function(i) return i == 3 and "Players:   3P" or "Players:   4P" end,
         label_remain_used = function(i1, i2) return fmt("[Y]剩%d[G]用%d", i1, i2) end,
         label_rightArrow = function() return "[Y]＋＞" end,
         label_score = function() return "分数" end,
+        label_settingsPage = function(i1, i2) return fmt("PAGE %d/%d", i1, i2) end,
+        label_sevenZeroRule = function(active) return "7-0 Rule: " .. (active and "[G]ON" or "[R]OFF") end,
         label_snd = function() return "音效" end,
         label_speed = function() return "速度" end,
         label_stackRule = function(i)
             return i == 0 and "允许叠牌: 　　　无" or i == 1 and "允许叠牌: 只有＋２"
                 or "允许叠牌: ＋２＋４"
+        end,
+        label_twoVsTwoRule = function(active) return "2vs2 Rule: " .. (active and "[G]ON" or "[R]OFF") end,
+        label_wildDraw4Challenge = function(active)
+            return "Wild +4 challenge: " .. (active and "[G]ON" or "[R]OFF")
         end,
         label_yes = function() return "是" end,
     }
@@ -229,6 +241,7 @@ do
         act_playSkip = function(i1, i2) return fmt("%s: %sの番をスキップ", p(i1), p(i2)) end,
         act_playWild = function(i1, i2) return fmt("%s: 次の色を%s[W]に変える", p(i1), c(i2)) end,
         act_playWildDraw4 = function(i1, i2) return fmt("%s: 色を変更 & %sに手札を 4 枚引かせる", p(i1), p(i2)) end,
+        ask_bullseyeTarget = function() return "^ Choose who this card targets" end,
         ask_challenge = function(i) return fmt("^ 前の方はまだ%sの手札[W]を持っていると思いますか?", c(i)) end,
         ask_color = function() return "^ 次の色を指定してください" end,
         ask_keep_play = function() return "^ 引いたカードすぐを出しますか?" end,
@@ -272,24 +285,29 @@ do
                 or fmt("+2/+4 を一枚重ねるか、デッキから手札を %d 枚引く", i1)
         end,
         label_bgm = function() return "音楽" end,
+        label_bullseye = function(active) return "Bullseye targeting: " .. (active and "[G]ON" or "[R]OFF") end,
+        label_drawToMatch = function(active) return "Draw to match: " .. (active and "[G]ON" or "[R]OFF") end,
         label_forcePlay = function() return "出せる手札を引いた時:" end,
-        label_gameMode = function(i)
-            return i == 1 and "遊び方:  7-0" or i == 2 and "遊び方: 2vs2"
-                or i == 3 and "遊び方:   3P" or "遊び方:   4P"
-        end,
         label_initialCards = function(i) return fmt("最初の手札数: %02d", i) end,
         label_lacks = function(n, e, w, s) return lacks("欠色:", n, e, w, s) end,
         label_leftArrow = function() return "[Y]＜－" end,
         label_level = function(i) return i == 0 and "難易度: 　簡単" or "難易度: 難しい" end,
         label_no = function() return "いいえ" end,
+        label_players = function(i) return i == 3 and "Players:   3P" or "Players:   4P" end,
         label_remain_used = function(i1, i2) return fmt("[Y]残%d[G]使%d", i1, i2) end,
         label_rightArrow = function() return "[Y]＋＞" end,
         label_score = function() return "スコア" end,
+        label_settingsPage = function(i1, i2) return fmt("PAGE %d/%d", i1, i2) end,
+        label_sevenZeroRule = function(active) return "7-0 Rule: " .. (active and "[G]ON" or "[R]OFF") end,
         label_snd = function() return "音声" end,
         label_speed = function() return "速さ" end,
         label_stackRule = function(i)
             return i == 0 and "積み重ね可: 　　なし" or i == 1 and "積み重ね可: ＋２のみ"
                 or "積み重ね可: ＋２＋４"
+        end,
+        label_twoVsTwoRule = function(active) return "2vs2 Rule: " .. (active and "[G]ON" or "[R]OFF") end,
+        label_wildDraw4Challenge = function(active)
+            return "Wild +4 challenge: " .. (active and "[G]ON" or "[R]OFF")
         end,
         label_yes = function() return "はい" end,
     }

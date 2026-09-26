@@ -75,11 +75,20 @@ In 2vs2 the differences are doubled and count for the whole team.)
 
 ### Special rules
 
+Independent on/off toggles, set from `<SETTINGS>`'s second page (see `docs/gameversions.md` for the survey
+of other UNO releases' mechanics this is drawn from, and which ones might be added next):
+
 * **7-0** — When someone plays a 7, they swap hands with another player. When anyone plays a 0, everybody
   passes their hand to the next player in the direction of play. (4 players.)
 * **2vs2** — You and NORTH are a team against WEST and EAST; the team wins when either member plays out their hand.
 * **Stack** — +2 (and optionally +4) cards can be stacked on each other; the first player who can't stack
   draws everything. When +4 is stackable it can be played at any time, but it doesn't change the color.
+* **Draw to match** — When you draw because you have nothing to play, keep drawing until you draw a card you
+  can play (instead of stopping after one card either way).
+* **Wild +4 challenge** — Turn off to make a Wild +4 unchallengeable: it's always safe to play, whatever's in
+  your hand.
+* **Bullseye targeting** — Whoever plays a +2 or Skip picks who it hits, instead of it always being the next
+  player.
 
 ## What's different from the original
 

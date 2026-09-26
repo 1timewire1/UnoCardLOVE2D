@@ -42,13 +42,30 @@ local function runAll(Game)
     local games, replaysChecked = 0, 0
     local stats = {}
 
-    local function config(mode, stack, force, level, initial)
+    -- Cycled (not crossed, to avoid a combinatorial explosion) across games
+    -- within each mode/stack/force/level config, so the new independent
+    -- rules still get broad exercise without multiplying the matrix size.
+    local EXTRA_PRESETS = {
+        { drawToMatch = false, noChallenge = false, bullseye = false },
+        { drawToMatch = true, noChallenge = false, bullseye = false },
+        { drawToMatch = false, noChallenge = true, bullseye = false },
+        { drawToMatch = false, noChallenge = false, bullseye = true },
+        { drawToMatch = true, noChallenge = true, bullseye = true },
+    }
+
+    local function config(mode, stack, force, level, initial, extraIdx)
         uno:setGameMode(mode)
         uno:setStackRule(stack)
         uno:setForcePlayRule(force)
         uno:setDifficulty(level)
         while uno:getInitialCards() < initial do uno:increaseInitialCards() end
         while uno:getInitialCards() > initial do uno:decreaseInitialCards() end
+
+        local extra = EXTRA_PRESETS[extraIdx or 1]
+
+        uno:setDrawToMatchRule(extra.drawToMatch)
+        uno:setWildDraw4NoChallengeRule(extra.noChallenge)
+        uno:setBullseyeRule(extra.bullseye)
     end
 
     local function startGame()
@@ -77,10 +94,11 @@ local function runAll(Game)
                         end
 
                         local initial = ({ 7, 5, 20, 7, 12 })[g % 5 + 1]
-                        local label = string.format("%s stack=%d force=%d level=%d initial=%d",
-                            modeName[mode], stack, force, level, initial)
+                        local extraIdx = (g - 1) % #EXTRA_PRESETS + 1
+                        local label = string.format("%s stack=%d force=%d level=%d initial=%d extra=%d",
+                            modeName[mode], stack, force, level, initial, extraIdx)
 
-                        config(mode, stack, force, level, initial)
+                        config(mode, stack, force, level, initial, extraIdx)
                         T.setAuto(true)
                         ctx.live(true)
                         ctx.resetSteps()
@@ -149,7 +167,7 @@ local function runAll(Game)
                             end
 
                             -- Back to a state where a new game can be started
-                            config(mode, stack, force, level, initial)
+                            config(mode, stack, force, level, initial, extraIdx)
                             if T.status() ~= C.STAT_WELCOME then
                                 fail(label .. ": not on the welcome screen after replay (" .. T.status() .. ")")
                             end

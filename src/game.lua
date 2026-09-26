@@ -49,6 +49,9 @@ local STAT_DOUBT_WILD4 = 0x6666
 local STAT_SEVEN_TARGET = 0x7777
 local STAT_ASK_KEEP_PLAY = 0x8888
 local STAT_PICK_REPLAY = 0x9999 -- (new: replaces the original's file dialog)
+local STAT_BULLSEYE_TARGET = 0xaaaa -- (new: Bullseye rule's target picker)
+
+local RULE_PAGES = 2
 
 local SCREEN_W, SCREEN_H = 1600, 900
 local SETTINGS_FILE = "UnoCard.stat"
@@ -92,6 +95,8 @@ local sGameSaved = false
 local sSelectedIdx = 0
 local sScore, sDiff = 0, 0
 local sAdjustOptions = false
+local sSettingsPage = 1
+local sBullseyeContent = nil -- pending +2/Skip content, while picking a Bullseye target
 local sSndEnabled = true
 local sBgmVolume = 50 -- 0 ~ 100
 local sReplayList = {}
@@ -146,6 +151,7 @@ end
 
 -- Forward declarations (the flow functions call each other)
 local setStatus, doDraw, doPlay, requestAI, onChallenge, swapWith, cycle
+local bullseyeResolve
 local refreshScreen
 
 --------------------------------------------------------------------------------
@@ -346,6 +352,226 @@ local function drawWin(cx, y)
     putText("[G]WIN", cx - idiv(getTextWidth("WIN"), 2), y)
 end
 
+--------------------------------------------------------------------------------
+-- Rule settings (data-driven and paginated, so a new toggle is just one more
+-- entry in rulePages() instead of new hardcoded layout/click-handling code)
+--------------------------------------------------------------------------------
+
+-- Layout of the two rule-setting columns, reused by every "arrows"/"toggle"
+-- widget. These are exactly the positions the screen used before it became
+-- data-driven, kept for continuity.
+local RULE_COL = {
+    [1] = { arrowL = 208, arrowLEnd = 273, center = 456, arrowR = 638, arrowREnd = 703, hitX0 = 208, hitX1 = 703 },
+    [2] = { arrowL = 896, arrowLEnd = 961, center = 1144, arrowR = 1326, arrowREnd = 1391, hitX0 = 896, hitX1 = 1391 },
+}
+local RULE_ROW_Y = { 690, 760, 830 }
+local RULE_ROW_HIT_Y0 = { 654, 724, 794 }
+
+--- Rule-setting pages. Each page is up to 3 rows; a row is either
+-- { left = descriptor, right = descriptor } (two half-width widgets) or
+-- { wide = descriptor } (one full-width widget, like Force Play's row).
+--
+-- A descriptor is one of:
+--   { kind = "arrows", label = fn()->string, left = fn(), right = fn() }
+--   { kind = "toggle", label = fn()->string, get = fn()->bool, set = fn(bool) }
+--   { kind = "select", label = fn()->string,
+--     options = { { hitX0, hitX1, text = fn()->string, activate = fn() }, ... } }
+-- (Called fresh on every render/click so it always sees the current state
+-- and the current language.)
+local function rulePages()
+    return {
+        { -- Page 1: the basics
+            { left = {
+                kind = "arrows",
+                label = function() return i18n.label_level(sUno:getDifficulty()) end,
+                left = function() sUno:setDifficulty(Uno.LV_EASY) end,
+                right = function() sUno:setDifficulty(Uno.LV_HARD) end,
+            }, right = {
+                kind = "arrows",
+                label = function() return i18n.label_initialCards(sUno:getInitialCards()) end,
+                left = function() sUno:decreaseInitialCards() end,
+                right = function() sUno:increaseInitialCards() end,
+            } },
+            { left = {
+                kind = "arrows",
+                label = function() return i18n.label_players(sUno:getPlayers()) end,
+                left = function() if sUno:getPlayers() ~= 3 then sUno:setPlayers(3) end end,
+                right = function() if sUno:getPlayers() ~= 4 then sUno:setPlayers(4) end end,
+            }, right = {
+                kind = "arrows",
+                label = function() return i18n.label_stackRule(sUno:getStackRule()) end,
+                left = function() sUno:setStackRule(sUno:getStackRule() - 1) end,
+                right = function() sUno:setStackRule(sUno:getStackRule() + 1) end,
+            } },
+            { wide = {
+                kind = "select",
+                label = function() return i18n.label_forcePlay() end,
+                options = {
+                    { hitX0 = 896, hitX1 = 997,
+                      text = function() return i18n.btn_keep(sUno:getForcePlayRule() == 0) end,
+                      activate = function() sUno:setForcePlayRule(0) end },
+                    { hitX0 = 1110, hitX1 = 1194,
+                      text = function() return i18n.btn_ask(sUno:getForcePlayRule() == 1) end,
+                      activate = function() sUno:setForcePlayRule(1) end },
+                    { hitX0 = 1290, hitX1 = 1391,
+                      text = function() return i18n.btn_play(sUno:getForcePlayRule() == 2) end,
+                      activate = function() sUno:setForcePlayRule(2) end },
+                },
+            } },
+        },
+        { -- Page 2: house rules (independent on/off toggles)
+            { left = {
+                kind = "toggle",
+                label = function() return i18n.label_sevenZeroRule(sUno:isSevenZeroRule()) end,
+                get = function() return sUno:isSevenZeroRule() end,
+                set = function(v) sUno:setSevenZeroRule(v) end,
+            }, right = {
+                kind = "toggle",
+                label = function() return i18n.label_twoVsTwoRule(sUno:is2vs2()) end,
+                get = function() return sUno:is2vs2() end,
+                set = function(v) sUno:set2vs2(v) end,
+            } },
+            { left = {
+                kind = "toggle",
+                label = function() return i18n.label_drawToMatch(sUno:isDrawToMatchRule()) end,
+                get = function() return sUno:isDrawToMatchRule() end,
+                set = function(v) sUno:setDrawToMatchRule(v) end,
+            }, right = {
+                kind = "toggle",
+                label = function()
+                    return i18n.label_wildDraw4Challenge(not sUno:isWildDraw4NoChallengeRule())
+                end,
+                get = function() return not sUno:isWildDraw4NoChallengeRule() end,
+                set = function(v) sUno:setWildDraw4NoChallengeRule(not v) end,
+            } },
+            { left = {
+                kind = "toggle",
+                label = function() return i18n.label_bullseye(sUno:isBullseyeRule()) end,
+                get = function() return sUno:isBullseyeRule() end,
+                set = function(v) sUno:setBullseyeRule(v) end,
+            } },
+        },
+    }
+end
+
+--- Draw one rule-setting widget (a "select" row spans both columns, so its
+-- column argument is ignored).
+local function drawRuleWidget(desc, col, y)
+    if desc.kind == "select" then
+        putText(desc.label(), 208, y)
+        for _, opt in ipairs(desc.options) do
+            putText(opt.text(), opt.hitX0, y)
+        end
+    else
+        local c = RULE_COL[col]
+        local text = desc.label()
+
+        if desc.kind == "arrows" then
+            putText(i18n.label_leftArrow(), c.arrowL, y)
+            putText(i18n.label_rightArrow(), c.arrowR, y)
+        end
+
+        putText(text, c.center - idiv(getTextWidth(text), 2), y)
+    end
+end
+
+--- Handle a click on one rule-setting widget.
+-- @return true if (mx, my) hit this widget (and its action already ran).
+local function clickRuleWidget(desc, col, mx, my, y0, y1)
+    if not (y0 <= my and my <= y1) then
+        return false
+    end
+
+    if desc.kind == "select" then
+        for _, opt in ipairs(desc.options) do
+            if opt.hitX0 <= mx and mx <= opt.hitX1 then
+                opt.activate()
+                return true
+            end
+        end
+    elseif desc.kind == "arrows" then
+        local c = RULE_COL[col]
+
+        if c.arrowL <= mx and mx <= c.arrowLEnd then
+            desc.left()
+            return true
+        elseif c.arrowR <= mx and mx <= c.arrowREnd then
+            desc.right()
+            return true
+        end
+    elseif desc.kind == "toggle" then
+        local c = RULE_COL[col]
+
+        if c.hitX0 <= mx and mx <= c.hitX1 then
+            desc.set(not desc.get())
+            return true
+        end
+    end
+
+    return false
+end
+
+--- Render the current rule-settings page (called only when sAdjustOptions
+-- and the game is not in progress).
+local function drawRulePage()
+    -- Page turn control
+    local label = i18n.label_settingsPage(sSettingsPage, RULE_PAGES)
+
+    putText(i18n.label_leftArrow(), 700, 596)
+    putText(label, 800 - idiv(getTextWidth(label), 2), 596)
+    putText(i18n.label_rightArrow(), 835, 596)
+
+    local rows = rulePages()[sSettingsPage]
+
+    for r, row in ipairs(rows) do
+        local y = RULE_ROW_Y[r]
+
+        if row.wide then
+            drawRuleWidget(row.wide, nil, y)
+        else
+            drawRuleWidget(row.left, 1, y)
+            if row.right then
+                drawRuleWidget(row.right, 2, y)
+            end
+        end
+    end
+end
+
+--- Handle a click anywhere on the rule-settings page (page-turn control or
+-- one of the current page's widgets).
+-- @return true if the click was handled.
+local function clickRulePage(mx, my)
+    if 560 <= my and my <= 596 then
+        if 700 <= mx and mx <= 765 then
+            sSettingsPage = math.max(1, sSettingsPage - 1)
+            return true
+        elseif 835 <= mx and mx <= 900 then
+            sSettingsPage = math.min(RULE_PAGES, sSettingsPage + 1)
+            return true
+        end
+    end
+
+    local rows = rulePages()[sSettingsPage]
+
+    for r, row in ipairs(rows) do
+        local y0, y1 = RULE_ROW_HIT_Y0[r], RULE_ROW_Y[r]
+
+        if row.wide then
+            if clickRuleWidget(row.wide, nil, mx, my, y0, y1) then
+                return true
+            end
+        else
+            if clickRuleWidget(row.left, 1, mx, my, y0, y1) then
+                return true
+            elseif row.right and clickRuleWidget(row.right, 2, mx, my, y0, y1) then
+                return true
+            end
+        end
+    end
+
+    return false
+end
+
 --- Refresh the screen display. The content of sScreen will be changed after
 -- calling this function.
 --
@@ -438,37 +664,7 @@ function refreshScreen(message, area)
         drawImage(sSpeed > 2 and c3.image or c3.darkImg, 1272, 80)
 
         if status ~= YOU then
-            -- [Level] option: easy / hard
-            info = i18n.label_level(sUno:getDifficulty())
-            putText(i18n.label_leftArrow(), 208, 690)
-            putText(info, 456 - idiv(getTextWidth(info), 2), 690)
-            putText(i18n.label_rightArrow(), 638, 690)
-
-            -- Rule settings
-            -- Initial cards
-            info = i18n.label_initialCards(sUno:getInitialCards())
-            putText(i18n.label_leftArrow(), 896, 690)
-            putText(info, 1144 - idiv(getTextWidth(info), 2), 690)
-            putText(i18n.label_rightArrow(), 1326, 690)
-
-            -- Game Mode
-            info = i18n.label_gameMode(sUno:getGameMode())
-            putText(i18n.label_leftArrow(), 208, 760)
-            putText(info, 456 - idiv(getTextWidth(info), 2), 760)
-            putText(i18n.label_rightArrow(), 638, 760)
-
-            -- Stacking
-            info = i18n.label_stackRule(sUno:getStackRule())
-            putText(i18n.label_leftArrow(), 896, 760)
-            putText(info, 1144 - idiv(getTextWidth(info), 2), 760)
-            putText(i18n.label_rightArrow(), 1326, 760)
-
-            -- Force play switch
-            local rule = sUno:getForcePlayRule()
-            putText(i18n.label_forcePlay(), 208, 830)
-            putText(i18n.btn_keep(rule == 0), 896, 830)
-            putText(i18n.btn_ask(rule == 1), 1110, 830)
-            putText(i18n.btn_play(rule == 2), 1290, 830)
+            drawRulePage()
         end
     elseif status == STAT_PICK_REPLAY then
         -- Replay picker (replaces the original's file dialog)
@@ -673,8 +869,9 @@ function refreshScreen(message, area)
             drawPie(BRUSH[RED], 0, -180)
             info = i18n.label_no()
             putText(info, 405 - idiv(getTextWidth(info), 2), 472)
-        elseif status == STAT_SEVEN_TARGET then
-            -- Ask the target you want to swap hand cards with
+        elseif status == STAT_SEVEN_TARGET or status == STAT_BULLSEYE_TARGET then
+            -- Ask the target you want to swap hand cards with, or (Bullseye
+            -- rule) the target a +2/Skip's effect should hit
             -- Draw west sector (red)
             drawPie(BRUSH[RED], -90, -120)
             putText("W", 338 - idiv(getTextWidth("W"), 2), 440)
@@ -768,7 +965,11 @@ function setStatus(status)
             -- wild card. Draw color sectors in the center of screen
             refreshScreen(i18n.ask_color(), 0x21)
         elseif status == STAT_DOUBT_WILD4 then
-            if sUno:getNext() == YOU and not sAuto then
+            if sUno:isWildDraw4NoChallengeRule() then
+                -- Wild +4 can never be challenged: always the no-challenge outcome
+                sUno:switchNow()
+                status = doDraw(4, true)
+            elseif sUno:getNext() == YOU and not sAuto then
                 -- Challenge or not is decided by you
                 refreshScreen(i18n.ask_challenge(sUno:next2lastColor()), 0x00)
             elseif sAI:needToChallenge() then
@@ -787,6 +988,15 @@ function setStatus(status)
             else
                 -- Seven-card is played by you. Select target manually.
                 refreshScreen(i18n.ask_target(), 0x00)
+            end
+        elseif status == STAT_BULLSEYE_TARGET then
+            -- In the Bullseye rule, whoever played a +2/Skip picks its target.
+            if sAuto or sUno:getNow() ~= YOU then
+                -- Played by AI. Select target automatically.
+                status = bullseyeResolve(sAI:calcBestBullseyeTarget4NowPlayer())
+            else
+                -- Played by you. Select target manually.
+                refreshScreen(i18n.ask_bullseyeTarget(), 0x00)
             end
         elseif status == STAT_ASK_KEEP_PLAY then
             if sAuto then
@@ -848,12 +1058,18 @@ function doDraw(count, force)
         force = true
     end
 
+    -- "Draw to match" rule: on a voluntary single draw, keep drawing (one at
+    -- a time, same animation as usual) until a legal card comes up, instead
+    -- of stopping after exactly one card.
+    local drawToMatch = not force and count == 1 and sUno:isDrawToMatchRule()
+    local loopCount = drawToMatch and Uno.MAX_HOLD_CARDS or count
+
     local index, drawn, message = 0, nil, nil
     local now = sUno:getNow()
     local flag = now == YOU and 0xff or lshift(1, now)
 
     sSelectedIdx = 0
-    for _ = 1, count do
+    for _ = 1, loopCount do
         index = sUno:draw(now, force)
         if index > 0 then
             local p = sUno:getCurrPlayer()
@@ -885,6 +1101,10 @@ function doDraw(count, force)
             animate({ layer })
             refreshScreen(message, flag)
             threadWait(300)
+            if drawToMatch and sUno:isLegalToPlay(drawn) then
+                -- Found a legal card: stop drawing right away
+                break
+            end
         else
             message = i18n.info_cannotDraw(now, Uno.MAX_HOLD_CARDS)
             refreshScreen(message, flag)
@@ -893,7 +1113,7 @@ function doDraw(count, force)
     end
 
     threadWait(750)
-    if count == 1 and drawn ~= nil and sUno:getForcePlayRule() ~= 0 and sUno:isLegalToPlay(drawn) then
+    if not force and drawn ~= nil and sUno:getForcePlayRule() ~= 0 and sUno:isLegalToPlay(drawn) then
         -- Player drew one card by itself, the drawn card
         -- can be played immediately if it's legal to play
         if sAuto or now ~= YOU then
@@ -1007,7 +1227,15 @@ function doPlay(index, color)
             local content = card.content
             local next
 
-            if content == DRAW2 then
+            if content == DRAW2 and sUno:isBullseyeRule() then
+                -- Bullseye rule: the +2's target is chosen, not automatic
+                sBullseyeContent = DRAW2
+                now = STAT_BULLSEYE_TARGET
+            elseif content == SKIP and sUno:isBullseyeRule() then
+                -- Bullseye rule: the Skip's target is chosen, not automatic
+                sBullseyeContent = SKIP
+                now = STAT_BULLSEYE_TARGET
+            elseif content == DRAW2 then
                 next = sUno:switchNow()
                 if sUno:getStackRule() ~= 0 then
                     refreshScreen(i18n.act_playDraw2(now, next, sUno:getDraw2StackCount()), flag)
@@ -1116,6 +1344,40 @@ function swapWith(whom)
     refreshScreen(i18n.info_7_swap(curr, whom), band(flag, bit.bnot(0x40)))
     threadWait(1500)
     return sUno:switchNow()
+end
+
+--- In the Bullseye rule, resolve a +2/Skip's effect against the chosen
+-- target instead of the automatic next player, then continue the turn
+-- normally onward from there. (Uno:setNow() needs no new replay opcode for
+-- this - see its doc comment.)
+-- @param target Chosen target (0 ~ 3).
+-- @return Next status value.
+function bullseyeResolve(target)
+    setStatus(STAT_IDLE)
+
+    local now = sUno:getNow()
+    local content = sBullseyeContent
+    local flag = now == YOU and 0xe1 or bit.bor(bitOf(now), 0x80)
+
+    sUno:setNow(target)
+    sBullseyeContent = nil
+    if content == DRAW2 then
+        if sUno:getStackRule() ~= 0 then
+            refreshScreen(i18n.act_playDraw2(now, target, sUno:getDraw2StackCount()), flag)
+            threadWait(1500)
+            now = target
+        else
+            refreshScreen(i18n.act_playDraw2(now, target, 2), flag)
+            threadWait(1500)
+            now = doDraw(2, true)
+        end
+    else -- SKIP
+        refreshScreen(i18n.act_playSkip(now, target), flag)
+        threadWait(1500)
+        now = sUno:switchNow()
+    end
+
+    return now
 end
 
 --- The hand cards travel one step along the players (used by 7-0 rule and
@@ -1387,58 +1649,8 @@ local function onClick(x, y)
                 sSpeed = 3
                 setStatus(sStatus)
             end
-        elseif 654 <= y and y <= 690 and sStatus ~= YOU then
-            if 208 <= x and x <= 273 then
-                -- Level EASY
-                sUno:setDifficulty(Uno.LV_EASY)
-                setStatus(sStatus)
-            elseif 638 <= x and x <= 703 then
-                -- Level HARD
-                sUno:setDifficulty(Uno.LV_HARD)
-                setStatus(sStatus)
-            end
-
-            if 896 <= x and x <= 961 then
-                -- Decrease initial cards
-                sUno:decreaseInitialCards()
-                setStatus(sStatus)
-            elseif 1326 <= x and x <= 1391 then
-                -- Increase initial cards
-                sUno:increaseInitialCards()
-                setStatus(sStatus)
-            end
-        elseif 724 <= y and y <= 760 and sStatus ~= YOU then
-            if 208 <= x and x <= 273 then
-                -- Game mode, backward
-                sUno:setGameMode(sUno:getGameMode() - 1)
-                setStatus(sStatus)
-            elseif 638 <= x and x <= 703 then
-                -- Game mode, forward
-                sUno:setGameMode(sUno:getGameMode() + 1)
-                setStatus(sStatus)
-            elseif 896 <= x and x <= 961 then
-                -- Stacking, backward
-                sUno:setStackRule(sUno:getStackRule() - 1)
-                setStatus(sStatus)
-            elseif 1326 <= x and x <= 1391 then
-                -- Stacking, forward
-                sUno:setStackRule(sUno:getStackRule() + 1)
-                setStatus(sStatus)
-            end
-        elseif 794 <= y and y <= 830 and sStatus ~= YOU then
-            if 896 <= x and x <= 997 then
-                -- Force play, <KEEP> button
-                sUno:setForcePlayRule(0)
-                setStatus(sStatus)
-            elseif 1110 <= x and x <= 1194 then
-                -- Force play, <ASK> button
-                sUno:setForcePlayRule(1)
-                setStatus(sStatus)
-            elseif 1290 <= x and x <= 1391 then
-                -- Force play, <PLAY> button
-                sUno:setForcePlayRule(2)
-                setStatus(sStatus)
-            end
+        elseif sStatus ~= YOU and clickRulePage(x, y) then
+            setStatus(sStatus)
         end
     elseif 844 <= y and y <= 880 and 1450 <= x and x <= 1580 then
         -- <AUTO> button
@@ -1567,19 +1779,21 @@ local function onClick(x, y)
                 playDrawn()
             end
         end
-    elseif sStatus == STAT_SEVEN_TARGET then
+    elseif sStatus == STAT_SEVEN_TARGET or sStatus == STAT_BULLSEYE_TARGET then
+        local resolve = sStatus == STAT_SEVEN_TARGET and swapWith or bullseyeResolve
+
         if 288 < y and y < 366 and sUno:getPlayers() == 4 then
             if 338 < x and x < 472 then
                 -- North sector
-                setStatus(swapWith(COM2))
+                setStatus(resolve(COM2))
             end
         elseif 405 < y and y < 500 then
             if 310 < x and x < 405 then
                 -- West sector
-                setStatus(swapWith(COM1))
+                setStatus(resolve(COM1))
             elseif 405 < x and x < 500 then
                 -- East sector
-                setStatus(swapWith(COM3))
+                setStatus(resolve(COM3))
             end
         end
     elseif sStatus == STAT_GAME_OVER then
@@ -1625,6 +1839,9 @@ function Game.saveSettings()
         "bgm=" .. sBgmVolume,
         "initialCards=" .. sUno:getInitialCards(),
         "twoVsTwo=" .. (sUno:is2vs2() and 1 or 0),
+        "drawToMatch=" .. (sUno:isDrawToMatchRule() and 1 or 0),
+        "wildDraw4NoChallenge=" .. (sUno:isWildDraw4NoChallengeRule() and 1 or 0),
+        "bullseye=" .. (sUno:isBullseyeRule() and 1 or 0),
         "speed=" .. sSpeed,
         "lang=" .. sLang,
     }
@@ -1661,6 +1878,9 @@ local function loadSettings()
     if int("snd") then sSndEnabled = int("snd") ~= 0 end
     if int("bgm") then setBgmVolume(clamp(int("bgm"), 0, 100)) end
     if int("twoVsTwo") then sUno:set2vs2(int("twoVsTwo") ~= 0) end
+    if int("drawToMatch") then sUno:setDrawToMatchRule(int("drawToMatch") ~= 0) end
+    if int("wildDraw4NoChallenge") then sUno:setWildDraw4NoChallengeRule(int("wildDraw4NoChallenge") ~= 0) end
+    if int("bullseye") then sUno:setBullseyeRule(int("bullseye") ~= 0) end
     if int("speed") then sSpeed = int("speed") < 2 and 1 or int("speed") > 2 and 3 or 2 end
     if int("initialCards") and 5 <= int("initialCards") and int("initialCards") <= 20 then
         while sUno:getInitialCards() < int("initialCards") do sUno:increaseInitialCards() end
@@ -1843,6 +2063,7 @@ Game._test = {
         STAT_GAME_OVER = STAT_GAME_OVER, STAT_WILD_COLOR = STAT_WILD_COLOR,
         STAT_DOUBT_WILD4 = STAT_DOUBT_WILD4, STAT_SEVEN_TARGET = STAT_SEVEN_TARGET,
         STAT_ASK_KEEP_PLAY = STAT_ASK_KEEP_PLAY, STAT_PICK_REPLAY = STAT_PICK_REPLAY,
+        STAT_BULLSEYE_TARGET = STAT_BULLSEYE_TARGET,
     },
 }
 

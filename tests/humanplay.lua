@@ -176,6 +176,23 @@ local function runAll(Game)
             end
 
             if not effective(x, y) then fail("choosing a swap target did nothing") end
+        elseif st == C.STAT_BULLSEYE_TARGET then
+            count("bullseye target question")
+            if uno:getPlayers() == 3 and effective(405, 330) then
+                -- The north sector is drawn but must do nothing in 3P
+                fail("north was selectable in a 3-player game (bullseye)")
+            end
+
+            local t = rnd(1, uno:getPlayers() == 4 and 3 or 2)
+            local x, y = 450, 450 -- east
+
+            if t == 3 then
+                x, y = 405, 330 -- north
+            elseif t == 1 then
+                x, y = 350, 450 -- west
+            end
+
+            if not effective(x, y) then fail("choosing a bullseye target did nothing") end
         else
             fail("unexpected status " .. st)
             return false
@@ -184,13 +201,29 @@ local function runAll(Game)
         return true
     end
 
-    local function config(mode, stack, force, level, initial)
+    -- Cycled (not crossed) across games within each config, same reasoning
+    -- as selfplay.lua's EXTRA_PRESETS.
+    local EXTRA_PRESETS = {
+        { drawToMatch = false, noChallenge = false, bullseye = false },
+        { drawToMatch = true, noChallenge = false, bullseye = false },
+        { drawToMatch = false, noChallenge = true, bullseye = false },
+        { drawToMatch = false, noChallenge = false, bullseye = true },
+        { drawToMatch = true, noChallenge = true, bullseye = true },
+    }
+
+    local function config(mode, stack, force, level, initial, extraIdx)
         uno:setGameMode(mode)
         uno:setStackRule(stack)
         uno:setForcePlayRule(force)
         uno:setDifficulty(level)
         while uno:getInitialCards() < initial do uno:increaseInitialCards() end
         while uno:getInitialCards() > initial do uno:decreaseInitialCards() end
+
+        local extra = EXTRA_PRESETS[extraIdx or 1]
+
+        uno:setDrawToMatchRule(extra.drawToMatch)
+        uno:setWildDraw4NoChallengeRule(extra.noChallenge)
+        uno:setBullseyeRule(extra.bullseye)
     end
 
     local modeName = { [1] = "7-0", [2] = "2vs2", [3] = "3P", [4] = "4P" }
@@ -203,10 +236,11 @@ local function runAll(Game)
                 for level = 0, 1 do
                     for g = 1, gamesPerConfig do
                         local initial = ({ 7, 5, 12 })[g % 3 + 1]
-                        local label = string.format("%s stack=%d force=%d level=%d initial=%d",
-                            modeName[mode], stack, force, level, initial)
+                        local extraIdx = (g - 1) % #EXTRA_PRESETS + 1
+                        local label = string.format("%s stack=%d force=%d level=%d initial=%d extra=%d",
+                            modeName[mode], stack, force, level, initial, extraIdx)
 
-                        config(mode, stack, force, level, initial)
+                        config(mode, stack, force, level, initial, extraIdx)
                         love.math.setRandomSeed(games + 1)
                         games = games + 1
                         T.setAuto(false)

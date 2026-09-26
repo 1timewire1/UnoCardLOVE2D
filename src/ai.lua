@@ -202,6 +202,25 @@ function AI:calcBestSwapTarget4NowPlayer()
     return target
 end
 
+--- In the Bullseye rule, calculate whom the AI should target when it plays
+-- a +2 or Skip: whichever opponent currently holds the fewest cards (i.e.
+-- the closest to winning), defaulting to the automatic next player on ties.
+function AI:calcBestBullseyeTarget4NowPlayer()
+    local uno = self.uno
+    local nxt, oppo, prev = uno:getNextPlayer(), uno:getOppoPlayer(), uno:getPrevPlayer()
+    local target, best = uno:getNext(), nxt:getHandSize()
+
+    if oppo:getHandSize() < best then
+        target, best = uno:getOppo(), oppo:getHandSize()
+    end
+
+    if prev:getHandSize() < best then
+        target, best = uno:getPrev(), prev:getHandSize()
+    end
+
+    return target
+end
+
 --- AI strategies of determining if it's necessary to challenge previous
 -- player's [wild +4] card's legality.
 -- @return True if it's necessary to make a challenge.
