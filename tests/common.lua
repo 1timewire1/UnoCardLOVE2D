@@ -4,6 +4,19 @@ local D = require("src.defs")
 
 local M = {}
 
+--- Whether seat `i` is actually in play at this player count (2P sits out
+-- COM1/COM3, 3P sits out COM2). Used to tell a genuine empty-handed winner
+-- apart from a seat that was never dealt any cards to begin with.
+function M.isActiveSeat(players, i)
+    if players == 4 then
+        return true
+    elseif players == 3 then
+        return i ~= D.COM2
+    else -- players == 2
+        return i == D.YOU or i == D.COM2
+    end
+end
+
 --- An independent spec of which cards are legal to play (not derived from the
 -- legality table of the Uno class, which is what it is checked against).
 function M.specLegal(uno, card)
@@ -135,8 +148,8 @@ function M.install(T)
                 ctx.fail("hand of player " .. i .. " has " .. n .. " cards")
             end
 
-            if players == 3 and i == D.COM2 and n > 0 then
-                ctx.fail("north holds cards in a 3-player game")
+            if n > 0 and not M.isActiveSeat(players, i) then
+                ctx.fail("player " .. i .. " holds cards but sits out a " .. players .. "-player game")
             end
 
             if #uno.player[i].open ~= n then
@@ -148,8 +161,9 @@ function M.install(T)
             ctx.fail("card count is " .. total .. " instead of 108 (status " .. status .. ")")
         end
 
-        if players == 3 and status == D.COM2 then
-            ctx.fail("turn of north in a 3-player game")
+        if (status == D.YOU or status == D.COM1 or status == D.COM2 or status == D.COM3)
+            and not M.isActiveSeat(players, status) then
+            ctx.fail("turn of player " .. status .. " who sits out a " .. players .. "-player game")
         end
     end)
 

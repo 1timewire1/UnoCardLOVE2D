@@ -1,6 +1,7 @@
 # UNO Card Game for LÖVE
 
-A simple UNO card game against three AI players, for [LÖVE](https://love2d.org) 11.x.
+A simple UNO card game against 1-3 AI players (2, 3 or 4 players total, set from `<SETTINGS>`), for
+[LÖVE](https://love2d.org) 11.x.
 (Developed and tested with LÖVE 11.5 on Windows. The game only uses LÖVE's cross-platform API, so it should
 also run on macOS, Linux and, through [love-android](https://github.com/love2d/love-android), Android.)
 
@@ -63,7 +64,8 @@ In 2vs2 the differences are doubled and count for the whole team.)
    on to the next player.
 3. **+2** (Draw Two): the next player draws 2 cards and forfeits their turn. Playable on a matching color or
    on another +2.
-4. **Reverse**: the direction of play is reversed. Playable on a matching color or another Reverse.
+4. **Reverse**: the direction of play is reversed. Playable on a matching color or another Reverse. With only
+   2 players it acts like a Skip instead (there's only one other seat to reverse towards): you go again.
 5. **Skip**: the next player loses their turn. Playable on a matching color or another Skip.
 6. **Wild**: you choose the color to continue with (it can stay the same). Playable at any time.
 7. **Wild +4**: choose the next color, and the next player draws 4 cards and forfeits their turn. But you may
@@ -88,7 +90,7 @@ of other UNO releases' mechanics this is drawn from, and which ones might be add
 * **Wild +4 challenge** — Turn off to make a Wild +4 unchallengeable: it's always safe to play, whatever's in
   your hand.
 * **Bullseye targeting** — Whoever plays a +2 or Skip picks who it hits, instead of it always being the next
-  player.
+  player. (With only 2 players there's only one possible target, so it resolves immediately with no picker.)
 
 ## What's different from the original
 

@@ -14,7 +14,6 @@
 -- game; "from=N" skips to game number N (games are seeded by their number,
 -- so a failing game can be reproduced).
 
-local D = require("src.defs")
 local common = require("tests.common")
 
 local M = {}
@@ -77,8 +76,8 @@ local function runAll(Game)
         end
     end
 
-    local modes = { 3, 4, 1, 2 }
-    local modeName = { [1] = "7-0", [2] = "2vs2", [3] = "3P", [4] = "4P" }
+    local modes = { 3, 4, 1, 2, 0 }
+    local modeName = { [0] = "2P", [1] = "7-0", [2] = "2vs2", [3] = "3P", [4] = "4P" }
     local t0 = os.clock()
 
     for _, mode in ipairs(modes) do
@@ -123,7 +122,7 @@ local function runAll(Game)
                             local empty = 0
 
                             for i = 0, 3 do
-                                if #uno:getHandCardsOf(i) == 0 and (i ~= D.COM2 or uno:getPlayers() == 4) then
+                                if #uno:getHandCardsOf(i) == 0 and common.isActiveSeat(uno:getPlayers(), i) then
                                     empty = empty + 1
                                 end
                             end

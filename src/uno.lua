@@ -120,7 +120,7 @@ function Uno.new(assets, seed)
     -- Player in turn (YOU / COM1 / COM2 / COM3)
     self.now = rand(0, 3)
 
-    -- How many players in game. Supports 3 or 4.
+    -- How many players in game. Supports 2, 3 or 4.
     self.players = 3
 
     -- Current action sequence (DIR_LEFT / DIR_RIGHT / 0 when not in game)
@@ -243,7 +243,14 @@ function Uno:switchNow()
 end
 
 --- @return Current player's next player.
+--         NOTE: With 2 players (YOU and COM2 only), this is always the
+--         other one of the two, regardless of direction: Reverse only has
+--         two seats to alternate between either way.
 function Uno:getNext()
+    if self.players == 2 then
+        return self.now == YOU and COM2 or YOU
+    end
+
     local nxt = (self.now + self.direction) % 4
 
     if self.players == 3 and nxt == COM2 then
@@ -254,8 +261,16 @@ function Uno:getNext()
 end
 
 --- @return Current player's opposite player.
---         NOTE: When only 3 players in game, getOppo() == getPrev().
+--         NOTE: When only 3 players in game, getOppo() == getPrev(). With 2
+--         players, getOppo() == getNext() == getPrev(): there is only one
+--         other player, so all three "relative to me" ideas mean the same
+--         seat (rather than mathematically folding back to yourself, which
+--         is what a naive 2-of-4-active-seats rotation would otherwise give).
 function Uno:getOppo()
+    if self.players == 2 then
+        return self.now == YOU and COM2 or YOU
+    end
+
     local oppo = (self:getNext() + self.direction) % 4
 
     if self.players == 3 and oppo == COM2 then
@@ -267,6 +282,10 @@ end
 
 --- @return Current player's previous player.
 function Uno:getPrev()
+    if self.players == 2 then
+        return self.now == YOU and COM2 or YOU
+    end
+
     local prev = (4 + self.now - self.direction) % 4
 
     if self.players == 3 and prev == COM2 then
@@ -295,14 +314,15 @@ function Uno:getHandCardsOf(whom)
     return self:getPlayer(whom):getHandCards()
 end
 
---- @return How many players in game (3 or 4).
+--- @return How many players in game (2, 3, or 4).
 function Uno:getPlayers()
     return self.players
 end
 
---- Set the amount of players in game. Supports 3 and 4.
+--- Set the amount of players in game. Supports 2, 3 and 4. A 2-player game
+-- is YOU against COM2 (the seat across the table); COM1 and COM3 sit out.
 function Uno:setPlayers(players)
-    if players == 3 or players == 4 then
+    if players == 2 or players == 3 or players == 4 then
         self._2vs2 = false
         self.sevenZeroRule = false
         self.players = players
@@ -434,14 +454,16 @@ function Uno:setStackRule(rule)
     end
 end
 
---- @return Current game mode: 1: 7-0, 2: 2vs2, 3: 3P, 4: 4P.
+--- @return Current game mode: 0: 2P, 1: 7-0, 2: 2vs2, 3: 3P, 4: 4P.
 function Uno:getGameMode()
-    return self.sevenZeroRule and 1 or self._2vs2 and 2 or self.players
+    return self.sevenZeroRule and 1 or self._2vs2 and 2 or self.players == 2 and 0 or self.players
 end
 
---- @param gameMode 1: 7-0, 2: 2vs2, 3: 3P, 4: 4P.
+--- @param gameMode 0: 2P, 1: 7-0, 2: 2vs2, 3: 3P, 4: 4P.
 function Uno:setGameMode(gameMode)
-    if gameMode == 1 then
+    if gameMode == 0 then
+        self:setPlayers(2)
+    elseif gameMode == 1 then
         self:setSevenZeroRule(true)
     elseif gameMode == 2 then
         self:set2vs2(true)
@@ -628,15 +650,17 @@ function Uno:start()
     -- Let everyone draw initial cards
     for _ = 1, self.initialCards do
         self:draw(YOU, true)
-        self:draw(COM1, true)
-        if self.players == 4 then self:draw(COM2, true) end
-        self:draw(COM3, true)
+        if self.players ~= 2 then self:draw(COM1, true) end
+        if self.players == 4 or self.players == 2 then self:draw(COM2, true) end
+        if self.players ~= 2 then self:draw(COM3, true) end
     end
 
-    -- In the case of (last winner = NORTH) & (game mode = 3 player mode)
-    -- Re-specify the dealer randomly
+    -- In the case of (last winner = a seat that sits out at this player
+    -- count) re-specify the dealer randomly among the seats actually in play
     if self.players == 3 and self.now == COM2 then
         self.now = (3 + rand(0, 2)) % 4
+    elseif self.players == 2 and (self.now == COM1 or self.now == COM3) then
+        self.now = rand(0, 1) == 0 and YOU or COM2
     end
 end
 
@@ -946,9 +970,9 @@ function Uno:loadReplay(text)
         elseif cmd == "ST" then
             -- ST: Start a new game. Command format: ST,a,b,c
             -- a = 1 if in 2vs2 mode, otherwise 0
-            -- b = players in game [3, 4]
+            -- b = players in game [2, 4]
             -- c = start card's id [0, 51]
-            ok = #x > 3 and check(x[2], 0, 1) and check(x[3], 3, 4) and check(x[4], 0, 51)
+            ok = #x > 3 and check(x[2], 0, 1) and check(x[3], 2, 4) and check(x[4], 0, 51)
         elseif cmd == "DR" then
             -- DR: Draw a card from deck. Command format: DR,a,b
             -- a = who drew a card [0, 3]
@@ -1008,7 +1032,7 @@ function Uno:forwardReplay()
         if s == "ST" then
             -- ST: Start a new game. Command format: ST,a,b,c
             -- a = 1 if in 2vs2 mode, otherwise 0
-            -- b = players in game [3, 4]
+            -- b = players in game [2, 4]
             -- c = start card's id [0, 51]
             self:setPlayers(b)
             self:set2vs2(a ~= 0)

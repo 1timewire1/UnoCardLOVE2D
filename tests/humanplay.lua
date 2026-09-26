@@ -226,11 +226,11 @@ local function runAll(Game)
         uno:setBullseyeRule(extra.bullseye)
     end
 
-    local modeName = { [1] = "7-0", [2] = "2vs2", [3] = "3P", [4] = "4P" }
+    local modeName = { [0] = "2P", [1] = "7-0", [2] = "2vs2", [3] = "3P", [4] = "4P" }
     local t0 = os.clock()
     local replaysChecked = 0
 
-    for _, mode in ipairs({ 3, 4, 1, 2 }) do
+    for _, mode in ipairs({ 3, 4, 1, 2, 0 }) do
         for stack = 0, 2 do
             for force = 0, 2 do
                 for level = 0, 1 do

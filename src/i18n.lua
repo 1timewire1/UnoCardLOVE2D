@@ -108,7 +108,9 @@ do
         label_leftArrow = function() return "[Y]＜－" end,
         label_level = function(i) return i == 0 and "Level: EASY" or "Level: HARD" end,
         label_no = function() return "NO" end,
-        label_players = function(i) return i == 3 and "Players:   3P" or "Players:   4P" end,
+        label_players = function(i)
+            return i == 2 and "Players:   2P" or i == 3 and "Players:   3P" or "Players:   4P"
+        end,
         label_remain_used = function(i1, i2) return fmt("[Y]R%d[W]/[G]U%d", i1, i2) end,
         label_rightArrow = function() return "[Y]＋＞" end,
         label_score = function() return "SCORE" end,
@@ -201,7 +203,9 @@ do
         label_leftArrow = function() return "[Y]＜－" end,
         label_level = function(i) return i == 0 and "难易度: 简单" or "难易度: 困难" end,
         label_no = function() return "否" end,
-        label_players = function(i) return i == 3 and "Players:   3P" or "Players:   4P" end,
+        label_players = function(i)
+            return i == 2 and "Players:   2P" or i == 3 and "Players:   3P" or "Players:   4P"
+        end,
         label_remain_used = function(i1, i2) return fmt("[Y]剩%d[G]用%d", i1, i2) end,
         label_rightArrow = function() return "[Y]＋＞" end,
         label_score = function() return "分数" end,
@@ -293,7 +297,9 @@ do
         label_leftArrow = function() return "[Y]＜－" end,
         label_level = function(i) return i == 0 and "難易度: 　簡単" or "難易度: 難しい" end,
         label_no = function() return "いいえ" end,
-        label_players = function(i) return i == 3 and "Players:   3P" or "Players:   4P" end,
+        label_players = function(i)
+            return i == 2 and "Players:   2P" or i == 3 and "Players:   3P" or "Players:   4P"
+        end,
         label_remain_used = function(i1, i2) return fmt("[Y]残%d[G]使%d", i1, i2) end,
         label_rightArrow = function() return "[Y]＋＞" end,
         label_score = function() return "スコア" end,

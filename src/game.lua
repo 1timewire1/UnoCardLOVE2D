@@ -395,8 +395,8 @@ local function rulePages()
             { left = {
                 kind = "arrows",
                 label = function() return i18n.label_players(sUno:getPlayers()) end,
-                left = function() if sUno:getPlayers() ~= 3 then sUno:setPlayers(3) end end,
-                right = function() if sUno:getPlayers() ~= 4 then sUno:setPlayers(4) end end,
+                left = function() if sUno:getPlayers() > 2 then sUno:setPlayers(sUno:getPlayers() - 1) end end,
+                right = function() if sUno:getPlayers() < 4 then sUno:setPlayers(sUno:getPlayers() + 1) end end,
             }, right = {
                 kind = "arrows",
                 label = function() return i18n.label_stackRule(sUno:getStackRule()) end,
@@ -1238,7 +1238,15 @@ function doPlay(index, color)
             local content = card.content
             local next
 
-            if content == DRAW2 and sUno:isBullseyeRule() then
+            if content == DRAW2 and sUno:isBullseyeRule() and sUno:getPlayers() == 2 then
+                -- Bullseye rule, but there's only one possible target with
+                -- 2 players: resolve immediately, nothing to pick
+                sBullseyeContent = DRAW2
+                now = bullseyeResolve(sUno:getNext())
+            elseif content == SKIP and sUno:isBullseyeRule() and sUno:getPlayers() == 2 then
+                sBullseyeContent = SKIP
+                now = bullseyeResolve(sUno:getNext())
+            elseif content == DRAW2 and sUno:isBullseyeRule() then
                 -- Bullseye rule: the +2's target is chosen, not automatic
                 sBullseyeContent = DRAW2
                 now = STAT_BULLSEYE_TARGET
@@ -1266,7 +1274,11 @@ function doPlay(index, color)
                 sUno:switchDirection()
                 refreshScreen(i18n.act_playRev(now))
                 threadWait(1500)
-                now = sUno:switchNow()
+                if sUno:getPlayers() ~= 2 then
+                    now = sUno:switchNow()
+                end
+                -- With only 2 players, Reverse acts like a Skip (the
+                -- standard 2-player house rule): you keep your turn.
             elseif content == WILD then
                 refreshScreen(i18n.act_playWild(now, color), flag)
                 threadWait(1500)
