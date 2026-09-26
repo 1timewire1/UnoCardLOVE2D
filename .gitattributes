@@ -1,0 +1,12 @@
+# Normalize line endings of text files
+* text=auto
+*.lua text eol=lf
+*.md text eol=lf
+*.sh text eol=lf
+
+# Binary assets
+*.png binary
+*.wav binary
+*.mp3 binary
+*.ttc binary
+*.love binary
