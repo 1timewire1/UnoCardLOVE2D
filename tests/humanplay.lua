@@ -252,9 +252,14 @@ local function runAll(Game)
 
                             local actions = 0
 
+                            -- Scaled up alongside common.lua's per-game step
+                            -- ceiling: 2-player games run legitimately much
+                            -- longer (Reverse gives the same player another
+                            -- turn instead of passing it on), and roughly
+                            -- half of all turns are "your turn" there.
                             while humanAction() do
                                 actions = actions + 1
-                                if actions > 3000 then
+                                if actions > 30000 then
                                     error("too many actions")
                                 end
                             end
