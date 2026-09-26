@@ -2093,6 +2093,13 @@ Game._test = {
     end,
     setHook = function(fn) testHook = fn end,
     click = function(x, y) runFlow(function() onClick(x, y) end) end,
+    --- Recover from a flow aborted mid-status-change (e.g. the test hook's
+    -- "does not terminate" bailout): setStatus() sets sStatus = STAT_IDLE
+    -- and then errors out of the flow's coroutine before anything moves it
+    -- on, and nothing else ever will, so every later click would otherwise
+    -- see STAT_IDLE forever. Real play never hits this (STAT_IDLE is only
+    -- ever transient there); this is purely test-harness recovery.
+    resetIfIdle = function() if sStatus == STAT_IDLE then sStatus = STAT_WELCOME end end,
     startReplay = startReplay,
     setStatus = function(status) runFlow(function() setStatus(status) end) end,
     selected = function() return sSelectedIdx end,

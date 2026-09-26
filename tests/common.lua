@@ -166,8 +166,12 @@ function M.install(T)
             end
         end
 
-        if total ~= 108 then
-            ctx.fail("card count is " .. total .. " instead of 108 (status " .. status .. ")")
+        -- Swap Pack adds 4 copies each of 2 cards to the deck when enabled
+        -- (see uno.lua's start()); the base deck is otherwise always 108.
+        local expected = 108 + (uno:isSwapPackRule() and 8 or 0)
+
+        if total ~= expected then
+            ctx.fail("card count is " .. total .. " instead of " .. expected .. " (status " .. status .. ")")
         end
 
         if (status == D.YOU or status == D.COM1 or status == D.COM2 or status == D.COM3)

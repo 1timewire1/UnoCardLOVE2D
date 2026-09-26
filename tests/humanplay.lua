@@ -271,8 +271,15 @@ local function runAll(Game)
                         ctx.live(false)
                         if not ok then
                             fail(label .. ": " .. tostring(err))
+                            -- An aborted flow (e.g. "does not terminate" or
+                            -- "too many actions") leaves sStatus stuck at
+                            -- STAT_IDLE forever (see game.lua's
+                            -- resetIfIdle); without this, every later game
+                            -- in this run would silently fail the same way.
+                            T.resetIfIdle()
                         elseif T.status() ~= C.STAT_GAME_OVER then
                             fail(label .. ": game did not end (status " .. T.status() .. ")")
+                            T.resetIfIdle()
                         else
                             local before = common.snapshot(uno)
 

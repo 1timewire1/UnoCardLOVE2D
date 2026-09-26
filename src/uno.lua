@@ -642,12 +642,13 @@ function Uno:start()
     -- wild cards have 4 copies, the others have 2 copies. Swap Pack's cards
     -- (54/55) only go in when that rule is enabled - 0 copies otherwise -
     -- so they're not just unplayable but genuinely absent from the deck.
+    -- 4 copies each, matching the real Swap Pack add-on's card count.
     for i = 0, 55 do
         card = self.table[i]
 
         local copies
         if card.content == WILD_SWAP or card.content == WILD_PASS then
-            copies = self.swapPackRule and 2 or 0
+            copies = self.swapPackRule and 4 or 0
         else
             copies = (card.content == WILD or card.content == WILD_DRAW4) and 4
                 or card.content == NUM0 and 1

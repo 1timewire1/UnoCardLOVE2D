@@ -3,7 +3,7 @@
 -- Plays whole games (all four seats controlled by the AI, through the real
 -- game flow in fast-forward mode) for every combination of game mode, stack
 -- rule, force-play rule and difficulty, and checks (see common.lua):
---   * card conservation (108 cards) and hand limits at every step,
+--   * card conservation (108 cards, +8 with Swap Pack) and hand limits at every step,
 --   * that nobody but the players in game holds cards,
 --   * that the legality table agrees with an independent spec of the rules,
 --     and the AI never picks an illegal card,
@@ -118,8 +118,15 @@ local function runAll(Game)
                         games = games + 1
                         if not ok then
                             fail(label .. ": error: " .. tostring(err))
+                            -- An aborted flow (e.g. "does not terminate")
+                            -- leaves sStatus stuck at STAT_IDLE forever
+                            -- (see game.lua's resetIfIdle); without this,
+                            -- every later game in this run would silently
+                            -- fail the same way.
+                            T.resetIfIdle()
                         elseif T.status() ~= C.STAT_GAME_OVER then
                             fail(label .. ": game did not end (status " .. T.status() .. ")")
+                            T.resetIfIdle()
                         else
                             -- Exactly one winner, holding no cards
                             local empty = 0
