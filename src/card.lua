@@ -20,7 +20,7 @@ local NAMES = {
     "[G]7", "[G]8", "[G]9", "[G]+2", "[G]Reverse", "[G]Skip",
     "[Y]0", "[Y]1", "[Y]2", "[Y]3", "[Y]4", "[Y]5", "[Y]6",
     "[Y]7", "[Y]8", "[Y]9", "[Y]+2", "[Y]Reverse", "[Y]Skip",
-    "Wild", "Wild +4",
+    "Wild", "Wild +4", "Wild Swap Hands", "Wild Pass Hands",
 }
 
 --- Create a card.
@@ -29,7 +29,7 @@ local NAMES = {
 -- @param image   Front image.
 -- @param darkImg Dark (unplayable) image.
 -- @param color   One of D.NONE / D.RED / D.BLUE / D.GREEN / D.YELLOW.
--- @param content One of D.NUM0 ... D.WILD_DRAW4.
+-- @param content One of D.NUM0 ... D.WILD_PASS.
 function Card.new(image, darkImg, color, content)
     local id = color == D.NONE and 39 + content or 13 * (color - 1) + content
     return setmetatable({

@@ -30,6 +30,7 @@ local I18N = require("src.i18n")
 local NONE, RED, BLUE, GREEN, YELLOW = D.NONE, D.RED, D.BLUE, D.GREEN, D.YELLOW
 local NUM0, NUM7, DRAW2, REV, SKIP, WILD, WILD_DRAW4 =
     D.NUM0, D.NUM7, D.DRAW2, D.REV, D.SKIP, D.WILD, D.WILD_DRAW4
+local WILD_SWAP, WILD_PASS = D.WILD_SWAP, D.WILD_PASS
 local YOU, COM1, COM2, COM3 = D.YOU, D.COM1, D.COM2, D.COM3
 
 local band, lshift, rshift = bit.band, bit.lshift, bit.rshift
@@ -449,6 +450,11 @@ local function rulePages()
                 label = function() return i18n.label_bullseye(sUno:isBullseyeRule()) end,
                 get = function() return sUno:isBullseyeRule() end,
                 set = function(v) sUno:setBullseyeRule(v) end,
+            }, right = {
+                kind = "toggle",
+                label = function() return i18n.label_swapPack(sUno:isSwapPackRule()) end,
+                get = function() return sUno:isSwapPackRule() end,
+                set = function(v) sUno:setSwapPackRule(v) end,
             } },
         },
     }
@@ -1295,6 +1301,23 @@ function doPlay(index, color)
                     threadWait(1500)
                     now = STAT_DOUBT_WILD4
                 end
+            elseif content == WILD_SWAP then
+                -- Swap Pack: choose a color (like any wild), then swap
+                -- hands with a chosen target (or, with only 2 players,
+                -- there's only one possible target - resolve immediately).
+                refreshScreen(i18n.act_playWild(now, color), flag)
+                threadWait(1500)
+                if sUno:getPlayers() == 2 then
+                    now = swapWith(sUno:getNext())
+                else
+                    now = STAT_SEVEN_TARGET
+                end
+            elseif content == WILD_PASS then
+                -- Swap Pack: choose a color, then everyone passes hands to
+                -- the next player (reuses the same cycle() as 7-0's "0").
+                refreshScreen(i18n.act_playWild(now, color), flag)
+                threadWait(1500)
+                now = cycle()
             elseif content == NUM7 and sUno:isSevenZeroRule() then
                 refreshScreen(i18n.act_playCard(now, card.name), flag)
                 threadWait(750)
@@ -1865,6 +1888,7 @@ function Game.saveSettings()
         "drawToMatch=" .. (sUno:isDrawToMatchRule() and 1 or 0),
         "wildDraw4NoChallenge=" .. (sUno:isWildDraw4NoChallengeRule() and 1 or 0),
         "bullseye=" .. (sUno:isBullseyeRule() and 1 or 0),
+        "swapPack=" .. (sUno:isSwapPackRule() and 1 or 0),
         "speed=" .. sSpeed,
         "lang=" .. sLang,
     }
@@ -1904,6 +1928,7 @@ local function loadSettings()
     if int("drawToMatch") then sUno:setDrawToMatchRule(int("drawToMatch") ~= 0) end
     if int("wildDraw4NoChallenge") then sUno:setWildDraw4NoChallengeRule(int("wildDraw4NoChallenge") ~= 0) end
     if int("bullseye") then sUno:setBullseyeRule(int("bullseye") ~= 0) end
+    if int("swapPack") then sUno:setSwapPackRule(int("swapPack") ~= 0) end
     if int("speed") then sSpeed = int("speed") < 2 and 1 or int("speed") > 2 and 3 or 2 end
     if int("initialCards") and 5 <= int("initialCards") and int("initialCards") <= 20 then
         while sUno:getInitialCards() < int("initialCards") do sUno:increaseInitialCards() end

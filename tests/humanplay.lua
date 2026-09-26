@@ -204,11 +204,13 @@ local function runAll(Game)
     -- Cycled (not crossed) across games within each config, same reasoning
     -- as selfplay.lua's EXTRA_PRESETS.
     local EXTRA_PRESETS = {
-        { drawToMatch = false, noChallenge = false, bullseye = false },
-        { drawToMatch = true, noChallenge = false, bullseye = false },
-        { drawToMatch = false, noChallenge = true, bullseye = false },
-        { drawToMatch = false, noChallenge = false, bullseye = true },
-        { drawToMatch = true, noChallenge = true, bullseye = true },
+        { drawToMatch = false, noChallenge = false, bullseye = false, swapPack = false },
+        { drawToMatch = true, noChallenge = false, bullseye = false, swapPack = false },
+        { drawToMatch = false, noChallenge = true, bullseye = false, swapPack = false },
+        { drawToMatch = false, noChallenge = false, bullseye = true, swapPack = false },
+        { drawToMatch = true, noChallenge = true, bullseye = true, swapPack = false },
+        { drawToMatch = false, noChallenge = false, bullseye = false, swapPack = true },
+        { drawToMatch = true, noChallenge = true, bullseye = true, swapPack = true },
     }
 
     local function config(mode, stack, force, level, initial, extraIdx)
@@ -224,6 +226,7 @@ local function runAll(Game)
         uno:setDrawToMatchRule(extra.drawToMatch)
         uno:setWildDraw4NoChallengeRule(extra.noChallenge)
         uno:setBullseyeRule(extra.bullseye)
+        uno:setSwapPackRule(extra.swapPack)
     end
 
     local modeName = { [0] = "2P", [1] = "7-0", [2] = "2vs2", [3] = "3P", [4] = "4P" }

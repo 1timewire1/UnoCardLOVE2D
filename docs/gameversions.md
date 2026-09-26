@@ -246,20 +246,34 @@ resolver function, not new hardcoded layout/click-handling code. Jump-In was sco
 turned out to need real turn-order-interruption plumbing (out-of-turn play), not just a card-effect tweak —
 deferred, see the note in Part A1.
 
-Still open in this tier: Jump-In (from Deluxe House Rules) · Swap Pack (swap 1, refresh hand, force-trade,
-pass-all-hands — blocked on new card art/content, see the note below) · Reverse Pack (reverse+draw,
-reverse+skip, reflect-penalty) · Stack Pack (stack 3, random-N via flipped card) · novelty fixed-N draws
-(73/100/all-opponents-4) · Team Attack multi-discard · WWE "Locked Up" duel · Nascar Drafting bonus plays ·
-X Games renamed action set · All Wild deck mode · Pocket reduced-deck mode · Junior/tiered-difficulty
-presets · Fandom NFL-style "one themed bonus wild" toggle · H2O Splash best-of-3 match structure ·
-colorblind-safe card icons and screen-reader labels (the real, useful half of the accessibility editions).
+**Also implemented, as the first new-card-art mechanic**: a 2-card **Swap Pack** (Wild Swap Hands - swap
+hands with a chosen player, or the sole opponent automatically in a 2-player game; Wild Pass Hands -
+everyone passes hands to the next player). Both reuse the `swap()`/`cycle()` engine primitives 7-0 already
+needed, so the only genuinely new work was the card-art pipeline itself (see the note below) and extending
+the card-id space from 0-53 to 0-55 (`src/defs.lua`'s comment explains why new cards must be wild-type: all
+13 per-color content slots are already taken). Gated behind its own `swapPackRule` toggle, defaulting off,
+which changes deck composition (not just legality) so it only takes effect on the next new game. The
+official Add-On Pack version has more cards (Swap 1, Refresh Hand, Wild Force Trade) than this first pass -
+easy to add more following the same pattern in `tools/gen_cards.py`'s `CARDS` table.
+
+Still open in this tier: Jump-In (from Deluxe House Rules) · a fuller Swap Pack (Swap 1, Refresh Hand, Wild
+Force Trade) · Reverse Pack (reverse+draw, reverse+skip, reflect-penalty) · Stack Pack (stack 3, random-N
+via flipped card) · novelty fixed-N draws (73/100/all-opponents-4) · Team Attack multi-discard · WWE
+"Locked Up" duel · Nascar Drafting bonus plays · X Games renamed action set · All Wild deck mode · Pocket
+reduced-deck mode · Junior/tiered-difficulty presets · Fandom NFL-style "one themed bonus wild" toggle ·
+H2O Splash best-of-3 match structure · colorblind-safe card icons and screen-reader labels (the real,
+useful half of the accessibility editions).
 
 Note on new card art: this codebase draws every card face from a pre-rendered PNG (`resource/front_*.png`,
-sourced from a public-domain-style Wikipedia SVG per the README) — there's no code path that draws a card
-face from text/data yet. Any mechanic that needs a genuinely new card type (Swap Pack, Reverse Pack, X
-Games, and eventually Flip's dark side) is blocked on building a small procedural placeholder-card
-renderer first (reusing the existing font/text pipeline) — agreed as the direction to take rather than
-trying to reproduce Mattel's proprietary card designs.
+sourced from a public-domain-style Wikipedia SVG per the README). **Resolved for new mechanics**: rather
+than a runtime placeholder-card renderer, `tools/gen_cards.py` generates new cards as SVGs (matching the
+existing cards' visual language: white rounded card, dark outline, an inset colored/black rect, a big white
+rotated ellipse, a colored icon, small corner icons) and rasterizes them via `rsvg-convert` at build time
+into the same `front_*.png`/`dark_*.png` files the engine already expects - no runtime rendering changes
+needed. New mechanics get their own original icons rather than reproductions of Mattel's actual card
+designs, both because the source vector art isn't available to match pixel-for-pixel and to avoid
+reproducing their proprietary designs. Reverse Pack, X Games, and eventually Flip's dark side can follow
+the same recipe.
 
 *Recommended starting point*, since these compose cleanly with the existing rule-toggle system and
 don't require new rendering or AI work beyond what 7-0/Stack already needed.
@@ -272,6 +286,15 @@ pile · Power Grab towers · Royal Revenge King/Jester role · Tippo's tipping-s
 standing-effect cards · Cricket-style running-score match mode · a generic "assemble your own action
 card" builder (covers the Wild Jackpot Roller / Happy Birthday / customizable-wild family in one
 feature instead of five).
+
+**To-do, explicitly deferred (not in this survey's original ~500, a house-rule idea raised while adding
+2-player support)**: a "shrinking table" toggle where a game continues until only the human player is out
+of cards — each CPU seat that empties its hand leaves the table instead of ending the game, so e.g. a
+4-player game can play down through 3-player and 2-player configurations before it's over. This needs
+mid-game seat deactivation (distinct from `setPlayers()`, which only sets the seat count for a *new*
+game), re-deriving `getNext()`/`getOppo()`/`getPrev()` and turn order around a shrinking active-seat set
+instead of the current fixed 2/3/4-player patterns, and reworking win/scoring (there's no longer a single
+winner the moment one hand empties). Sequenced after the current Tier 1 toggles are solid.
 
 ### Tier 3 — Hard: structural changes
 Flip! double-sided deck (touches card data, legality, AI evaluation, and rendering throughout, but is

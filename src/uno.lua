@@ -17,6 +17,7 @@ local Player = require("src.player")
 
 local NONE, RED, YELLOW = D.NONE, D.RED, D.YELLOW
 local DRAW2, REV, WILD, WILD_DRAW4, NUM0 = D.DRAW2, D.REV, D.WILD, D.WILD_DRAW4, D.NUM0
+local WILD_SWAP, WILD_PASS = D.WILD_SWAP, D.WILD_PASS
 local YOU, COM1, COM2, COM3 = D.YOU, D.COM1, D.COM2, D.COM3
 
 local Uno = {}
@@ -82,7 +83,7 @@ function Uno.new(assets, seed)
     local A = { "k", "r", "b", "g", "y" }
     local B = {
         "0", "1", "2", "3", "4", "5", "6", "7",
-        "8", "9", "+", "$", "@", "w", "w+",
+        "8", "9", "+", "$", "@", "w", "w+", "sw", "ph",
     }
 
     -- Load background & card back image resources
@@ -91,9 +92,12 @@ function Uno.new(assets, seed)
     self.bgClockwise = assets.load("bg_clockwise.png")
     self.backImage = assets.load("back.png")
 
-    -- Generate 54 types of cards. table[id] (0 ~ 53)
+    -- Generate the card types. table[id] (0 ~ 53 for the base 108-card deck,
+    -- plus one wild-type card per optional-rule card, e.g. Swap Pack's
+    -- WILD_SWAP/WILD_PASS at 54/55 - see defs.lua's comment on why those
+    -- have to be wild-type).
     self.table = {}
-    for i = 0, 53 do
+    for i = 0, 55 do
         local a = i < 52 and math.floor(i / 13) + 1 or 0
         local b = i < 52 and i % 13 or i - 39
         local x = assets.load("front_" .. A[a + 1] .. B[b + 1] .. ".png")
@@ -153,6 +157,11 @@ function Uno.new(assets, seed)
     -- player chosen by whoever played it, instead of always the next player.
     self.bullseyeRule = false
 
+    -- Whether the Swap Pack rule is enabled: adds Wild Swap Hands (swap
+    -- hands with a chosen player) and Wild Pass Hands (everyone passes
+    -- hands to the next player) to the deck.
+    self.swapPackRule = false
+
     -- 0: No cards can be stacked.
     -- 1: Only +2 cards can be stacked.
     -- 2: +2 & +4 cards can be stacked.
@@ -180,7 +189,7 @@ function Uno.new(assets, seed)
     -- contentAnalysis[B]: how many cards in content B are used.
     self.colorAnalysis = { [0] = 0, 0, 0, 0, 0 }
     self.contentAnalysis = {}
-    for i = 0, 14 do
+    for i = 0, 16 do
         self.contentAnalysis[i] = 0
     end
 
@@ -425,6 +434,19 @@ function Uno:setBullseyeRule(enabled)
     self.bullseyeRule = enabled
 end
 
+--- @return Whether the Swap Pack rule is enabled. See the field comment in
+--         Uno.new() for what it does.
+function Uno:isSwapPackRule()
+    return self.swapPackRule
+end
+
+--- Enable/Disable the Swap Pack rule. Takes effect on the next start(): the
+-- deck composition (not just legality) depends on this, so it can't be
+-- toggled mid-game.
+function Uno:setSwapPackRule(enabled)
+    self.swapPackRule = enabled
+end
+
 --- Directly set whose turn it is, bypassing the normal direction-based
 -- getNext() computation. Used by the Bullseye rule to redirect a +2/Skip's
 -- effect to a chosen target instead of the automatic next player.
@@ -497,18 +519,19 @@ end
 --- Find a card instance in card table.
 -- @return Corresponding card instance, or nil if the pair is invalid.
 function Uno:findCard(color, content)
-    if color == NONE and content == WILD then
-        return self.table[39 + WILD]
-    elseif color == NONE and content == WILD_DRAW4 then
-        return self.table[39 + WILD_DRAW4]
-    elseif color ~= NONE and content ~= WILD and content ~= WILD_DRAW4 then
+    local isWildType = content == WILD or content == WILD_DRAW4
+        or content == WILD_SWAP or content == WILD_PASS
+
+    if color == NONE and isWildType then
+        return self.table[39 + content]
+    elseif color ~= NONE and not isWildType then
         return self.table[13 * (color - 1) + content]
     end
 
     return nil
 end
 
---- Find a card instance in card table by card ID (0 ~ 53).
+--- Find a card instance in card table by card ID (0 ~ 55).
 function Uno:findCardById(id)
     return self.table[id]
 end
@@ -562,7 +585,10 @@ end
 -- color, and (if the last card is not a wild card) all cards that have the
 -- same content as the last card.
 function Uno:calcLegality()
-    local legal = { [WILD + 39] = true, [WILD_DRAW4 + 39] = true }
+    local legal = {
+        [WILD + 39] = true, [WILD_DRAW4 + 39] = true,
+        [WILD_SWAP + 39] = true, [WILD_PASS + 39] = true,
+    }
     local card = self.recent[3].card
     local last = self:lastColor()
 
@@ -594,7 +620,7 @@ function Uno:start()
 
     -- Clear the analysis data
     self.colorAnalysis = { [0] = 0, 0, 0, 0, 0 }
-    for i = 0, 14 do
+    for i = 0, 16 do
         self.contentAnalysis[i] = 0
     end
 
@@ -612,14 +638,21 @@ function Uno:start()
         p.strongColor = NONE
     end
 
-    -- Generate a temporary sequenced card deck (108 cards). Zero cards
-    -- have 1 copy, wild cards have 4 copies, the others have 2 copies.
-    for i = 0, 53 do
+    -- Generate a temporary sequenced card deck. Zero cards have 1 copy,
+    -- wild cards have 4 copies, the others have 2 copies. Swap Pack's cards
+    -- (54/55) only go in when that rule is enabled - 0 copies otherwise -
+    -- so they're not just unplayable but genuinely absent from the deck.
+    for i = 0, 55 do
         card = self.table[i]
 
-        local copies = (card.content == WILD or card.content == WILD_DRAW4) and 4
-            or card.content == NUM0 and 1
-            or 2
+        local copies
+        if card.content == WILD_SWAP or card.content == WILD_PASS then
+            copies = self.swapPackRule and 2 or 0
+        else
+            copies = (card.content == WILD or card.content == WILD_DRAW4) and 4
+                or card.content == NUM0 and 1
+                or 2
+        end
 
         for _ = 1, copies do
             self.deck[#self.deck + 1] = card
@@ -976,14 +1009,14 @@ function Uno:loadReplay(text)
         elseif cmd == "DR" then
             -- DR: Draw a card from deck. Command format: DR,a,b
             -- a = who drew a card [0, 3]
-            -- b = drawn card's id [0, 53]
-            ok = #x > 2 and check(x[2], 0, 3) and check(x[3], 0, 53)
+            -- b = drawn card's id [0, 55]
+            ok = #x > 2 and check(x[2], 0, 3) and check(x[3], 0, 55)
         elseif cmd == "PL" then
             -- PL: Play a card. Command format: PL,a,b,c
             -- a = who played a card [0, 3]
-            -- b = played card's id [0, 53]
+            -- b = played card's id [0, 55]
             -- c = the following legal color [0, 4]
-            ok = #x > 3 and check(x[2], 0, 3) and check(x[3], 0, 53) and check(x[4], 0, 4)
+            ok = #x > 3 and check(x[2], 0, 3) and check(x[3], 0, 55) and check(x[4], 0, 4)
         elseif cmd == "DF" or cmd == "CH" then
             -- DF: Draw but failure. Command format: DF,a
             -- a = who drew but failure [0, 3]
@@ -1054,7 +1087,7 @@ function Uno:forwardReplay()
         elseif s == "DR" then
             -- DR: Draw a card from deck. Command format: DR,a,b
             -- a = who drew a card [0, 3]
-            -- b = drawn card's id [0, 53]
+            -- b = drawn card's id [0, 55]
             local p = self.player[a]
             local i = 1
 
@@ -1069,7 +1102,7 @@ function Uno:forwardReplay()
         elseif s == "PL" then
             -- PL: Play a card. Command format: PL,a,b,c
             -- a = who played a card [0, 3]
-            -- b = played card's id [0, 53]
+            -- b = played card's id [0, 55]
             -- c = the following legal color [0, 4]
             local p = self.player[a]
             local i = 1

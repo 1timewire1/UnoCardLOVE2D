@@ -94,7 +94,7 @@ function M.install(T)
             local hand = uno:getCurrPlayer():getHandCards()
 
             aiChecks = aiChecks + 1
-            for id = 0, 53 do
+            for id = 0, 55 do
                 local card = uno:findCardById(id)
 
                 if uno:isLegalToPlay(card) ~= (M.specLegal(uno, card) and true or false) then

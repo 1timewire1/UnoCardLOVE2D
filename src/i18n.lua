@@ -122,6 +122,7 @@ do
             return i == 0 and "Stackable cards: NONE" or i == 1 and "Stackable cards:   +2"
                 or "Stackable cards: +2+4"
         end,
+        label_swapPack = function(active) return "Swap Pack: " .. (active and "[G]ON" or "[R]OFF") end,
         label_twoVsTwoRule = function(active) return "2vs2 Rule: " .. (active and "[G]ON" or "[R]OFF") end,
         label_wildDraw4Challenge = function(active)
             return "Wild +4 challenge: " .. (active and "[G]ON" or "[R]OFF")
@@ -217,6 +218,7 @@ do
             return i == 0 and "允许叠牌: 　　　无" or i == 1 and "允许叠牌: 只有＋２"
                 or "允许叠牌: ＋２＋４"
         end,
+        label_swapPack = function(active) return "Swap Pack: " .. (active and "[G]ON" or "[R]OFF") end,
         label_twoVsTwoRule = function(active) return "2vs2 Rule: " .. (active and "[G]ON" or "[R]OFF") end,
         label_wildDraw4Challenge = function(active)
             return "Wild +4 challenge: " .. (active and "[G]ON" or "[R]OFF")
@@ -311,6 +313,7 @@ do
             return i == 0 and "積み重ね可: 　　なし" or i == 1 and "積み重ね可: ＋２のみ"
                 or "積み重ね可: ＋２＋４"
         end,
+        label_swapPack = function(active) return "Swap Pack: " .. (active and "[G]ON" or "[R]OFF") end,
         label_twoVsTwoRule = function(active) return "2vs2 Rule: " .. (active and "[G]ON" or "[R]OFF") end,
         label_wildDraw4Challenge = function(active)
             return "Wild +4 challenge: " .. (active and "[G]ON" or "[R]OFF")

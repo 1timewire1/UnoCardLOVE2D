@@ -45,11 +45,13 @@ local function runAll(Game)
     -- within each mode/stack/force/level config, so the new independent
     -- rules still get broad exercise without multiplying the matrix size.
     local EXTRA_PRESETS = {
-        { drawToMatch = false, noChallenge = false, bullseye = false },
-        { drawToMatch = true, noChallenge = false, bullseye = false },
-        { drawToMatch = false, noChallenge = true, bullseye = false },
-        { drawToMatch = false, noChallenge = false, bullseye = true },
-        { drawToMatch = true, noChallenge = true, bullseye = true },
+        { drawToMatch = false, noChallenge = false, bullseye = false, swapPack = false },
+        { drawToMatch = true, noChallenge = false, bullseye = false, swapPack = false },
+        { drawToMatch = false, noChallenge = true, bullseye = false, swapPack = false },
+        { drawToMatch = false, noChallenge = false, bullseye = true, swapPack = false },
+        { drawToMatch = true, noChallenge = true, bullseye = true, swapPack = false },
+        { drawToMatch = false, noChallenge = false, bullseye = false, swapPack = true },
+        { drawToMatch = true, noChallenge = true, bullseye = true, swapPack = true },
     }
 
     local function config(mode, stack, force, level, initial, extraIdx)
@@ -65,6 +67,7 @@ local function runAll(Game)
         uno:setDrawToMatchRule(extra.drawToMatch)
         uno:setWildDraw4NoChallengeRule(extra.noChallenge)
         uno:setBullseyeRule(extra.bullseye)
+        uno:setSwapPackRule(extra.swapPack)
     end
 
     local function startGame()

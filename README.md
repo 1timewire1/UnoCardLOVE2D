@@ -91,6 +91,10 @@ of other UNO releases' mechanics this is drawn from, and which ones might be add
   your hand.
 * **Bullseye targeting** — Whoever plays a +2 or Skip picks who it hits, instead of it always being the next
   player. (With only 2 players there's only one possible target, so it resolves immediately with no picker.)
+* **Swap Pack** — Adds two wild cards to the deck: **Wild Swap Hands** (swap hands with a chosen player, or
+  automatically with your only opponent in a 2-player game) and **Wild Pass Hands** (everyone passes their
+  hand to the next player in the direction of play, like playing a 0 from the 7-0 rule). Off by default;
+  changes deck composition, so it takes effect on the next new game.
 
 ## What's different from the original
 
