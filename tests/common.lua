@@ -94,7 +94,7 @@ function M.install(T)
             local hand = uno:getCurrPlayer():getHandCards()
 
             aiChecks = aiChecks + 1
-            for id = 0, 55 do
+            for id = 0, 63 do
                 local card = uno:findCardById(id)
 
                 if uno:isLegalToPlay(card) ~= (M.specLegal(uno, card) and true or false) then
@@ -166,9 +166,10 @@ function M.install(T)
             end
         end
 
-        -- Swap Pack adds 4 copies each of 2 cards to the deck when enabled
-        -- (see uno.lua's start()); the base deck is otherwise always 108.
-        local expected = 108 + (uno:isSwapPackRule() and 8 or 0)
+        -- Swap Pack adds 4 copies each of Wild Swap/Pass Hands (8) plus 1
+        -- copy per color of Swap 1/Refresh Hand (8) when enabled (see
+        -- uno.lua's start()); the base deck is otherwise always 108.
+        local expected = 108 + (uno:isSwapPackRule() and 16 or 0)
 
         if total ~= expected then
             ctx.fail("card count is " .. total .. " instead of " .. expected .. " (status " .. status .. ")")

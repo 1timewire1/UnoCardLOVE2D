@@ -53,9 +53,10 @@ function Player:getHandScore()
 
     for _, card in ipairs(self.handCards) do
         local c = card.content
-        if c == D.WILD or c == D.WILD_DRAW4 then
+
+        if c == D.WILD or c == D.WILD_DRAW4 or c == D.WILD_SWAP or c == D.WILD_PASS then
             score = score + 50
-        elseif c == D.REV or c == D.SKIP or c == D.DRAW2 then
+        elseif c == D.REV or c == D.SKIP or c == D.DRAW2 or c == D.SWAP1 or c == D.REFRESH_HAND then
             score = score + 20
         else
             score = score + c

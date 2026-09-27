@@ -246,23 +246,28 @@ resolver function, not new hardcoded layout/click-handling code. Jump-In was sco
 turned out to need real turn-order-interruption plumbing (out-of-turn play), not just a card-effect tweak —
 deferred, see the note in Part A1.
 
-**Also implemented, as the first new-card-art mechanic**: a 2-card **Swap Pack** (Wild Swap Hands - swap
-hands with a chosen player, or the sole opponent automatically in a 2-player game; Wild Pass Hands -
-everyone passes hands to the next player). Both reuse the `swap()`/`cycle()` engine primitives 7-0 already
-needed, so the only genuinely new work was the card-art pipeline itself (see the note below) and extending
-the card-id space from 0-53 to 0-55 (`src/defs.lua`'s comment explains why new cards must be wild-type: all
-13 per-color content slots are already taken). Gated behind its own `swapPackRule` toggle, defaulting off,
-which changes deck composition (not just legality) so it only takes effect on the next new game. The
-official Add-On Pack version has more cards (Swap 1, Refresh Hand, Wild Force Trade) than this first pass -
-easy to add more following the same pattern in `tools/gen_cards.py`'s `CARDS` table.
+**Also implemented, as the first new-card-art mechanic**: a full 4-card **Swap Pack** -
+**Wild Swap Hands** (swap hands with a chosen player, or the sole opponent automatically in a 2-player
+game) and **Wild Pass Hands** (everyone passes hands to the next player) reuse the `swap()`/`cycle()`
+engine primitives 7-0 already needed; **Swap 1** (take a random card from a chosen player's hand and swap
+it for a random card of yours) and **Refresh Hand** (discard your whole hand under the draw pile, then draw
+the same number of new cards) needed two new engine primitives (`Uno:swapOneCard()`/`Uno:refreshHand()`)
+and two new replay opcodes (`S1`/`RF`), since - unlike everything added so far - they involve randomness
+that has to be logged, not just re-derived. Swap 1 reuses the same target-picker UI as 7-0/Wild Swap Hands
+(a `sSwapOneCard` flag in `src/game.lua` tells the shared resolver which kind of swap to do), rather than
+adding a whole separate status. Wild Swap/Pass Hands are wild-type (4 copies each, id 39+content, since all
+13 per-color content slots were taken - see `src/defs.lua`); Swap 1/Refresh Hand are ordinary colored cards
+instead (one copy per color, 4 total each, matching the real Add-On Pack's density), which needed a 3rd id
+scheme tacked on after the wild-type ids (`src/card.lua`'s `Card.new()` has the exact formula) since they
+don't fit either of the first two. All of it is gated behind the single `swapPackRule` toggle, defaulting
+off, which changes deck composition (not just legality) so it only takes effect on the next new game.
 
-Still open in this tier: Jump-In (from Deluxe House Rules) · a fuller Swap Pack (Swap 1, Refresh Hand, Wild
-Force Trade) · Reverse Pack (reverse+draw, reverse+skip, reflect-penalty) · Stack Pack (stack 3, random-N
-via flipped card) · novelty fixed-N draws (73/100/all-opponents-4) · Team Attack multi-discard · WWE
-"Locked Up" duel · Nascar Drafting bonus plays · X Games renamed action set · All Wild deck mode · Pocket
-reduced-deck mode · Junior/tiered-difficulty presets · Fandom NFL-style "one themed bonus wild" toggle ·
-H2O Splash best-of-3 match structure · colorblind-safe card icons and screen-reader labels (the real,
-useful half of the accessibility editions).
+Still open in this tier: Jump-In (from Deluxe House Rules) · Reverse Pack (reverse+draw, reverse+skip,
+reflect-penalty) · Stack Pack (stack 3, random-N via flipped card) · novelty fixed-N draws
+(73/100/all-opponents-4) · Team Attack multi-discard · WWE "Locked Up" duel · Nascar Drafting bonus plays ·
+X Games renamed action set · All Wild deck mode · Pocket reduced-deck mode · Junior/tiered-difficulty
+presets · Fandom NFL-style "one themed bonus wild" toggle · H2O Splash best-of-3 match structure ·
+colorblind-safe card icons and screen-reader labels (the real, useful half of the accessibility editions).
 
 Note on new card art: this codebase draws every card face from a pre-rendered PNG (`resource/front_*.png`,
 sourced from a public-domain-style Wikipedia SVG per the README). **Resolved for new mechanics**: rather

@@ -31,6 +31,7 @@ local NONE, RED, BLUE, GREEN, YELLOW = D.NONE, D.RED, D.BLUE, D.GREEN, D.YELLOW
 local NUM0, NUM7, DRAW2, REV, SKIP, WILD, WILD_DRAW4 =
     D.NUM0, D.NUM7, D.DRAW2, D.REV, D.SKIP, D.WILD, D.WILD_DRAW4
 local WILD_SWAP, WILD_PASS = D.WILD_SWAP, D.WILD_PASS
+local SWAP1, REFRESH_HAND = D.SWAP1, D.REFRESH_HAND
 local YOU, COM1, COM2, COM3 = D.YOU, D.COM1, D.COM2, D.COM3
 
 local band, lshift, rshift = bit.band, bit.lshift, bit.rshift
@@ -98,6 +99,7 @@ local sScore, sDiff = 0, 0
 local sAdjustOptions = false
 local sSettingsPage = 1
 local sBullseyeContent = nil -- pending +2/Skip content, while picking a Bullseye target
+local sSwapOneCard = false -- STAT_SEVEN_TARGET means Swap 1 (one card), not a 7/Wild Swap Hands (whole hand)
 local sSndEnabled = true
 local sBgmVolume = 50 -- 0 ~ 100
 local sReplayList = {}
@@ -151,7 +153,7 @@ local function setBgmVolume(v)
 end
 
 -- Forward declarations (the flow functions call each other)
-local setStatus, doDraw, doPlay, requestAI, onChallenge, swapWith, cycle
+local setStatus, doDraw, doPlay, requestAI, onChallenge, swapWith, swapOneCardWith, cycle
 local bullseyeResolve
 local refreshScreen
 
@@ -997,14 +999,17 @@ function setStatus(status)
                 status = doDraw(4, true)
             end
         elseif status == STAT_SEVEN_TARGET then
-            -- In 7-0 rule, when someone put down a seven card, the player
-            -- must swap hand cards with another player immediately.
+            -- In 7-0 rule / Wild Swap Hands, the player must swap hand cards
+            -- with another player immediately; Swap Pack's Swap 1 (one card,
+            -- not the whole hand) reuses this same picker (see sSwapOneCard).
+            local resolve = sSwapOneCard and swapOneCardWith or swapWith
+
             if sAuto or sUno:getNow() ~= YOU then
-                -- Seven-card is played by AI. Select target automatically.
-                status = swapWith(sAI:calcBestSwapTarget4NowPlayer())
+                -- Card is played by AI. Select target automatically.
+                status = resolve(sAI:calcBestSwapTarget4NowPlayer())
             else
-                -- Seven-card is played by you. Select target manually.
-                refreshScreen(i18n.ask_target(), 0x00)
+                -- Card is played by you. Select target manually.
+                refreshScreen(sSwapOneCard and i18n.ask_swap1Target() or i18n.ask_target(), 0x00)
             end
         elseif status == STAT_BULLSEYE_TARGET then
             -- In the Bullseye rule, whoever played a +2/Skip picks its target.
@@ -1307,6 +1312,7 @@ function doPlay(index, color)
                 -- there's only one possible target - resolve immediately).
                 refreshScreen(i18n.act_playWild(now, color), flag)
                 threadWait(1500)
+                sSwapOneCard = false
                 if sUno:getPlayers() == 2 then
                     now = swapWith(sUno:getNext())
                 else
@@ -1318,9 +1324,32 @@ function doPlay(index, color)
                 refreshScreen(i18n.act_playWild(now, color), flag)
                 threadWait(1500)
                 now = cycle()
+            elseif content == SWAP1 then
+                -- Swap Pack: an ordinary colored card (no color choice), so
+                -- pick a target and swap one random card each way - or, with
+                -- only 2 players, resolve immediately.
+                refreshScreen(i18n.act_playCard(now, card.name), flag)
+                threadWait(750)
+                sSwapOneCard = true
+                if sUno:getPlayers() == 2 then
+                    now = swapOneCardWith(sUno:getNext())
+                else
+                    now = STAT_SEVEN_TARGET
+                end
+            elseif content == REFRESH_HAND then
+                -- Swap Pack: discard your whole hand under the draw pile,
+                -- then draw the same number of cards back. Self-only, so the
+                -- turn just continues onward afterwards.
+                refreshScreen(i18n.act_playCard(now, card.name), flag)
+                threadWait(750)
+                sUno:refreshHand(now)
+                refreshScreen(i18n.info_refreshHand(now), flag)
+                threadWait(750)
+                now = sUno:switchNow()
             elseif content == NUM7 and sUno:isSevenZeroRule() then
                 refreshScreen(i18n.act_playCard(now, card.name), flag)
                 threadWait(750)
+                sSwapOneCard = false
                 now = STAT_SEVEN_TARGET
             elseif content == NUM0 and sUno:isSevenZeroRule() then
                 refreshScreen(i18n.act_playCard(now, card.name), flag)
@@ -1388,6 +1417,31 @@ function swapWith(whom)
     sHideFlag = 0x00
     sUno:swap(curr, whom)
     refreshScreen(i18n.info_7_swap(curr, whom), band(flag, bit.bnot(0x40)))
+    threadWait(1500)
+    return sUno:switchNow()
+end
+
+--- Swap Pack's Swap 1: the player in action exchanges one random card with
+-- another player, instead of the whole hand (see swapWith()).
+-- @param whom Swap with whom (0 ~ 3).
+-- @return Next status value.
+function swapOneCardWith(whom)
+    setStatus(STAT_IDLE)
+
+    local curr = sUno:getNow()
+    local flag = bit.bor(bitOf(curr), bitOf(whom), curr == YOU and 0x40 or 0x00)
+    local back = sUno:getBackImage()
+
+    sHideFlag = bit.bor(bitOf(curr), bitOf(whom))
+    refreshScreen(i18n.info_swap1(curr, whom), flag)
+    animate({
+        { elem = back, startLeft = POS_X[curr], startTop = POS_Y[curr], endLeft = POS_X[whom], endTop = POS_Y[whom] },
+        { elem = back, startLeft = POS_X[whom], startTop = POS_Y[whom], endLeft = POS_X[curr], endTop = POS_Y[curr] },
+    })
+    sHideFlag = 0x00
+    sUno:swapOneCard(curr, whom)
+    sSwapOneCard = false
+    refreshScreen(i18n.info_swap1(curr, whom), band(flag, bit.bnot(0x40)))
     threadWait(1500)
     return sUno:switchNow()
 end
@@ -1553,6 +1607,23 @@ local function loadReplay(text, name)
                 })
                 sHideFlag = 0x00
                 refreshScreen(i18n.info_7_swap(a, b))
+                threadWait(750)
+            elseif cmd == "S1" then
+                local back = sUno:getBackImage()
+
+                -- Animation (like SW, but this is one card each way, not
+                -- the whole hand - see uno.lua's swapOneCard())
+                sHideFlag = bit.bor(bitOf(a), bitOf(b))
+                refreshScreen(i18n.info_swap1(a, b))
+                animate({
+                    { elem = back, startLeft = POS_X[a], startTop = POS_Y[a], endLeft = POS_X[b], endTop = POS_Y[b] },
+                    { elem = back, startLeft = POS_X[b], startTop = POS_Y[b], endLeft = POS_X[a], endTop = POS_Y[a] },
+                })
+                sHideFlag = 0x00
+                refreshScreen(i18n.info_swap1(a, b))
+                threadWait(750)
+            elseif cmd == "RF" then
+                refreshScreen(i18n.info_refreshHand(a))
                 threadWait(750)
             elseif cmd == "CY" then
                 -- Animation
@@ -1826,7 +1897,8 @@ local function onClick(x, y)
             end
         end
     elseif sStatus == STAT_SEVEN_TARGET or sStatus == STAT_BULLSEYE_TARGET then
-        local resolve = sStatus == STAT_SEVEN_TARGET and swapWith or bullseyeResolve
+        local resolve = sStatus == STAT_BULLSEYE_TARGET and bullseyeResolve
+            or sSwapOneCard and swapOneCardWith or swapWith
 
         if 288 < y and y < 366 and sUno:getPlayers() == 4 then
             if 338 < x and x < 472 then

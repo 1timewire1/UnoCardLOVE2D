@@ -18,6 +18,7 @@ local Player = require("src.player")
 local NONE, RED, YELLOW = D.NONE, D.RED, D.YELLOW
 local DRAW2, REV, WILD, WILD_DRAW4, NUM0 = D.DRAW2, D.REV, D.WILD, D.WILD_DRAW4, D.NUM0
 local WILD_SWAP, WILD_PASS = D.WILD_SWAP, D.WILD_PASS
+local SWAP1, REFRESH_HAND = D.SWAP1, D.REFRESH_HAND
 local YOU, COM1, COM2, COM3 = D.YOU, D.COM1, D.COM2, D.COM3
 
 local Uno = {}
@@ -83,7 +84,7 @@ function Uno.new(assets, seed)
     local A = { "k", "r", "b", "g", "y" }
     local B = {
         "0", "1", "2", "3", "4", "5", "6", "7",
-        "8", "9", "+", "$", "@", "w", "w+", "sw", "ph",
+        "8", "9", "+", "$", "@", "w", "w+", "sw", "ph", "s1", "rf",
     }
 
     -- Load background & card back image resources
@@ -92,14 +93,26 @@ function Uno.new(assets, seed)
     self.bgClockwise = assets.load("bg_clockwise.png")
     self.backImage = assets.load("back.png")
 
-    -- Generate the card types. table[id] (0 ~ 53 for the base 108-card deck,
-    -- plus one wild-type card per optional-rule card, e.g. Swap Pack's
-    -- WILD_SWAP/WILD_PASS at 54/55 - see defs.lua's comment on why those
-    -- have to be wild-type).
+    -- Generate the card types. table[id]: 0 ~ 51 for the base 108-card
+    -- deck's colored cards (13 per color), 52 ~ 55 for Wild/Wild+4/Swap
+    -- Pack's wild-type cards (Wild Swap Hands/Wild Pass Hands - see
+    -- defs.lua's comment on why those have to be wild-type), and 56 ~ 63
+    -- for Swap Pack's colored cards (Swap 1/Refresh Hand - one id per
+    -- color, since they're ordinary colored cards like Draw Two).
     self.table = {}
-    for i = 0, 55 do
-        local a = i < 52 and math.floor(i / 13) + 1 or 0
-        local b = i < 52 and i % 13 or i - 39
+    for i = 0, 63 do
+        local a, b
+
+        if i < 52 then
+            a, b = math.floor(i / 13) + 1, i % 13
+        elseif i < 56 then
+            a, b = 0, i - 39
+        else
+            local j = i - 56
+
+            a, b = j % 4 + 1, 17 + math.floor(j / 4)
+        end
+
         local x = assets.load("front_" .. A[a + 1] .. B[b + 1] .. ".png")
         local y = assets.load("dark_" .. A[a + 1] .. B[b + 1] .. ".png")
         self.table[i] = Card.new(x, y, a, b)
@@ -189,7 +202,7 @@ function Uno.new(assets, seed)
     -- contentAnalysis[B]: how many cards in content B are used.
     self.colorAnalysis = { [0] = 0, 0, 0, 0, 0 }
     self.contentAnalysis = {}
-    for i = 0, 16 do
+    for i = 0, 18 do
         self.contentAnalysis[i] = 0
     end
 
@@ -519,19 +532,21 @@ end
 --- Find a card instance in card table.
 -- @return Corresponding card instance, or nil if the pair is invalid.
 function Uno:findCard(color, content)
-    local isWildType = content == WILD or content == WILD_DRAW4
-        or content == WILD_SWAP or content == WILD_PASS
+    if color == NONE then
+        local isWildType = content == WILD or content == WILD_DRAW4
+            or content == WILD_SWAP or content == WILD_PASS
 
-    if color == NONE and isWildType then
-        return self.table[39 + content]
-    elseif color ~= NONE and not isWildType then
+        return isWildType and self.table[39 + content] or nil
+    elseif content >= 17 then
+        return self.table[56 + (content - 17) * 4 + (color - 1)]
+    elseif content <= 12 then
         return self.table[13 * (color - 1) + content]
     end
 
     return nil
 end
 
---- Find a card instance in card table by card ID (0 ~ 55).
+--- Find a card instance in card table by card ID (0 ~ 63).
 function Uno:findCardById(id)
     return self.table[id]
 end
@@ -596,11 +611,21 @@ function Uno:calcLegality()
         for c = 0, 12 do
             legal[13 * (last - 1) + c] = true
         end
+        -- Swap 1 / Refresh Hand of the last color (see card.lua's id
+        -- formula: 56 + (content - 17) * 4 + (color - 1)).
+        legal[56 + (last - 1)] = true
+        legal[60 + (last - 1)] = true
     end
 
     if not card:isWild() then
-        for col = 0, 3 do
-            legal[13 * col + card.content] = true
+        if card.content >= 17 then
+            for col = 0, 3 do
+                legal[56 + (card.content - 17) * 4 + col] = true
+            end
+        else
+            for col = 0, 3 do
+                legal[13 * col + card.content] = true
+            end
         end
     end
 
@@ -620,7 +645,7 @@ function Uno:start()
 
     -- Clear the analysis data
     self.colorAnalysis = { [0] = 0, 0, 0, 0, 0 }
-    for i = 0, 16 do
+    for i = 0, 18 do
         self.contentAnalysis[i] = 0
     end
 
@@ -640,15 +665,18 @@ function Uno:start()
 
     -- Generate a temporary sequenced card deck. Zero cards have 1 copy,
     -- wild cards have 4 copies, the others have 2 copies. Swap Pack's cards
-    -- (54/55) only go in when that rule is enabled - 0 copies otherwise -
-    -- so they're not just unplayable but genuinely absent from the deck.
-    -- 4 copies each, matching the real Swap Pack add-on's card count.
-    for i = 0, 55 do
+    -- (54/55 wild-type at 4 copies each, 56-63 colored at 1 copy per color,
+    -- for 4 total of each) only go in when that rule is enabled - 0 copies
+    -- otherwise - so they're not just unplayable but genuinely absent from
+    -- the deck. Counts match the real Swap Pack add-on's card density.
+    for i = 0, 63 do
         card = self.table[i]
 
         local copies
         if card.content == WILD_SWAP or card.content == WILD_PASS then
             copies = self.swapPackRule and 4 or 0
+        elseif card.content == SWAP1 or card.content == REFRESH_HAND then
+            copies = self.swapPackRule and 1 or 0
         else
             copies = (card.content == WILD or card.content == WILD_DRAW4) and 4
                 or card.content == NUM0 and 1
@@ -965,6 +993,58 @@ function Uno:cycle()
     self.replay[#self.replay + 1] = "CY"
 end
 
+--- Swap Pack's Swap 1: take a random card from another player's hand and
+-- swap it with a random card from yours (unlike Wild Swap Hands, which
+-- exchanges the whole hand). Like draw(), only your own hand (YOU) needs to
+-- stay sorted for display - non-YOU hands are never shown card-by-card, so
+-- a plain append is enough there, and makePublic() below re-sorts + reveals
+-- your hand wholesale when you're on either side of the trade.
+-- @param a Who played the card, initiating the swap (0 ~ 3).
+-- @param b Whose hand to exchange one card with (0 ~ 3). Cannot be yourself.
+function Uno:swapOneCard(a, b)
+    local pa, pb = self.player[a], self.player[b]
+    local ia, ib = rand(1, #pa.handCards), rand(1, #pb.handCards)
+    local cardA, cardB = pa.handCards[ia], pb.handCards[ib]
+    local openA, openB = pa.open[ia], pb.open[ib]
+
+    table.remove(pa.handCards, ia)
+    table.remove(pa.open, ia)
+    table.remove(pb.handCards, ib)
+    table.remove(pb.open, ib)
+    pa.handCards[#pa.handCards + 1] = cardB
+    pa.open[#pa.handCards] = openB
+    pb.handCards[#pb.handCards + 1] = cardA
+    pb.open[#pb.handCards] = openA
+    if a == YOU or b == YOU then
+        makePublic(self, YOU)
+    end
+
+    self.replay[#self.replay + 1] = string.format("S1,%d,%d,%d,%d", a, b, cardA.id, cardB.id)
+end
+
+--- Swap Pack's Refresh Hand: put all of a player's cards under the draw
+-- pile (the bottom, so they won't reappear until the deck runs out and is
+-- reshuffled from the used pile), then draw the same number of new cards.
+-- No new replay opcode is needed for the redraw itself: draw() already logs
+-- a DR entry per card, exactly as if the player had drawn that many cards
+-- normally.
+-- @param who Whose hand to refresh (0 ~ 3).
+function Uno:refreshHand(who)
+    local p = self.player[who]
+    local count = #p.handCards
+
+    for i = #p.handCards, 1, -1 do
+        table.insert(self.deck, 1, p.handCards[i])
+    end
+
+    p.handCards = {}
+    p.open = {}
+    self.replay[#self.replay + 1] = string.format("RF,%d", who)
+    for _ = 1, count do
+        self:draw(who, true)
+    end
+end
+
 --- Save current game as a new replay file (in LOVE's save directory).
 -- @return Name of the saved file, or an empty string if save failed.
 function Uno:save()
@@ -1005,19 +1085,22 @@ function Uno:loadReplay(text)
             -- ST: Start a new game. Command format: ST,a,b,c
             -- a = 1 if in 2vs2 mode, otherwise 0
             -- b = players in game [2, 4]
-            -- c = start card's id [0, 51]
-            ok = #x > 3 and check(x[2], 0, 1) and check(x[3], 2, 4) and check(x[4], 0, 51)
+            -- c = start card's id: [0, 51] or [56, 63] (any non-wild card -
+            -- ids 52-55 are Wild/Wild+4/Swap Pack's wild-type cards, which
+            -- can never be a start card)
+            ok = #x > 3 and check(x[2], 0, 1) and check(x[3], 2, 4)
+                and (check(x[4], 0, 51) or check(x[4], 56, 63))
         elseif cmd == "DR" then
             -- DR: Draw a card from deck. Command format: DR,a,b
             -- a = who drew a card [0, 3]
-            -- b = drawn card's id [0, 55]
-            ok = #x > 2 and check(x[2], 0, 3) and check(x[3], 0, 55)
+            -- b = drawn card's id [0, 63]
+            ok = #x > 2 and check(x[2], 0, 3) and check(x[3], 0, 63)
         elseif cmd == "PL" then
             -- PL: Play a card. Command format: PL,a,b,c
             -- a = who played a card [0, 3]
-            -- b = played card's id [0, 55]
+            -- b = played card's id [0, 63]
             -- c = the following legal color [0, 4]
-            ok = #x > 3 and check(x[2], 0, 3) and check(x[3], 0, 55) and check(x[4], 0, 4)
+            ok = #x > 3 and check(x[2], 0, 3) and check(x[3], 0, 63) and check(x[4], 0, 4)
         elseif cmd == "DF" or cmd == "CH" then
             -- DF: Draw but failure. Command format: DF,a
             -- a = who drew but failure [0, 3]
@@ -1029,6 +1112,18 @@ function Uno:loadReplay(text)
             -- a = player A's id [0, 3]
             -- b = player B's id [0, 3]
             ok = #x > 2 and check(x[2], 0, 3) and check(x[3], 0, 3) and x[2] ~= x[3]
+        elseif cmd == "S1" then
+            -- S1: Swap Pack's Swap 1. Command format: S1,a,b,c,d
+            -- a = who initiated the swap [0, 3]
+            -- b = whose hand to exchange one card with [0, 3]
+            -- c = card id that moved from a to b [0, 63]
+            -- d = card id that moved from b to a [0, 63]
+            ok = #x > 4 and check(x[2], 0, 3) and check(x[3], 0, 3) and x[2] ~= x[3]
+                and check(x[4], 0, 63) and check(x[5], 0, 63)
+        elseif cmd == "RF" then
+            -- RF: Swap Pack's Refresh Hand. Command format: RF,a
+            -- a = whose hand to refresh [0, 3]
+            ok = #x > 1 and check(x[2], 0, 3)
         elseif cmd ~= "CY" then
             -- CY: Cycle, everyone pass hand cards to the next. Command: CY
             -- Other commands are all unknown commands
@@ -1088,7 +1183,7 @@ function Uno:forwardReplay()
         elseif s == "DR" then
             -- DR: Draw a card from deck. Command format: DR,a,b
             -- a = who drew a card [0, 3]
-            -- b = drawn card's id [0, 55]
+            -- b = drawn card's id [0, 63]
             local p = self.player[a]
             local i = 1
 
@@ -1103,7 +1198,7 @@ function Uno:forwardReplay()
         elseif s == "PL" then
             -- PL: Play a card. Command format: PL,a,b,c
             -- a = who played a card [0, 3]
-            -- b = played card's id [0, 55]
+            -- b = played card's id [0, 63]
             -- c = the following legal color [0, 4]
             local p = self.player[a]
             local i = 1
@@ -1136,6 +1231,53 @@ function Uno:forwardReplay()
             -- a = player A's id [0, 3]
             -- b = player B's id [0, 3]
             self.player[a], self.player[b] = self.player[b], self.player[a]
+        elseif s == "S1" then
+            -- S1: Swap Pack's Swap 1. Command format: S1,a,b,c,d
+            -- a = who initiated the swap [0, 3]
+            -- b = whose hand to exchange one card with [0, 3]
+            -- c = card id that moved from a to b [0, 63]
+            -- d = card id that moved from b to a [0, 63]
+            local pa, pb = self.player[a], self.player[b]
+            local d = x[5] and tonumber(x[5]) or 0
+            local cardC, cardD = self.table[c], self.table[d]
+
+            for i = #pa.handCards, 1, -1 do
+                if pa.handCards[i] == cardC then
+                    table.remove(pa.handCards, i)
+                    break
+                end
+            end
+
+            for i = #pb.handCards, 1, -1 do
+                if pb.handCards[i] == cardD then
+                    table.remove(pb.handCards, i)
+                    break
+                end
+            end
+
+            local function insertById(p, cd)
+                local i = 1
+
+                while i <= #p.handCards and p.handCards[i].id < cd.id do
+                    i = i + 1
+                end
+
+                table.insert(p.handCards, i, cd)
+            end
+
+            insertById(pa, cardD)
+            insertById(pb, cardC)
+        elseif s == "RF" then
+            -- RF: Swap Pack's Refresh Hand. Command format: RF,a
+            -- a = whose hand to refresh [0, 3]
+            local p = self.player[a]
+
+            for i = #p.handCards, 1, -1 do
+                table.insert(self.deck, 1, p.handCards[i])
+            end
+
+            p.handCards = {}
+            p.open = {}
         elseif s == "CY" then
             -- CY: Cycle, everyone pass hand cards to the next. Command: CY
             local curr, nxt = self.now, self:getNext()
