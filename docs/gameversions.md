@@ -177,16 +177,26 @@ board.
 ### A12. Digital-only precedents worth stealing
 
 Several existing UNO video games/apps already did the "toggle a bunch of house rules" thing this
-project wants to build, and their menus are good prior art:
+project wants to build, and their menus are good prior art. **Part E is a full deep-dive research pass**
+on every digital-only title in this survey (exact card names/effects, not just "has some DLC cards") -
+this section is just the headline takeaways:
 
-* **Uno (Ubisoft, #115)** and its many DLC packs (#118-123, #386) ship a combinable "house rules"
-  toggle set, exactly the shape being planned here.
-* **Uno Mobile (Mattel163, #374)** exposes named toggles like "Discard All" and "Stack" as
-  independent options (minus its real-money wagering mode, which is **out of scope** for this
-  project regardless of mechanical simplicity).
+* **Uno (Ubisoft, #115)** and its many DLC packs (#118-123, #386, #390) ship a combinable "house rules"
+  toggle set, exactly the shape being planned here. Confirmed toggles: Stacking, 7-0, Jump-In (high
+  confidence); Draw to Match, Force Play, No Bluffing (medium confidence, plausible but not verified
+  against the actual options menu). See Part E2.
+* **Uno Mobile (Mattel163, #374)** exposes 7 named house-rule toggles as independent options (Stack,
+  Jump-in, 7-0, No Bluffing, Progressive, Draw to Match, Force Play - a near-exact match for the shape
+  of this codebase's own settings menu), minus its real-money wagering mode, which is **out of scope**
+  for this project regardless of mechanical simplicity. See Part E3.
 * **Uno 2 Go / Uno Wonder (#375)** and **Uno & Friends (#376, #243)** show that a "career/tournament"
-  progression mode and simple companion-power mechanics are popular digital-only additions worth
-  considering as separate features from the historical-versions survey itself.
+  progression mode and companion-power mechanics are popular digital-only additions. Uno & Friends'
+  companions in particular are a genuine gameplay system (limited-use active powers, not cosmetic) worth
+  studying as a template for an optional "character power" framework (see A7/C's Tier 3 roadmap note).
+  See Part E3.
+* **Uno Undercover (#235)**'s 9 power-up cards, **Uno CD-ROM (#236)**'s hand-size-hiding Spy Card, and
+  **Uno Famicom's (#364)** Board Game mode are the most structurally novel finds of the whole digital
+  research pass - none of them are just reskins with a bonus wild card. See Part E4.
 
 ### A13. Never-released ideas
 
@@ -460,17 +470,17 @@ on RESKIN entries in bulk.
 | 110 | Uno Blast | MECHANIC | Attack-family variant with a slot-choice risk mechanic. |
 | 111 | Uno Eye Eye Spongebob! | MECHANIC | Eyes-spin randomizer/targeter. See A5. |
 | 112 | Uno Triple Play Stealth | MECHANIC | Triple Play with hidden overload warnings. See A5. |
-| 113 | Uno (Xbox 360) | DIGITAL-ONLY | Standard/Partner/House Rules modes, ranked play, downloadable decks. |
-| 114 | Uno (Gamesloft) | DIGITAL-ONLY | 15-round unlock-progression career mode. |
-| 115 | Uno (Ubisoft) | DIGITAL-ONLY | Base for many DLC packs; combinable house-rules toggles, 2v2 online. See A12. |
-| 116 | Uno 35th Anniversary (Xbox 360) | DIGITAL-ONLY | Free DLC deck, minor added rule card. |
-| 117 | Uno Super Street Fighter 2 Turbo HD Remix | DIGITAL-ONLY | XBLA DLC deck with a bespoke "Hadouken" card. |
-| 118 | Uno Rabbids | DIGITAL-ONLY | Ubisoft DLC, 4 unique action cards. |
-| 119 | Uno Just Dance 2017 | DIGITAL-ONLY | Ubisoft DLC, all-players-simultaneously effects. |
-| 120 | Uno Rayman | DIGITAL-ONLY | Ubisoft DLC, 4 unique action cards. |
-| 121 | Uno Fenyx's Quest | DIGITAL-ONLY | Ubisoft DLC, selectable passive "god blessing" powers. |
-| 122 | Uno The Call of Yara | DIGITAL-ONLY | Ubisoft DLC, "Pesos" economy + character abilities. |
-| 123 | Uno Valhalla | DIGITAL-ONLY | Ubisoft DLC, full board + resource collection. |
+| 113 | Uno (Xbox 360) | DIGITAL-ONLY | Dev. Carbonated Games/Microsoft (not Gameloft). Standard/Partner/House Rules modes, ranked play, downloadable decks, literal webcam video chat. See Part E1. |
+| 114 | Uno (Gameloft) | DIGITAL-ONLY | 15-round unlock-progression career mode; same product line as #241/#243. See Part E3. |
+| 115 | Uno (Ubisoft) | DIGITAL-ONLY | Base for many DLC packs; combinable house-rules toggles, 2v2 online. See A12, Part E2. |
+| 116 | Uno 35th Anniversary (Xbox 360) | DIGITAL-ONLY | Free DLC deck; "35" card forces next player to play a 3 or 5 or draw-and-miss-turn. See Part E1. |
+| 117 | Uno Super Street Fighter 2 Turbo HD Remix | DIGITAL-ONLY | XBLA DLC deck with a bespoke "Hadouken" card (open-ended draw penalty). See Part E1. |
+| 118 | Uno Rabbids | DIGITAL-ONLY | Ubisoft DLC, 4 named unique action cards. See Part E2. |
+| 119 | Uno Just Dance 2017 | DIGITAL-ONLY | Ubisoft DLC, 4 named all-players-simultaneously cards. See Part E2. |
+| 120 | Uno Rayman | DIGITAL-ONLY | Ubisoft DLC, 4 named unique action cards. See Part E2. |
+| 121 | Uno Fenyx's Quest | DIGITAL-ONLY | Ubisoft DLC, 4 selectable passive "god blessing" powers (low-confidence effect text). See Part E2. |
+| 122 | Uno The Call of Yara | DIGITAL-ONLY | Ubisoft DLC, "Pesos" economy + 4 named character abilities + 1 new card. See Part E2. |
+| 123 | Uno Valhalla | DIGITAL-ONLY | Ubisoft DLC, full board + cargo/perks/events - biggest structural departure of any Ubisoft pack. See Part E2. |
 | 124 | Uno Teenage Mutant Ninja Turtles (Team Attack) | MECHANIC | "Team Attack" multi-card discard wild. See A3. |
 | 125 | Uno Nickelodeon Spongebob Squarepants | RESKIN | Cosmetic reskin, standard UNO rules. |
 | 126 | Uno Nickelodeon Spongebob Squarepants Special Edition (2002) | RESKIN | Cosmetic reskin, standard UNO rules. |
@@ -587,16 +597,16 @@ on RESKIN entries in bulk.
 | 232 | Uno WWE (2010) | UNKNOWN | Plausibly the same "Locked Up" mechanic; unconfirmed. |
 | 233 | Uno Nascar (2005) | MECHANIC | "Drafting" bonus-plays wild. See A8. |
 | 234 | Uno X Games | MECHANIC | Renamed action-card set with several new effects. See A8. |
-| 235 | Uno Undercover | DIGITAL-ONLY | Secret-agent story/mission mode over standard rules. |
-| 236 | Uno CD-ROM | DIGITAL-ONLY | 1990s PC port; digital-only AI/settings value only. |
-| 237 | Uno Game Boy Color | DIGITAL-ONLY | Adds a point-elimination "Challenge" mode + Link Cable multiplayer. |
+| 235 | Uno Undercover | DIGITAL-ONLY | Dev. Golden Goose/RealArcade, PC only (no DS version - that's a separate plain Gameloft port). Standard deck + 9 named "power-up cards," some played as 2-card combos. See Part E4. |
+| 236 | Uno CD-ROM | DIGITAL-ONLY | Mattel Media/Interactive, ~1999-2002. Adds Spy Card (hides your hand-size from opponents) + Mutant/Shark Cards (names known, effects undocumented). See Part E4. |
+| 237 | Uno Game Boy Color | DIGITAL-ONLY | Dev. HotGen (not Genki), 1999. Adds a Challenge mode that inverts scoring: reaching a point ceiling eliminates you instead of winning. See Part E4. |
 | 238 | Uno + Skip-Bo 2 Game Pack (Game Boy Advance) | RESKIN | Two unmodified separate games bundled on one cartridge. |
 | 239 | Uno Free Fall (Game Boy Advance) | DIFFERENT-GAME | Falling-block tile-matching puzzle game. See A10. |
 | 240 | Uno Free Fall (Java Mobile Game) | DIFFERENT-GAME | Same falling-block puzzle mechanic as #239. |
-| 241 | Uno (Java Mobile Game) (2009) | DIGITAL-ONLY | Adds Quick Play, Tournament, Custom Game modes. |
+| 241 | Uno (Java Mobile Game) (2009) | DIGITAL-ONLY | Gameloft; same product line as #114. Quick Play/Tournament (5 escalating rounds)/Custom Game (9 toggleable rules, only 2 named). See Part E3. |
 | 242 | Uno Spin (Java Mobile Game) | MECHANIC | Digital Uno Spin wheel mechanic. See A5. |
-| 243 | Uno & Friends (Java Mobile Game) (2012) | DIGITAL-ONLY | Career/World Tour mode + Hot Seat multiplayer. |
-| 244 | Uno DirecTV Game Lounge | DIGITAL-ONLY | Interactive-TV port; no unique rule beyond delivery method. |
+| 243 | Uno & Friends (Java Mobile Game) (2012) | DIGITAL-ONLY | Gameloft, distinct from the 2013 online version (#376). "Uno World Tour" (6 venues x 5 stages, some stages are non-UNO minigames) + Hot Seat. See Part E3. |
+| 244 | Uno DirecTV Game Lounge | DIGITAL-ONLY | Dev. Denki, interactive-TV port; no unique rule found beyond delivery method. See Part E4. |
 | 245 | Uno Paw Patrol (2015) | RESKIN | Cosmetic reskin, standard UNO rules. |
 | 246 | Uno Mickey Mouse and Friends (2017) | RESKIN | Cosmetic reskin, standard UNO rules. |
 | 247 | Uno South Park | RESKIN | Cosmetic reskin, standard UNO rules. |
@@ -726,9 +736,9 @@ on RESKIN entries in bulk.
 | 361 | Uno Platica Polinesia | MECHANIC | "¡Mira!" wild forces draws unless holding a token card. |
 | 362 | Uno Junior Move! | MECHANIC | Tiered difficulty + "Move!" physical-action cards. See A6/A8. |
 | 363 | Uno Boost | UNKNOWN | Could not verify details. |
-| 364 | Uno Famicom / Super Uno | DIGITAL-ONLY | Japan-only Super Famicom port; adjustable rules/players. |
+| 364 | Uno Famicom / Super Uno | DIGITAL-ONLY | Dev. Tomy, 1993, Japan-only. Up to 6 players, official +2/+4 stacking predating Mattel's own house rules, and a Board Game mode (5 boards, items, UNO-hands-as-battles). See Part E4. |
 | 365 | Uno Stacko (1994) | DIFFERENT-GAME | Original Jenga-style block tower + die. See A10. |
-| 366 | Uno Rush | DIGITAL-ONLY | Timed, visible-hands XBLA mode + shuffle card. |
+| 366 | Uno Rush | DIGITAL-ONLY | Dev. Carbonated Games, 2009. Auto-plays a pre-sorted hand under time pressure, all hands visible, + a Shuffle card. See Part E1. |
 | 367 | Uno Arby's Get Wild 4 Uno Plus Glow-In-The-Dark Stickers | RESKIN | Promo decks + "make your own wild" stickers, standard rules. |
 | 368 | Uno House Rules | MECHANIC | Standalone player-authored dynamic rule-set. See A1/A5. |
 | 369 | Uno Deluxe House Rules | MECHANIC | Jump-In, Seven-O, Progressive baked into the ruleset. See A1. |
@@ -736,9 +746,9 @@ on RESKIN entries in bulk.
 | 371 | Uno The Batman (2006) | RESKIN | Cosmetic reskin, standard UNO rules. |
 | 372 | Uno Ito Family's Dining Table | MECHANIC | Bonus 14-card set of 12 alternate house-rule variants. |
 | 373 | Uno Sudoku | DIFFERENT-GAME | UNO-branded Sudoku puzzle. See A10. |
-| 374 | Uno Mobile (Mattel163) | DIGITAL-ONLY | House-rule toggles + Survival mode (wagering excluded, see roadmap). |
-| 375 | Uno 2 Go / Uno Wonder | DIGITAL-ONLY | Handheld/app with 9 new action cards + Story Mode. |
-| 376 | Uno & Friends (Online) | DIGITAL-ONLY | Tournaments, 2v2 teams, companion characters, leaderboards. |
+| 374 | Uno Mobile (Mattel163) | DIGITAL-ONLY | 7 named house-rule toggles + Ranked/2v2 modes (wagering excluded, see roadmap); "Survival" mode could not be confirmed to exist. See Part E3. |
+| 375 | Uno 2 Go / Uno Wonder | DIGITAL-ONLY | Same game, renamed on 2025 global launch. 9 named new action cards + 14-route/3000+-level Story Mode. See Part E3. |
+| 376 | Uno & Friends (Online) | DIGITAL-ONLY | Gameloft 2013, distinct from the 2012 version (#243). Tournaments, 2v2, ~31 companions with real activatable powers, leaderboards. See Part E3. |
 | 377 | Eres Un Experto Jugando A UNO Showdown? (Flash Game) | UNKNOWN | Likely a promotional trivia/skill mini-game, not full rules. |
 | 378 | Uno Show 'Em No Mercy Expansion Pack | MECHANIC | More No Mercy power cards. See A2. |
 | 379 | Uno Golf | DIFFERENT-GAME | Face-down grid-based scoring variant. See A9. |
@@ -746,8 +756,8 @@ on RESKIN entries in bulk.
 | 381 | Uno Spin (2025) | MECHANIC | Refreshed Spin wheel outcomes. See A5. |
 | 382 | Uno Spin Adults Only | MECHANIC | Adult Spin outcomes incl. dares. See A5/A8. |
 | 383 | Uno Braille | ACCESSIBILITY | Braille + colorblind-friendly icon markings. See A11. |
-| 384 | Radica: Uno 360 | DIGITAL-ONLY | Electronic handheld, standard rules digitized. |
-| 385 | Uno SuperLite 2000 Vol. 16 Game | DIGITAL-ONLY | Budget PS2 port, standard rules. |
+| 384 | Radica: Uno 360 | DIGITAL-ONLY | NOT standard rules digitized - 4 discard piles selected by physically rotating the handheld, plus a timed UNO-call penalty. Same family as Triple Play (A5). See Part E4. |
+| 385 | Uno SuperLite 2000 Vol. 16 Game | DIGITAL-ONLY | Japan-only budget PS2 reissue (Success), anime art/VO added; no rule difference found. See Part E4. |
 | 386 | Uno Party Mania! | MECHANIC | Ubisoft DLC: Point Taken, Wild Drawn Together, Wild Pile Up. |
 | 387 | Uno Disney Princess (2002) | RESKIN | Cosmetic reskin, standard UNO rules. |
 | 388 | Uno Harry Potter (2003) | RESKIN | Cosmetic reskin, standard UNO rules. |
@@ -763,10 +773,10 @@ on RESKIN entries in bulk.
 | 398 | Uno Magic Tree House | RESKIN | Cosmetic reskin, standard UNO rules. |
 | 399 | Uno Pocket Sunset Boulevard | UNKNOWN | Likely a promotional pocket-tin tie-in, unverified. |
 | 400 | Uno Master | MECHANIC | Likely shorthand for Masters of the Universe's "Power of Greyskull" card. |
-| 401 | Uno Xbox 360 Live | DIGITAL-ONLY | Online play, webcam opponent view, downloadable theme decks. |
+| 401 | Uno Xbox 360 Live | DIGITAL-ONLY | Not a separate SKU - these are features of #113's same 2006 release (literal webcam video chat + 4 enumerated theme decks). See Part E1. |
 | 402 | Uno McDonald's 2007 | RESKIN | Cosmetic reskin, standard UNO rules. |
 | 403 | Uno ColorADD | ACCESSIBILITY | Colorblind ColorADD symbol markings. See A11. |
-| 404 | Uno Arcade Edition (Apple Arcade) | DIGITAL-ONLY | Single Player/Quick Match/Custom Games with new cards. |
+| 404 | Uno Arcade Edition (Apple Arcade) | DIGITAL-ONLY | Dev. Mattel163, June 2025. Single Player/Quick Match/Custom Games; new cards incl. Wild Swap Hands, Double Discard All. See Part E3. |
 | 405 | Uno Teams! | MECHANIC | Deeper 2v2 team play with card-passing/pooled hands. See A3. |
 | 406 | Uno Show 'Em No Mercy Deadpool | MECHANIC | New "Wild Reverse Draw Ten" card for the No Mercy ruleset. |
 | 407 | Uno Show 'Em No Mercy Deadpool Reverse Draw 10 Promo Card | MECHANIC | Reverse + draw-10 combined effect. |
@@ -859,5 +869,444 @@ See Part B above for the full table.
 
 ---
 
+## Part E — Digital-only deep dive
+
+A dedicated research pass on every `DIGITAL-ONLY`-tagged title in Part D, at the user's request: instead
+of "has some DLC cards," this documents the actual card names, exact effects, and rule structures, so
+any of these can be properly scoped for implementation later. Produced by four parallel research agents
+(one per sub-section below), each independently hitting the same environment limitation: direct page
+fetches (Wikipedia, Fandom wikis, GameFAQs, app stores, official Ubisoft/Xbox pages) were blocked by
+this session's network egress policy, so every finding below comes from web-search result synthesis
+rather than a verified raw read of the source page. Confidence is tagged per finding:
+
+* **HIGH** — corroborated across 2+ independent sources/searches with consistent wording.
+* **MED** — a specific, detailed claim from a source that reads as reliable, but not independently
+  cross-checked against a second source.
+* **LOW** — a name or general claim is confirmed, but exact effect text/wording is inferred, ambiguous
+  between sources, or single-sourced from a fan site. Treat as "needs verification before relying on it,"
+  not as confirmed fact.
+
+Corrections this pass made to Part D's existing entries (developer misattributions, wrong dates,
+conflated titles, wrong "standard rules" assumptions) are applied directly to those rows above; this
+section is the supporting detail.
+
+### E1. Xbox 360 / Xbox Live family (#113, #116, #117, #366, #401)
+
+**Correction:** all of these are developed by **Carbonated Games**, published by **Microsoft Game
+Studios** — not Gameloft (Gameloft made an unrelated 2008 iPod/iPhone UNO). And **#401 "Uno Xbox 360
+Live" is not a separate release** — no evidence of a distinct SKU exists; online play, ranked matches,
+webcam, and the downloadable theme decks are all features of the one 2006 release (#113). Recommend
+merging #401 into #113 if this doc is ever restructured.
+
+**#113 — UNO (Xbox 360/XBLA base game).** Released May 9, 2006, 400 Microsoft Points. Standard 108-card
+deck; no structural deck change in the base game (deck changes come only from DLC below). HIGH.
+
+Modes: **Standard** (normal play), **Partner** (2v2 with the player across from you, to 250 points,
+MED), **House Rules** (marketed as "customize 10 different game rules"; only 3 specific toggles could be
+sourced - win-condition point threshold, Wild Draw Four challenge on/off, Draw Two penalty count, MED;
+achievement text confirms 3+ toggleable rules exist, consistent with ~10, but the full list wasn't
+found). A YouTube title suggesting a 4th "Elimination" mode conflicts with the 3-mode framing most
+sources give — unresolved, LOW. Xbox Live supported Ranked/Quick/Player match types, MED-HIGH.
+
+**Webcam feature is real**, not a UI flourish: UNO was a flagship launch title for the Xbox 360 Live
+Vision camera (Sept 2006) and showed literal live video of your opponents' faces during play — well
+documented, including its infamy for attracting inappropriate content shortly after launch. HIGH.
+
+Downloadable theme decks for the base game (4 total, per one aggregated source - no purely-cosmetic deck
+was found, every one added at least one new card):
+* **Project Gotham Racing 3 Theme Deck** (100 MSP, Sept 2006) — new backgrounds/music/art, plus a
+  **"Gotham Live"** card: lets you look at any other player's hand, while also functioning as a normal
+  Wild. HIGH.
+* **Kameo: Elements of Power Theme Deck** (100-150 MSP, price disputed between sources; Nov 2006) — an
+  unnamed card that lets the player **swap their entire hand with any other player's**. Only the lobby
+  host needs to own the deck for the whole table to use it. HIGH on mechanic, LOW on exact price.
+* **UNO 35th Anniversary Theme Deck** (#116, free, ~2006) — one added **"35" card**: the next player
+  must play a 3 or a 5 of any color, or draw a card and miss their turn. A constraint card, not a direct
+  attack. MED-HIGH.
+* **UNO Super Street Fighter II Turbo HD Remix Theme Deck** (#117, 280 MSP, ~late 2008) — character
+  portraits, Sagat's HD Remix stage as background/music. The **Hadouken card**: target one opponent, who
+  must then draw continuously until they draw a "Block" or "Jump" card (i.e. until they hit the deck's
+  Skip- or Reverse-equivalent) — an open-ended draw penalty, not a fixed count. Skip/Reverse in this deck
+  appear to be thematically renamed "Block"/"Jump" (MED, inferred from phrasing, not an explicit
+  statement); if so, Hadouken is the only mechanically-new card in the deck.
+
+**#366 — UNO Rush (XBLA).** Released March 25, 2009 ("Days of Arcade" promo), same developer. Not a
+straight 108-card deck: 7 cards each numbered 0-9 in one of 4 colors, plus standard action cards (Skip,
+Draw Two, Reverse, Wild, Wild Draw Four) and a new **Shuffle** card — a rebalanced pool built for speed
+play. MED.
+
+The **"timed" mode is a hybrid, not a countdown bar or free-form reflex play**: on your turn, the game
+auto-plays from the front of your (player-ordered) hand — if the front card is legal it plays
+automatically, and if the next card also combos (matches color/number in sequence) it auto-chains, and
+so on. Your actual input during other players' turns is **re-ordering your hand** so the front is a
+legal/optimal play when your turn arrives (reviewers describe "about five seconds" to do this,
+approximate). A well-arranged hand can play its whole hand in one turn. MED-HIGH, consistent across
+several independent reviews.
+
+**"Visible hands"**: every player's hand is shown face-up to everyone for the whole round — purely
+informational (helps you plan the reordering above), does not grant jump-in or change legality. MED-HIGH.
+
+**Shuffle card**: styled like a Draw Four in a distinct color. Shuffles the **next player's** hand into
+random order **and** skips their turn — a direct attack on Rush's core "keep your hand pre-sorted"
+strategy, on top of the skip. ("Scramble" in one achievement-guide source is the same card, not a second
+one.) HIGH, corroborated across 3 independent paraphrases.
+
+Modes: **Traditional/Standard**, **Partner/Pairs** (2v2), **Elimination** (must play a card or take a
+strike; 3 strikes = eliminated from the round). The timed/visible-hands ruleset is the underlying engine
+across all three, not a separate 4th mode — if this doc's earlier "timed, visible-hands mode" framing
+implied a single mode, that's imprecise; better read as "Rush's core ruleset" with these 3 as the mode
+select on top. MED.
+
+Biggest open questions: the complete 10-toggle House Rules list for #113, whether Elimination is a real
+4th top-level mode there, exact Kameo deck price, exact 35th Anniversary/Street Fighter release dates,
+and whether Block/Jump are literally renamed Skip/Reverse.
+
+### E2. Ubisoft family (#115, #118-123, #386, #390)
+
+**#115 — UNO (Ubisoft base game, 2016).** PS4/Xbox One Aug 2016, PC Dec 2016, Switch Nov 2017. Dev.
+Ubisoft Chengdu. Standard 108-card deck. Markets its house rules as explicitly **combinable** ("combine
+Jump-In and Stacking or 7-0 swaps to create your perfect kind of chaos"). Confirmed toggles: **Stacking**
+(Draw Two/Wild Draw Four stack, penalty passes on), **7-0** (7 swaps hands with a chosen opponent, 0
+passes all hands one seat), **Jump-In** (play an exact match out of turn) — these 3 are HIGH confidence,
+cited by Mattel itself as the "classic" fan-contest house rules. **Draw to Match**, **Force Play**, **No
+Bluffing** (disables the Wild Draw Four challenge) are also referenced as being among "six combinable
+house rules" for this game but couldn't be verified against the actual in-game menu — MED.
+
+**#118 — Uno Rabbids DLC.** 4 cards, HIGH confidence on names, MED-HIGH on effects:
+* **Comin' Through** — 5 cards randomly distributed from your hand to opponents, then 5 more randomly
+  redistributed among everyone including you.
+* **Explosive Results** — next forced-to-draw player draws 4 total.
+* **Hurry Up!** — for several turns, each player must act within 3 seconds or draws a card and is
+  skipped.
+* **Wild Blue Yonder** — cancels an incoming Draw Two/Wild Draw Four; with no pending penalty to block,
+  functions as a normal Wild.
+
+**#119 — Uno Just Dance 2017 DLC.** 4 cards, distinguishing trait: affects **all players at once**
+rather than one target. HIGH names, MED-HIGH effects:
+* **Just Dance Machine** — every player gets a random "experiment" card triggering a random action.
+* **Scream & Shout** — every player except whoever has the lowest card count must randomly discard down
+  to match that lowest count.
+* **Lean On** — each player swaps hands with the player seated directly across from them.
+* **Worth It** — for a duration, only number cards may be played, table-wide.
+
+**#120 — Uno Rayman DLC.** 4 cards, HIGH names, MED-HIGH effects:
+* **Dragon** — takes every player's hand, shuffles, redistributes randomly.
+* **Punching Things** — reflects an incoming Draw Two/Wild Draw Four back at whoever played it, at
+  double the penalty.
+* **Escape** — peek at one opponent's hand; hides your own hand count from everyone until you call Uno.
+* **A Little Help** — duplicates the effect/appearance of the current top discard card (a free copy).
+
+**#121 — Uno Fenyx's Quest DLC** (Immortals Fenyx Rising, Jan 2021). Adds a "Golden Isle" board element:
+playing 5 cards frees a chosen god, granting a passive blessing for the rest of the match. **LOW
+confidence on exact effects** (single uncorroborated search synthesis):
+* **Aphrodite** — immunity to "Typhon" damage/penalty effects (exact trigger unconfirmed).
+* **Hephaistos** — every 3 cards you play, discard all your cards of one chosen color.
+* **Athena** — when an opponent draws due to no legal play, they must discard a random card.
+* **Ares** — each time any card is played, two random cards of that color are discarded (scope —
+  own hand vs. table-wide — ambiguous).
+
+**#122 — Uno The Call of Yara DLC** (Far Cry 6, ~Oct 2021, $5 standalone). Genuinely structural: adds a
+**Pesos economy** (7 cards + 300 Pesos to start, +100 Pesos each turn) spendable on 4 named character
+abilities, plus 1 new card. MED-HIGH:
+* **Dani Rojas** — 500P: chosen player draws 1-6 cards. 800P: ALL other players draw 1-6.
+* **Philly Barzaga** — 600P: combine 4 colors into an instantly-playable Wild. 1000P: same, but a Wild
+  Draw Four.
+* **Juan Cortez** — 600P: discard 1-3 of your own cards. 1300P: discard 4-6.
+* **Lucky Mama** — 200P: block one chosen player from a "service" next turn. 400P: block ALL others.
+* **Guerrilla Recorder** (new card) — randomly affects every player's Pesos: each may gain a large sum
+  or lose their entire stash.
+
+**#123 — Uno Valhalla DLC** (Assassin's Creed Valhalla, ~April 2022). **The single biggest structural
+departure of any digital-only UNO found in this whole pass** — Ubisoft's own PR: "for the first time in
+UNO, the board becomes part of the gameplay." Discarding cards moves you across a physical board;
+movement collects **cargo**, spendable on **perks** (including slowing opponents); a **Longboat** passive
+lets enough cargo discard multiple cards at once; random board **events** (e.g. "Glory Regained"/"Raid"
+— steal 2 cargo from an opponent, possibly two distinct events, not fully disambiguated); a new
+**Eivor's Raven** card lets you travel to any board area to claim a reward, bypassing normal movement;
+cargo can also be spent to start a "card fight" to slow an opponent. **Exact win condition and
+cargo/perk costs are unconfirmed** — no source gave a full rules breakdown. MED-HIGH on mechanics
+existing, LOW-MED on exact rules. Flag for follow-up before ever prioritizing this one.
+
+**#386 — Uno Party! Mania DLC** (July 2024, $4.99 standalone). **3** new action cards, not 4 (confirmed
+by 2 independent searches — if any existing doc text implied a 4th card, that was wrong). HIGH names and
+effects:
+* **Point Taken** — every player points at one other player; each player then draws one card per
+  finger currently pointed at them (stackable, multi-target accusation).
+* **Wild Drawn Together** — choose a new color (standard Wild) and link two players; for the rest of
+  the game, whenever either linked player draws, the other must draw the same amount too.
+* **Wild Pile Up** — starts a "mini-pile" seeded from the top of the draw pile; players take turns
+  adding a matching-color card to pass it along; whoever can't continue absorbs the whole mini-pile.
+
+**#390 — Uno Show 'Em No Mercy DLC** (Ubisoft, Oct 2025). **Verdict: a digital port/adaptation of
+Mattel's existing tabletop "UNO Show 'Em No Mercy"/"No Mercy" ruleset, not a digital-only invention** —
+rules and cards match the known physical variant closely, and no source describes anything unique to
+the digital version specifically. Confirmed rules (HIGH): **Mercy** (25+ cards in hand = eliminated),
+**Draw Until You Can Play**, **7's Swap** (whole-hand swap), **0's Pass** (everyone passes hands).
+Marketing cites "six super-tough action cards"; cross-referencing tabletop No Mercy sources, likely Wild
+Reverse Draw 4, Wild Draw 6, Wild Draw 10, Wild Color Roulette ("sad face" — next player names a color,
+flip draw-pile cards until it appears, take all revealed, lose turn), Skip Everyone, and probably a
+Discard-All matching-color card — MED on the complete 6-card list. Win conditions: empty-hand-first OR
+elimination via the 25-card Mercy threshold.
+
+### E3. Mobile / handheld family (#114, #241, #243, #374, #375, #376, #404)
+
+**Two collapsing notes:** #114 and #241 are the **same Gameloft product** at different points in its
+life (2008 J2ME/BREW/Symbian build → 2009+ iPhone/iPod/Android/"UNO HD" build), not two separate games.
+Likewise #375's "Uno 2 Go" (Dec 2022 soft-launch) was **renamed "UNO Wonder"** for its Sept 2025 global
+launch — same cruise theme, same 9 cards, same Story Mode, one release not two. (#243 and #376 *are*
+genuinely distinct Gameloft releases — a 2012 offline feature-phone build and a 2013 online rebuild —
+confirmed via separate MobyGames listings.)
+
+**#114/#241 — UNO (Gameloft mobile).** Standard 108-card deck; customization is at the rules level.
+**Career mode**: exactly 15 rounds, sequential, up to 5 attempts per round; what changes round-to-round
+is procedural difficulty (opponent count, active house-rule set, win condition), not new decks/named
+opponents — progression rewards are cosmetic/meta only (icons, backgrounds, avatars). MED-HIGH.
+**Tournament mode**: exactly 5 rounds, same escalating-rules engine as Career, just shorter. MED-HIGH.
+**Custom Game mode**: 9 toggleable rules total; only **7-0** and **Jump-in** confirmed by name (same
+definitions as elsewhere); the other 7 weren't individually named in any accessible source. HIGH that
+it's 9 rules including these two, LOW on the rest.
+
+**#243 — Uno & Friends (2012, Gameloft, feature-phone/offline).** Career mode = **"Uno World Tour"**: 6
+venues x 5 stages = 30 stages; 1-3 stars per stage gate the next venue; some stages are mini-games
+sharing only card *imagery* with UNO (e.g. memory-matching), not real UNO rules. **Hot Seat**:
+pass-and-play for up to 4 on one device. MED-HIGH.
+
+**#376 — Uno & Friends (2013, online, Gameloft+Mattel).** Single-player content was later entirely
+replaced by online multiplayer-only (up to 4 worldwide). Two currencies: **Tokens** (match/tournament
+entry, 2 per basic game, earned via win streaks/daily ads or bought) and **Coins** (cosmetics/boosts,
+earned via match points or bought).
+
+Boosts (per-match activatable perks), full named list, HIGH confidence:
+**Shield** (respond to an incoming Draw 2/4 with a card to block it), **Snare** (activates the first
+time you're Skipped/Reversed), **Safety Net** (5 cards instead of 6+ once the match timer hits 30s),
+**50% Bonus** (+50% points that match), **New Hand** (swap your whole hand once per game), **Dampener**
+(halves cards drawn from a Draw 2/4 hit against you), **Mirror** (whoever plays a Draw 2/4 on you also
+draws), **Spy** (see other players' hands), **Overdraw** (opponents draw 2 instead of 1 when they can't
+play — a global modifier, not a personal buff).
+
+**Companion characters are mechanically real, not cosmetic-only** (the key question asked): ~31
+companions, each with an **active special power usable a limited number of times per match** (example
+cited: makes a random player draw a card when a specified card is played). Use-count scales with
+companion level: 1 use/game at levels 1-4, 2 at levels 5-9, 3 at level 10 ("Ultimate Ability"); leveled
+by winning or buying duplicates (10 copies = max level). A genuine gameplay-affecting
+passive-with-limited-triggers system. MED-HIGH, single-sourced but internally consistent and detailed.
+
+A later update added a **"Team UNO" 2v2 mode** (confirmed via a period YouTube title) — exact rules text
+not found for Gameloft's version specifically (inferred by analogy to Mattel163's 2v2, see below). MED
+mode exists, LOW on exact rules. Also found: **Uno Dare** (unlocks 12 collectible avatars) and **Uno
+Journey** (separate progression track with named sub-journeys — Tiki Twist, Mine, Arctic — 20-30 levels
+each).
+
+**#374 — Uno Mobile / "UNO!™" (Mattel163).** Live service since ~2019-2020, still active (a Dec
+2025-Feb 2026 Sanrio collab was found in search). Note: Mattel recently bought out NetEase's stake and
+launched "Mattel Game Studios" to self-publish going forward; **"Codemasters" as a developer could not
+be corroborated by any source** — worth double-checking if that attribution exists elsewhere in this
+project's notes.
+
+Full house-rule toggle list (Custom room setup), HIGH confidence on all 6-7, near-verbatim across 3
+search passes:
+* **Stack** — +2/+4 stackable; a +2 can only stack on another +2; whoever can't extend draws the total.
+* **Jump-in** — play an exact match instantly out of turn; play continues from there.
+* **7-0** (sometimes split "Swap on 7"/"Swap on 0") — same definitions as elsewhere.
+* **No Bluffing** — removes the Wild Draw Four challenge entirely.
+* **Progressive** — identical draw cards stack/accumulate (MED confidence this is genuinely distinct
+  from "Stack" rather than an alt name for it — sources weren't fully consistent).
+* **Draw to Match** (aka Draw Until You Play).
+* **Force Play** — a playable drawn card auto-plays immediately.
+
+Could **not** confirm a "Discard All" *toggle* — may instead be a special *card* in seasonal decks (see
+below), which would explain an earlier doc note citing it as a headline feature. A "No Mercy" preset
+with Wild Draw Six/Ten, "Seven Swap," "Zero Pass" that turned up in search is **very likely Ubisoft's
+separate product bleeding into the search results** (a Fandom wiki catalogs multiple UNO products
+together) — **do not treat as confirmed for this app.** Likewise, **a "Survival" mode could not be
+confirmed to exist at all** after a genuine multi-angle search — may be removed, mistranslated, or
+confused with another product; recommend dropping this claim or marking it explicitly unverified.
+
+Other confirmed modes: **Ranked** (earn "stars" via in-match points on a win; lose a "heart" on a loss,
+3 hearts = knocked out of that session; Platinum+ can spend "Star Defense" to protect against star
+loss), **2v2** (4 players/2 teams, teammates sit across from each other and **can see each other's
+hand** — the core mechanical hook; round ends and both teammates win as soon as either empties their
+hand), **Room Mode** (general custom-lobby term). HIGH on 2v2, MED-HIGH on Ranked.
+
+Seasonal/event decks are mostly cosmetic reskins (Sanrio collab, Joyous Voyage, Summer Splashers, Card
+Carnival, Fantástica Day of the Dead, Cat Card, Call of Spring). One confirmed mechanical exception:
+**Double Discard All Card** — appears occasionally on "Wild Weekend" events; discards both of its two
+shown colors together, and the next player must match the card's designated "main" color.
+
+**#375 — Uno 2 Go / Uno Wonder.** Standard base + **9 named new action cards** (additions model, not a
+redesign). Marketing names and wiki-catalogued names both surfaced without a fully certain 1:1 mapping
+between them — reported as-is so the mapping can be verified in-app later:
+* **Wild Skip All** — play again instantly (skips everyone else).
+* **Number Tornado** (= likely "Tornado Card"/"Wild Tornado Card") — discards every number card (0-9)
+  from your hand; does not affect action/wild cards.
+* **Shark** — "devours the next card played" (exact mechanics not confirmed beyond marketing flavor
+  text).
+* **Explosive Results Card** — next forced-to-draw player draws 3 *extra* cards; itself stackable if
+  another draw card follows and Stacking is on.
+* **Dandelion Modifier** — discards all *other* cards carrying the "Dandelion Modifier" from the play
+  area, placing this card at the bottom.
+* **Wild Draw Color Card** — next player draws continuously until revealing a card of a color chosen
+  by whoever played this (Wilds don't count), then their turn is skipped entirely.
+* **Wild Punch Card** — when a draw card is played against you, play this to *both* reverse turn order
+  and reflect the draw penalty back at whoever hit you.
+* **Wild Trick Card**, **Double Color Property**, **Mirror Card** — confirmed to exist/be marketed but
+  exact effect text could not be retrieved. LOW.
+
+MED-HIGH that these names are real and belong to this title; LOW-MED on exact wording for the last
+three; LOW on the marketing↔wiki name mapping (educated inference only).
+
+Story Mode: a "luxurious global cruise," 14 routes, 100+ named locations (Cape Town, San Diego,
+Santorini cited), 3,000+ levels total; each destination has a boss battle against a named antagonist
+(examples: "Octopus King," pirates, mermaids). MED-HIGH on the numbers, LOW on the complete boss roster.
+
+**#404 — UNO: Arcade Edition (Apple Arcade, Mattel163, June 2025).** Standard base + a small set of
+new/exclusive cards:
+* **Wild Swap Hands Card** — acts as a normal Wild *and* forces the player to swap their entire hand
+  with another player of their choice. (Note: same concept name as this codebase's own already-shipped
+  Wild Swap Hands, arrived at independently — worth being aware neither is "based on" the other, and
+  that Mattel163 appears to reuse this card design across their own UNO titles.)
+* **Double Discard All Card** — same card documented for Uno Mobile above; Mattel163 clearly reuses card
+  designs across their portfolio.
+* **Color Showdown**/likely **"Wild Color Shutdown"** — name only, exact effect not found. LOW.
+* **Wild Draw Color Card** — if identical to the Uno Wonder version above: draw until the chosen color,
+  then skip. MED (inferred by name-match).
+
+Modes: Single Player (vs. AI), Quick Match (online), Custom Games (exposes the new cards). Custom Games
+also confirmed to offer a **turn/match time limit**: 3 minutes, 5 minutes, or Unlimited.
+
+### E4. Legacy / miscellaneous digital (#235, #236, #237, #244, #364, #384, #385)
+
+**#235 — UNO Undercover — the title specifically flagged for this research pass.** PC only (Windows,
+via RealArcade), released July 2008. Dev. **Golden Goose Productions**, distributed by
+RealNetworks/RealArcade under Mattel's license; also ported to BREW/J2ME/Windows Mobile. **Correction:
+there is no DS version of "Uno Undercover" specifically** — a separate, plain "UNO" (standard rules, no
+spy theme) was released for DS by Gameloft in Dec 2009, a different product this doc's earlier "(PC/DS,
+~2008, likely Gameloft)" tag appears to have conflated with Undercover.
+
+Standard 108-card deck plus **9 added "power-up cards"** shuffled into play in both modes. MED-HIGH,
+converging across MobyGames/RealArcadeapedia/Giant Bomb, paraphrased not verbatim:
+* **Redecorate** — changes the color of the discard pile *and* every card in the deck to the same
+  color/tone (a mass color-unification wild).
+* **Clone** — mimics/assumes the effect of any other card in the deck (a copy-a-card wild).
+* **Lucky Croc Tooth** — protects the holder from a draw-card penalty for a number of turns equal to the
+  value of a paired numbered card.
+* **Toe Hold** — forces a target opponent to hold 3 random cards for several turns, duration tied to a
+  paired card's number.
+* **Highland Two-Step** — makes two chosen opponents swap hands with each other.
+* **Double Cross** — a wild that changes the pile's color *and* two other cards in the deck.
+* **Sleep** — discarded together with a numbered card; makes one selected opponent skip turns, count set
+  by the numbered card's value.
+* **Tsunami** — discarded together with a numbered card; forces a selected opponent to draw cards, count
+  set by the numbered card's value.
+* **Switcheroo** — makes two opponents swap *seats* (turn order), not hands.
+
+Sleep and Tsunami are genuinely new to this project: **two-card combo plays** (a special card + a
+numbered card whose value parameterizes the effect) — no "play two cards as one action" primitive exists
+in this codebase yet, so these would need real new plumbing, not just a new content/status value.
+
+**On "command cards" specifically (the term that prompted this whole research pass):** every source
+found for the *shipped* game calls these "power-up cards"/"power cards," **never** "command cards." This
+strongly suggests this project's existing Part B note (#497, "Cut command cards from Uno Undercover")
+refers to an earlier prototype/internal name for a mechanic that shipped under a different name (most
+likely these same 9 cards, renamed before release) — or a genuinely different, never-shown cut set that
+can't be distinguished from that possibility with available sources. **No source** (fan wiki, a Cutting
+Room Floor-style preservation site, developer interview, marketing archive) documents specific cut
+"command cards" by name or effect — this remains "specifics undocumented," now with much more confidence
+that it can't be resolved further without whatever original source generated this project's ~500-item
+list in the first place. **Do not treat the shipped power-up cards as confirmed to *be* the cut command
+cards** — that's an inference, not a sourced fact.
+
+Mission/story structure: a spy narrative wrapper (protagonist "Felicia Blue" infiltrating locations to
+track "Madame Zero") over the *same* standard-rules-plus-power-cards deck throughout — different
+venues/opponents appear to just mean different AI personalities/difficulty, not different card-legality
+rules per mission; no source describes a mission-specific rule change. A separate **Quick-Play mode**
+offers the same ruleset without the story wrapper. MED-HIGH — effectively reskinned standard UNO plus a
+fixed 9-card bonus set, not per-mission rule variants.
+
+**#236 — UNO CD-ROM.** Dev/pub Mattel Media/Mattel Interactive; dating is inconsistent across sources
+(GameFAQs "2000," an Internet Archive listing "2002") — likely one base release ~1999-2000 with a later
+reissue ~2002, so this doc's "1990s PC port" framing is probably slightly late. **Correction: not
+"AI/settings value only"** — adds named special cards:
+* **Spy Card** (HIGH, has its own dedicated wiki page) — while held in your hand, other players *cannot
+  see how many cards you have*: suppresses the normal visible-hand-size info this and most UNO
+  implementations show. A genuine informational-asymmetry mechanic not present in this codebase (which
+  always shows AI hand-size counts).
+* **Mutant Card** and **Shark Card** — confirmed to exist by name (listed consistently alongside Spy
+  Card) but their exact effects could not be found anywhere indexed. Reporting names only, not guessing.
+
+**#237 — UNO (Game Boy Color).** Released Dec 16, 1999, dev **HotGen** (this doc's earlier "Genki,
+~2001" attribution appears to be wrong; no source connects Genki to this title). Standard cards, standard
+official UNO point values for scoring.
+
+**Challenge mode inverts the win condition of the existing scoring system**, HIGH confidence, converging
+across GameFAQs/Wikipedia/2 independent reviews: each player has a max point ceiling; every round, losers
+(and per one source, sometimes even the winner) have points *added* to their running total; reaching or
+exceeding the ceiling gets you *eliminated* rather than declared a winner as in Standard scoring. Play
+continues until one player remains — they win. Multiple reviewers independently call this confusing,
+noting the exact points-per-round formula is never explained on-screen even in the original game — a
+real but poorly-documented mechanic, not just an artifact of secondary sourcing. **Standard mode** plays
+to ~1000 points (double the real-world default of 500, unconfirmed if adjustable); **Link Game mode**
+adds 1 human opponent via Game Boy Link Cable in either scoring mode, with up to 3 CPU seats filling the
+rest. If this codebase ever tracks cumulative score across games, Challenge mode would be a cheap
+"flip the win condition" toggle worth considering.
+
+**#244 — UNO DirecTV Game Lounge.** DirecTV's interactive-TV "Game Lounge" channel, launched mid-2007;
+UNO included via an exclusive Mattel-brands deal, dev. **Denki** (Dundee, Scotland). Rebranded "GSN Game
+Lounge" 2010, discontinued March 2013. No source describes any rule variant, added card, or UNO-specific
+feature beyond the interactive-TV delivery mechanism. Consistent with this doc's existing note. MED
+(absence of evidence, no gameplay footage/manual locatable to positively confirm).
+
+**#364 — UNO Famicom / Super UNO.** Super Famicom, Nov 12 1993, Japan-only, dev. **Tomy Corporation**
+(licensed from Mattel). Standard matching as a base, but with real structural additions this doc's
+earlier "adjustable rules/players" stub undersold:
+* **Up to 6 players** (1-2 human + CPU) — already broader than this codebase's fixed 4-seat design.
+* **Two scoring variants** (names/differences not found, confirmed as a menu choice).
+* An official **+2/+4 stacking toggle** — functionally close to this codebase's existing Stack rule, but
+  shipped as a menu option in 1993, predating Mattel's own "Progressive"/Stack packaging by decades.
+* Three modes: **Regular** (straight UNO), **Team** (partnered play, akin to 2vs2, exact partner
+  mechanics not detailed), and **Board Game mode** — a genuinely different structural layer: move around
+  one of 5 boards against 3 CPU opponents; board spaces trigger effects (bonus points, forced movement,
+  item pickups); collected items are usable either on the board (hinder other players) or at the start
+  of an UNO hand (help win that hand); the first 4 boards each have 4 "castles," where defeating a castle
+  means winning an UNO hand to "rescue" a character; the 5th board has one castle holding the final
+  opponent.
+
+MED confidence (converges across superfamicom.org, Giant Bomb wiki, and a 2025 English fan-translation
+project's blog, but no official Japanese-language primary source was independently found). Board Game
+mode is a full metagame (board traversal + items + UNO-hands-as-battles) predating and resembling later
+career/tournament modes (Uno & Friends, Gameloft's progression mode) by 15-20 years — genuinely one of
+the more interesting digital-only finds in this pass if a "career mode" is ever scoped.
+
+**#384 — Radica: Uno 360 (electronic handheld).** Mattel/Radica Games brand (model P6629). **Correction:
+not "standard rules digitized"** — has a distinct physical/structural mechanic: **four discard piles**,
+one per physical side of the device; instead of choosing a card from a single pile, on-screen arrows
+tell you which direction(s) to physically rotate the handheld (it has motion/gravity sensors) to align a
+matching pile, then press SELECT to discard into it. A **"Discard Two"** action card (one of four colors)
+appears to discard 2 cards at once (exact trigger not fully confirmed). **UNO-calling has a hard ~2
+second time limit** once down to one card, with up to a 5-card penalty if missed — stricter and more
+literally timed than standard UNO's usual 2/4-card penalty. Three modes: Free Play (no time limit), Time
+Match (discard as much as possible in 5 minutes), 500 Points. MED-HIGH, sourced from what appears to be
+the real Mattel instruction-manual PDF via search snippet. **Reclassification recommendation:** this is
+structurally the same family as this doc's existing **Triple Play** entry (A5, tagged HARD — touches the
+single-discard-pile assumption throughout the engine) but with 4 piles instead of 3, plus a genuinely
+stricter timed call-penalty on top; not the simple digitization the old stub implied.
+
+**#385 — UNO SuperLite 2000 Vol. 16 Game.** PS2, Japan-only, published by **Success** under their budget
+"SuperLite 2000" reissue line, 2004. Appears to be an enhanced port (anime-style art, Japanese voice
+acting) rather than a mechanically distinct release — no source describes any rule/card difference from
+standard UNO, though no rules-level source (manual, detailed review) was found to independently verify
+that beyond box-listing detail. LOW-MED that this is purely cosmetic — treat as "no positive evidence of
+a mechanical difference found," not "confirmed identical."
+
+**UNO Free Fall / the Java Mobile ecosystem (~2009)** — confirmed (not deep-researched further, per
+scope): a falling-block tile-matching puzzle game (cards fall into one of 8 columns, match 3+ by
+color/number/symbol to clear, comparable to Dr. Mario/Puyo Puyo). Does not use UNO's discard-matching
+mechanic at all — correctly excluded from this project's scope, consistent with this doc's existing
+A10 classification.
+
+---
+
 *Compiled from a multi-pass automated survey (see Methodology). Titles marked UNKNOWN in Part D should
-be re-checked before relying on their RESKIN-by-default assumption for anything load-bearing.*
+be re-checked before relying on their RESKIN-by-default assumption for anything load-bearing. Part E's
+confidence tags (HIGH/MED/LOW) work the same way — re-verify anything below HIGH before it drives an
+actual implementation decision, ideally with direct page fetches rather than search-snippet synthesis.*
