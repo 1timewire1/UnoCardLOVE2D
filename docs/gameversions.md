@@ -25,6 +25,14 @@ GeekyHobbies, the UNO Fandom wiki, Mattel's own rules PDFs, and similar sources.
   themed deck with 0-2 bespoke cards, rules otherwise standard) is extremely well established and
   called out explicitly by multiple sources, so it's a safe default — but a specific title tagged
   RESKIN here could turn out to have one overlooked bonus card.
+  **Update:** a dedicated verification pass has started (see the note at the end of Part D), and the
+  first batch of 50 titles blew this prior apart — only 3 of 50 (#14, #39, #49) came back as genuinely
+  plain reskins with zero card/rule differences. The other 47 had at least one documented or
+  strongly-evidenced bonus card, mostly single-movie/TV tie-ins from the mid-2000s through today that
+  each shipped with one bespoke wild card Mattel just doesn't advertise loudly. Treat "strong prior" as
+  reversed until more batches say otherwise — assume a RESKIN row *has* a bonus card until checked, not
+  the other way around. RESKIN rows without a "correction"/"confirmed" note in Part D have simply not
+  been re-checked yet.
 * **A handful of entries are tagged UNKNOWN** where no reliable source could be found at all (mostly
   obscure regional/promotional items). These are called out in Part C and should be treated as "we
   don't actually know," not "confirmed cosmetic."
@@ -353,20 +361,20 @@ on RESKIN entries in bulk.
 
 | # | Title | Category | Mechanic Notes |
 |---|-------|----------|-----------------|
-| 1 | Uno 50th Anniversary Icon Series 1971 | RESKIN | Decade-themed retro-art collector deck; standard UNO rules. Some sources note 8 Wild cards instead of 4, otherwise cosmetic. |
-| 2 | Uno 50th Anniversary Icon Series 1980 | RESKIN | 1980s-themed retro art, standard rules. |
-| 3 | Uno 50th Anniversary Icon Series 1990 | RESKIN | 1990s-themed retro art, standard rules. |
-| 4 | Uno 50th Anniversary Icon Series 2000 | RESKIN | 2000s-themed retro art, standard rules. |
-| 5 | Uno 50th Anniversary Icon Series 2010 | RESKIN | 2010s-themed retro art, standard rules. |
+| 1 | Uno 50th Anniversary Icon Series 1971 | RESKIN | 2021 Iconic Series (1 of 5 decade decks). Standard rules, but 8 Wild cards instead of 4 (112 cards) - a series-wide trait, not unique to this deck. HIGH. |
+| 2 | Uno 50th Anniversary Icon Series 1980 | RESKIN | Same Iconic Series as #1: standard rules, 8 Wild cards instead of 4 (112 cards), 1980s retro art. HIGH. |
+| 3 | Uno 50th Anniversary Icon Series 1990 | RESKIN | Same Iconic Series as #1: standard rules, 8 Wild cards instead of 4 (112 cards), 1990s retro art. HIGH. |
+| 4 | Uno 50th Anniversary Icon Series 2000 | RESKIN | Same Iconic Series as #1: standard rules, 8 Wild cards instead of 4 (112 cards), 2000s retro art. HIGH. |
+| 5 | Uno 50th Anniversary Icon Series 2010 | RESKIN | Same Iconic Series as #1: standard rules, 8 Wild cards instead of 4 (112 cards), 2010s retro art. HIGH. |
 | 6 | Uno 50th Anniversary Premium Set | MECHANIC | "50/50" card: coin-flip decides who draws 4 extra. See A2. |
 | 7 | Nonpartisan Uno | MECHANIC (novelty) | Orange/purple instead of red/blue; "Veto" out-of-turn interrupt card. See A8. |
-| 8 | Base Uno (1980) | RESKIN | Historical baseline release; reference point, not a variant. |
+| 8 | Base Uno (1980) | RESKIN | Historical baseline release; reference point, not a variant. Wild Draw Four likely postdates 1980 (added ~1983), so this snapshot may have shipped without it. MED. |
 | 9 | Uno Attack | MECHANIC | Card-launcher random draw; Hit 2, Wild Hit 4. See A5. |
 | 10 | Uno Left Hand | UNKNOWN | Not confirmed as a distinct product; likely a "pass hand left" house rule. |
 | 11 | Uno BTS | MECHANIC (minor) | "Dancing Wild" — dance or draw 3. See A8. |
 | 12 | Uno Dare! | MECHANIC | Dare/Wild Dare: perform a dare or draw. See A8. |
 | 13 | Uno Flip! | MECHANIC | Double-sided Light/Dark deck. See A4. |
-| 14 | Uno Artiste Jean-Michel Basquiat | RESKIN | Collector art deck; 4 decorative-only extra cards, standard play. |
+| 14 | Uno Artiste Jean-Michel Basquiat | RESKIN | Collector art deck; 4 decorative-only "Artiste Extra" cards (recreate a larger artwork when arranged), standard play - confirmed. HIGH. |
 | 15 | Uno Spin (2005) | MECHANIC | Spinning wheel on action/wild play. See A5. |
 | 16 | Uno Triple Play | MECHANIC | 3 simultaneous discard piles, overload penalty. See A5. |
 | 17 | Skip-Bo | DIFFERENT-GAME | Sequencing game, no color/number discard matching. See A10. |
@@ -391,7 +399,7 @@ on RESKIN entries in bulk.
 | 36 | Uno Harry Potter and the Sorcerer's Stone | MECHANIC (minor) | "Voldemort"/"Harry" multi-discard; "Gryffindor" forced-draw-until. |
 | 37 | Uno Showdown | MECHANIC | Physical reflex paddle duel + 500-pt scoring. See A5. |
 | 38 | Ono 99 | DIFFERENT-GAME | Running-total-to-99 elimination game. See A9. |
-| 39 | Uno Splash | RESKIN | Waterproof plastic cards, standard rules. |
+| 39 | Uno Splash | RESKIN | Waterproof plastic cards, standard rules - confirmed, distinct from the mechanically-different Uno H2O Splash (#40 family). HIGH. |
 | 40 | Uno H2O | MECHANIC (minor) | Wild "Downpour" 1/2 — force draws. |
 | 41 | Uno Dare Adults Only | MECHANIC | Escalating dare tiers via die roll. See A8. |
 | 42 | Uno Monster High | MECHANIC (minor) | Two bespoke Wild cards (color give-away, multi-discard+share). |
@@ -401,8 +409,8 @@ on RESKIN entries in bulk.
 | 46 | Uno Flip (2009) | MECHANIC | Likely mislabel/duplicate of #13 (Flip debuted 2019). |
 | 47 | Uno H2O Splash | MECHANIC | Shake-to-reveal "Whirlpool" device; best-of-3 match. See A5/A9. |
 | 48 | Blokus Shuffle: Uno Edition | DIFFERENT-GAME | Blokus tile-placement with an UNO card layer. See A10. |
-| 49 | Uno Milk Chocolate Edition | RESKIN | Cards printed on chocolate wrappers; no rule change. |
-| 50 | Uno UpUp DownDown | RESKIN | WWE collab; "Wild Challenge!" is a re-themed Wild Draw Four. |
+| 49 | Uno Milk Chocolate Edition | RESKIN | Cards printed on chocolate wrappers; no rule change found - novelty confectionery, not a functioning ruleset variant. MED. |
+| 50 | Uno UpUp DownDown | RESKIN | WWE collab. Correction: "Wild Challenge" is a 3rd, additional Wild-type card (forces opponent to draw extra cards) alongside the untouched standard Wild and Wild Draw Four - not a retheme of either. MED. |
 | 51 | Uno Pocket Pizza Pizza | MECHANIC (minor) | Reduced 52-card "Pocket" deck + exclusive Wild. See A6. |
 | 52 | Uno Pocket Pizza 73 | MECHANIC (minor) | Same Pocket format, different exclusive Wilds. |
 | 53 | Uno Extreme | MECHANIC | Same mechanic as Attack (#9), different regional name. |
@@ -426,30 +434,30 @@ on RESKIN entries in bulk.
 | 71 | Uno Ultimate Marvel Mighty Thor Expansion Pack | MECHANIC | Adds one character to the Ultimate Marvel system. |
 | 72 | Uno Ultimate DC Batman Expansion Pack | MECHANIC | Adds one character to the Ultimate DC system. |
 | 73 | Uno Ultimate DC Harley Quinn Expansion Pack | MECHANIC | Adds one character to the Ultimate DC system. |
-| 74 | Uno Happy Feet | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 75 | Uno Ghostbusters | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 76 | Uno Encanto | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 77 | Uno Planes | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 78 | Uno Captain Marvel | RESKIN | Cosmetic reskin (distinct from the Ultimate Marvel line's Captain Marvel). |
-| 79 | Uno Cars 2 | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 80 | Uno Jurassic World | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 81 | Uno Star Wars | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 82 | Uno The Lion King | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 83 | Uno Avengers | RESKIN | Cosmetic reskin (distinct from the mechanically-different Ultimate Marvel line). |
-| 84 | Uno Cars 3 | RESKIN | Cosmetic reskin, standard UNO rules. |
+| 74 | Uno Happy Feet | RESKIN | Correction: has 1 unique "MAMBO!" bonus card/rule, exact effect undocumented online. MED. |
+| 75 | Uno Ghostbusters | RESKIN | Correction: unique "Crossing the Streams" Wild card - all players draw 1, then must match a color of the player's choice or draw 2 more. HIGH. |
+| 76 | Uno Encanto | RESKIN | Correction: 4 unique "Wild Don't Talk" cards - silences a chosen opponent (3-card draw penalty for talking) until someone calls UNO; also a normal Wild. HIGH. |
+| 77 | Uno Planes | RESKIN | Correction: unique "Wild Altimeter Alert" card - name a color, everyone plays one card of that color face-down, reveal simultaneously, highest number wins. MED-HIGH. |
+| 78 | Uno Captain Marvel | RESKIN | Confirmed distinct from the Ultimate Marvel line's Captain Marvel power. Correction: has its own unique "Cosmic Crush" Wild card - discard your whole hand under the deck, redraw the same count. MED-HIGH. |
+| 79 | Uno Cars 2 | RESKIN | Correction: unique "Wild Special Agent Mater" card - look at every other player's hand before choosing the color. HIGH. |
+| 80 | Uno Jurassic World | RESKIN | Correction: unique "Owen's Wild Raptor Squad" card - discard every "raptor"-marked card of any color from your hand, then choose the color. Distinct from Uno Attack Jurassic World (#109) and Jurassic World Dominion (#181). HIGH. |
+| 81 | Uno Star Wars | RESKIN | Correction: unique "Wild The Force" card - pick a player+color, they reveal their hand and draw 2 if they hold that color, either way the pile becomes that color. A separate later release, "Star Wars: The Mandalorian" (not otherwise catalogued here), adds its own "This is the Way" card that blocks any action card played against you. HIGH both decks/cards exist. |
+| 82 | Uno The Lion King | RESKIN | Correction: unique "Wild Circle of Life" card - hands are passed in a circle around the table rather than a normal color-choice wild. HIGH. |
+| 83 | Uno Avengers | RESKIN | Confirmed distinct from the mechanically-different Ultimate Marvel line, but 2 separate plain Avengers decks exist and BOTH have a bonus card: 2014 (CJM73) "Avengers Assemble" blocks an incoming Draw Two/Four and doubles as a Wild; 2018 (GDJ80) "Infinity Gauntlet" makes players lacking the chosen color draw 2. HIGH existence, MED on Infinity Gauntlet's exact "with/without" wording. |
+| 84 | Uno Cars 3 | RESKIN | Correction: unique "Wild Crash-Up" card - combine your hand with the next player's, redeal the combined pile evenly between you, choose the color. A possible 2nd "Smokey" card (look at/combine/redeal with another hand) is claimed by some retailers but not confirmed as distinct from Crash-Up. HIGH for Crash-Up, MED for Smokey. |
 
 ### #85–168
 
 | # | Title | Category | Mechanic Notes |
 |---|-------|----------|-----------------|
-| 85 | Uno Incredibles 2 | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 86 | Uno Trolls World Tour | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 87 | Uno Toy Story 4 | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 88 | Uno Frozen 2 | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 89 | Uno Shrek 2 | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 90 | Uno Kung Fu Panda | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 91 | Uno Superman Returns | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 92 | Uno Pirates of the Caribbean | RESKIN | Cosmetic reskin, standard UNO rules. |
+| 85 | Uno Incredibles 2 | RESKIN | Correction: unique "Wild Screen Slayer" card - other players close their eyes and go face-down, the player rearranges two cards between two hands, everyone reopens eyes. HIGH. |
+| 86 | Uno Trolls World Tour | RESKIN | Correction: unique "Tiny Diamond's Mix Tape" card - forces the next player to draw one card from EACH other player's hand. MED-HIGH. |
+| 87 | Uno Toy Story 4 | RESKIN | Correction: unique "Wild Duke Caboom" card - combine two other players' hands and redeal them evenly, choose the color. HIGH. |
+| 88 | Uno Frozen 2 | RESKIN | Correction: unique "Wild Forces of Nature" card - names a color everyone else MUST follow even holding a legal different-color card, or draw a card; overrides UNO's normal any-legal-card rule. HIGH. |
+| 89 | Uno Shrek 2 | RESKIN | Correction: unique "Wild Blind" card - a chosen player closes their eyes and blindly picks one card from each other player's hand, then a color is chosen. HIGH. |
+| 90 | Uno Kung Fu Panda | RESKIN | Correction: unique "Kickin' Battle" wild rule - challenge an opponent, both play a card simultaneously (higher value wins, non-numbers=0, ties replay), loser takes all battled cards + 2 more. MED. |
+| 91 | Uno Superman Returns | RESKIN | Correction: box copy cites "two unique wilds" centered on a Kryptonite-themed card forcing green-card/draw-3 penalties; exact wording and the 2nd card's name unconfirmed. MED existence, LOW wording. |
+| 92 | Uno Pirates of the Caribbean | RESKIN | AMBIGUOUS - at least 2 distinct releases exist. "At World's End" (~2007, Disney Parks skull tin) has a "Black Pearl" card, exact effect unconfirmed. "Dead Men Tell No Tales" (~2017) has a wild that forces all other players to draw until they get the chosen color. MED existence, LOW wording. |
 | 93 | Uno Dominos | DIFFERENT-GAME | UNO effects layered on domino tile-matching. See A10. |
 | 94 | Uno Hearts | DIFFERENT-GAME | Trick-taking Hearts with UNO wilds mixed in. See A10. |
 | 95 | Uno Wild Twists Playing Cards | DIFFERENT-GAME | Poker deck + wilds, own "Wild Race" game. See A10. |
@@ -482,30 +490,30 @@ on RESKIN entries in bulk.
 | 122 | Uno The Call of Yara | DIGITAL-ONLY | Ubisoft DLC, "Pesos" economy + 4 named character abilities + 1 new card. See Part E2. |
 | 123 | Uno Valhalla | DIGITAL-ONLY | Ubisoft DLC, full board + cargo/perks/events - biggest structural departure of any Ubisoft pack. See Part E2. |
 | 124 | Uno Teenage Mutant Ninja Turtles (Team Attack) | MECHANIC | "Team Attack" multi-card discard wild. See A3. |
-| 125 | Uno Nickelodeon Spongebob Squarepants | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 126 | Uno Nickelodeon Spongebob Squarepants Special Edition (2002) | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 127 | Uno Nickelodeon Spongebob Squarepants Meme | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 128 | Uno Rick and Morty | RESKIN | Standard rules + one "Mr. Meeseeks" discard-search card. |
-| 129 | Uno Teen Titans Go! | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 130 | Uno DragonBall Z | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 131 | Uno Saved By The Bell | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 132 | Uno Friends | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 133 | Uno Hanna Barbera | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 134 | Uno Ultimate Spider-Man Web Warriors | RESKIN | Cosmetic reskin, not tied to the Ultimate Marvel powers system. |
-| 135 | Uno Hannah Montana (2007 On Tour) | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 136 | Uno Hannah Montana (2007 Best of Both Worlds) | RESKIN | Cosmetic reskin, standard UNO rules. |
+| 125 | Uno Nickelodeon Spongebob Squarepants | RESKIN | Ambiguous which printing/year; SpongeBob Uno has been re-released many times. Composition cited for at least one printing: 112 cards incl. 4 "Wild Draw 6" cards replacing/alongside normal wilds - may not be a pure vanilla reskin depending on printing. MED. |
+| 126 | Uno Nickelodeon Spongebob Squarepants Special Edition (2002) | RESKIN | Correction: Sababa Toys collector tin with a unique "Super Absorbency" rule - the player with the FEWEST cards absorbs 3 cards (1 from each neighbor + 1 from the draw pile). MED-HIGH. |
+| 127 | Uno Nickelodeon Spongebob Squarepants Meme | RESKIN | Correction: unique "Wild Draw 6 Cards" card (meme-speak styling) - name a color, next player draws 6, may discard all cards of that color from the draw if any matched. MED. |
+| 128 | Uno Rick and Morty | RESKIN | Confirmed (2019): "Mr. Meeseeks" card searches the DISCARD PILE (not your hand) for a favorable card and plays it immediately. HIGH. |
+| 129 | Uno Teen Titans Go! | RESKIN | Correction (2016): unique "Robin" card forces another player to discard all their pink/red cards, plus two blank customizable wild cards for a house rule. MED. |
+| 130 | Uno DragonBall Z | RESKIN | Correction (2023): unique "Wild Shenron's Wish" card - flip the top draw-pile card; if it bears a Dragonball icon, choose one of draw-2/reverse/skip/discard-a-card; otherwise turn just ends; player still names the color. MED. |
+| 131 | Uno Saved By The Bell | RESKIN | Correction (~2020): unique "Rad Style" rule, a themed color-matching draw penalty ("draw cards if you're wearing the wrong color") - precise step-by-step wording not found. MED existence, LOW-MED wording. |
+| 132 | Uno Friends | RESKIN | Correction (~2022, the sitcom not the app): unique "The One Where You Draw" rule - opponents draw continuously until they draw a card featuring a specific named Friend. MED. |
+| 133 | Uno Hanna Barbera | RESKIN | Correction (~2004, Deluxe Collector Tin): unique "Pic-a-nic" (Yogi Bear) card - steal the top card of the discard pile at any time; also a Wild. MED. |
+| 134 | Uno Ultimate Spider-Man Web Warriors | RESKIN | Correction (2014): confirmed distinct from the Ultimate Marvel powers system, but has its own unique "Web Slinger" Wild card - give away up to 3 cards of one color, distributed however you choose. HIGH. |
+| 135 | Uno Hannah Montana (2007 On Tour) | RESKIN | Correction (Mattel M1004): unique "World Tour" Wild card - give your whole hand to another player who may pass it on again down a chain; last player in the chain keeps whatever's left. Confirmed distinct from #136. MED. |
+| 136 | Uno Hannah Montana (2007 Best of Both Worlds) | RESKIN | Correction (Mattel K6505, distinct product from #135): unique dual-mode "Best of Both Worlds" card - either force everyone to draw 1, or cancel a Wild Draw 4 played against you. MED. |
 | 137 | Uno Spin Hannah Montana | MECHANIC | Uno Spin wheel mechanic, themed. See A5. |
-| 138 | Uno The Big Bang Theory | RESKIN | Standard rules + "Kitty" forced-draw-until-Sheldon/Penny card. |
+| 138 | Uno The Big Bang Theory | RESKIN | Confirmed (2012): "Kitty"/"Soft Kitty" card forces the next player to draw repeatedly until they hit a Sheldon (3/9) or Penny (0/5) numbered card; they keep everything drawn and lose their turn. HIGH. |
 | 139 | Uno One Piece (2003) | UNKNOWN | Could not verify; likely early-2000s reskin. |
-| 140 | Uno Doctor Who | RESKIN | Standard rules + "Exterminate" fewest-cards-draws-4 card. |
-| 141 | Uno Spy X Family | RESKIN | Standard rules + 4 original special cards (effects unconfirmed). |
-| 142 | Uno Glee | RESKIN | Cosmetic reskin, standard UNO rules. |
+| 140 | Uno Doctor Who | RESKIN | Confirmed (2007, Tenth Doctor era): "Exterminate" forces whoever has the fewest cards to draw 4, unless challenged (mirrors the Wild Draw Four challenge - loser of the challenge draws 4 or 6). HIGH core effect, MED on the challenge detail. |
+| 141 | Uno Spy X Family | RESKIN | Major correction (Ensky, Japan, Oct 2023): the "4 original special cards" are 4 physical COPIES of ONE card, "Bond's Precognition" - name a color, everyone reveals cards of that color or draws 3. A separate 2026 McDonald's Japan promo has different single-card-per-deck Spy x Family tie-ins; don't conflate the two. HIGH. |
+| 142 | Uno Glee | RESKIN | Correction (2010, Fundex under Mattel's sublicense): unique "Sabotage" card - view an opponent's hand and swap a card you don't want for one you do. MED. |
 | 143 | Uno Flip! Stranger Things | MECHANIC | Uno Flip mechanic + themed extra cards. See A4. |
-| 144 | Uno Schitt's Creek | RESKIN | Standard rules + "Where Everyone Fits In" reveal-and-draw card. |
-| 145 | Uno Ted Lasso | RESKIN | Standard rules + "Roy Kent Grunt" extra-draw card. |
-| 146 | Uno Yellowstone | RESKIN | Standard rules + "Yellowstone Brand" forced-draw card. |
-| 147 | Uno DC Super Hero Girls | RESKIN | Standard rules + "Save the Day" immunity wild. |
-| 148 | Uno Shark Week | RESKIN | Standard rules + "Shark Attack" slap-race card. |
+| 144 | Uno Schitt's Creek | RESKIN | Confirmed (2021): every card also carries a Love/Money icon; "Where Everyone Fits In" calls one icon, and anyone holding more of the OTHER icon draws 3. HIGH. |
+| 145 | Uno Ted Lasso | RESKIN | Confirmed (2022): "Roy Kent Grunt" - stare down the next player in a grunt-face contest; whoever breaks first draws 2. HIGH. |
+| 146 | Uno Yellowstone | RESKIN | Confirmed (2023): 36 numbered cards secretly carry a "Yellowstone Brand" icon; the Brand card makes everyone show a Branded card or draw 2. HIGH. |
+| 147 | Uno DC Super Hero Girls | RESKIN | Confirmed: "Save the Day" - choose ANOTHER player, who becomes immune to draw/penalty cards until someone plays another Wild. MED-HIGH. |
+| 148 | Uno Shark Week | RESKIN | Confirmed: "Wild Shark Attack" - everyone races to slap the discard pile, last one draws 4, then a color is chosen. MED-HIGH. |
 | 149 | Uno Masters of the Universe | UNKNOWN | Could not verify specific rules. |
 | 150 | Uno The Muppet Show | RESKIN | Cosmetic reskin, standard UNO rules. |
 | 151 | Uno Nickelodeon | RESKIN | Cosmetic reskin, standard UNO rules. |
@@ -866,6 +874,22 @@ on RESKIN entries in bulk.
 ### #485–503 (never released)
 
 See Part B above for the full table.
+
+### Reskin verification pass (in progress)
+
+The Methodology section's "reskins are a strong prior, not individually verified" caveat is being
+worked off in batches of 50, checking each RESKIN/UNKNOWN title for a missed bonus card or rule (per
+user request, separate from Part E's digital-only pass). Progress:
+
+* **Batch 1 (titles #1-5, #8, #14, #39, #49, #50, #74-92, #125-136, #138, #140-142, #144-148 - 50
+  titles): done.** Only #14, #39, and #49 confirmed as genuinely plain reskins; the other 47 rows above
+  were corrected or confirmed in place with a specific card/rule and a confidence tag. Two structural
+  gaps surfaced but were folded into existing rows rather than given new numbers: "Uno Star Wars: The
+  Mandalorian" (a separate later release from #81, own "This is the Way" card) and the 2018 "Uno
+  Avengers" GDJ80 (a second release alongside the 2014 one already at #83, own "Infinity Gauntlet"
+  card) - both noted inline in #81/#83 above.
+* **Remaining RESKIN/UNKNOWN titles**: not yet checked. ~193 RESKIN-tagged and 15 UNKNOWN-tagged rows
+  remain across Parts C/D as of this batch; continue in further batches of 50 in title-number order.
 
 ---
 
