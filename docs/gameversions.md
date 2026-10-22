@@ -729,18 +729,18 @@ on RESKIN entries in bulk.
 | 346 | Uno NDJOLIJEAN | MECHANIC | "Shuffle Hands"/"Make Your Own Rule" wilds + multi-discard house rule. |
 | 347 | Uno World Series Champions 2004 Boston Red Sox | RESKIN | Weakly sourced to a single eBay listing (publisher Sababa Toys, not Mattel); no card/rule info found. Very likely the SAME product as #319 "Boston Red Sox (2004)" above, double-counted under two titles - recommend merging/cross-referencing. LOW. |
 | 348 | Uno Philadelphia Eagles (2006) | RESKIN | Standalone 2006 single-team edition unconfirmed; the modern multi-team UNO NFL line has a documented "Ice the Kicker" mechanic (see #298), but attributing it to a one-off 2006 Eagles tin is unverified. LOW-MED. |
-| 349 | Uno New York Yankees Derek Jeter | RESKIN | Cosmetic reskin, standard UNO rules. |
+| 349 | Uno New York Yankees Derek Jeter | RESKIN | Correction (2007, Sababa Toys, part of a 9-player MLB line): a unique named "Captain" card exists for this deck specifically (each player in the line has their own uniquely-named card), exact effect not found. MED. |
 | 350 | Mein Erstes Uno (Germany) | MECHANIC | Uno Junior: tiered difficulty, animal icons. See A6. |
-| 351 | Uno Artlist Collection The Dog Special Edition (2003) | RESKIN | Cosmetic reskin, standard UNO rules. |
+| 351 | Uno Artlist Collection The Dog Special Edition (2003) | RESKIN | Confirmed real (2003 Mattel); no bonus card found, distinct from the later Artiste Series (Haring/Basquiat) decks which do add a matching rule. LOW. |
 | 352 | Uno Artlist Collection The Dog Special Edition (2006) | RESKIN | Reissue of #351. |
-| 353 | Uno Chicago Cubs (2006) | RESKIN | Cosmetic reskin, standard UNO rules. |
+| 353 | Uno Chicago Cubs (2006) | RESKIN | Correction (year disputed: 2004/2006/2007 all cited): named "Acquisition cards" and rules are confirmed to exist, exact effect not found. MED. |
 | 354 | Uno Madness | DIFFERENT-GAME | Perfection-style spring-loaded spiral tray/timer game. See A10. |
 | 355 | Uno Utterly Butterly Omega 3 | RESKIN | UK margarine-brand promo pack, standard UNO rules. |
-| 356 | Uno Elvis | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 357 | Uno Sumikko Gurashi | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 358 | Uno NFL Greatest Stars Reggie Bush | RESKIN | Cosmetic reskin, standard UNO rules. |
+| 356 | Uno Elvis | RESKIN | Correction (2000 Mattel tin #42541): a named "Vegas card" exists (wild-type, grouped with Wild Draw Four per a dedicated rules site), exact effect not found. MED. |
+| 357 | Uno Sumikko Gurashi | RESKIN | Existence itself unconfirmed despite Japanese-language searches. Ensky-pattern character decks (Chiikawa, see #413) typically carry 4 bonus cards - plausible if real, but unconfirmed. LOW. |
+| 358 | Uno NFL Greatest Stars Reggie Bush | RESKIN | Existence unconfirmed after a real search - only a generic, unrelated NFL UNO (HPW20) found. LOW. |
 | 359 | Uno Emoji | MECHANIC | Face-holding action card + blank house-rule wild. See A8. |
-| 360 | Uno 2000 Italian Ferrari | RESKIN | Cosmetic reskin, standard UNO rules. |
+| 360 | Uno 2000 Italian Ferrari | RESKIN | Existence unconfirmed after a real search - only an unrelated 2025 F1 line found (its own "Overtake" rule, don't attribute it here). LOW. |
 | 361 | Uno Platica Polinesia | MECHANIC | "¡Mira!" wild forces draws unless holding a token card. |
 | 362 | Uno Junior Move! | MECHANIC | Tiered difficulty + "Move!" physical-action cards. See A6/A8. |
 | 363 | Uno Boost | DIGITAL-ONLY | Resolved: a Facebook browser game (~2010-2011), 2-player vs AI. "Boost" mechanic lets you substitute powerful cards into your hand from a sideboard, paid for with earned/purchased virtual currency; wins grant XP unlocking harder AI. HIGH real/digital, MED on exact publisher. |
@@ -751,7 +751,7 @@ on RESKIN entries in bulk.
 | 368 | Uno House Rules | MECHANIC | Standalone player-authored dynamic rule-set. See A1/A5. |
 | 369 | Uno Deluxe House Rules | MECHANIC | Jump-In, Seven-O, Progressive baked into the ruleset. See A1. |
 | 370 | Uno Fun Pack (Germany) | RESKIN | Resolved: standard 108 cards + a spare blank card + 3 German-language "Fun-Regeln" house-rule cards bundled in - a minor packaging/rules-card variant, not a themed reskin. MED-HIGH. |
-| 371 | Uno The Batman (2006) | RESKIN | Cosmetic reskin, standard UNO rules. |
+| 371 | Uno The Batman (2006) | RESKIN | Unresolved: multiple Batman UNO editions exist with "Bat Signal" (draw until a Batman/Robin/Batgirl/Nightwing card) or "Justice" (2005 Batman Begins) cards, but no source confirms a 2006-specific edition by name. MED mechanic exists somewhere, LOW-MED on this year. |
 | 372 | Uno Ito Family's Dining Table | MECHANIC | Bonus 14-card set of 12 alternate house-rule variants. |
 | 373 | Uno Sudoku | DIFFERENT-GAME | UNO-branded Sudoku puzzle. See A10. |
 | 374 | Uno Mobile (Mattel163) | DIGITAL-ONLY | 7 named house-rule toggles + Ranked/2v2 modes (wagering excluded, see roadmap); "Survival" mode could not be confirmed to exist. See Part E3. |
@@ -767,22 +767,22 @@ on RESKIN entries in bulk.
 | 384 | Radica: Uno 360 | DIGITAL-ONLY | NOT standard rules digitized - 4 discard piles selected by physically rotating the handheld, plus a timed UNO-call penalty. Same family as Triple Play (A5). See Part E4. |
 | 385 | Uno SuperLite 2000 Vol. 16 Game | DIGITAL-ONLY | Japan-only budget PS2 reissue (Success), anime art/VO added; no rule difference found. See Part E4. |
 | 386 | Uno Party Mania! | MECHANIC | Ubisoft DLC: Point Taken, Wild Drawn Together, Wild Pile Up. |
-| 387 | Uno Disney Princess (2002) | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 388 | Uno Harry Potter (2003) | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 389 | Uno National Parks | RESKIN | Cosmetic reskin, standard UNO rules. |
+| 387 | Uno Disney Princess (2002) | RESKIN | Correction: "Power of Friendship" wild card (secret face-down color-guessing game) confirmed, but for a modern/2020s SKU - not verified as existing under a genuine 2002 date. MED mechanic, LOW on this date. |
+| 388 | Uno Harry Potter (2003) | RESKIN | Confirmed (Mattel #42797): "Sorting Hat" rule card - the chosen player draws until they reveal a Gryffindor card. Verbatim-matching across 2+ retailer sources. HIGH. |
+| 389 | Uno National Parks | RESKIN | Confirmed (Sababa Toys, proceeds to the National Park Foundation): a named "exclusive bear alert card" exists, exact effect not found. MED. |
 | 390 | Uno Show 'Em No Mercy (Ubisoft) | DIGITAL-ONLY | Digital adaptation of the full No Mercy ruleset. See A2. |
 | 391 | Uno Choo Choo | MECHANIC | Icon-matching kids' variant + Wild "Conductor." See A6. |
 | 392 | Seikin Uno (Japan) | RESKIN | Resolved: SEIKIN (Japanese YouTuber/musician) named Mattel Games' official Japan ambassador Jan 11 2023 ("UNO Day"); limited "SEIKIN Cards"/"SEIKIN Dice" promo items with original SEIKIN-devised house rules shipped alongside. HIGH. |
-| 393 | Uno NSYNC | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 394 | Uno University of North Carolina | RESKIN | Cosmetic reskin, standard UNO rules. |
+| 393 | Uno NSYNC | RESKIN | Confirmed (2000 Mattel #42810, bundled with a Justin Timberlake CD); no bonus card found despite confirmed product details - plausibly a genuine plain reskin plus bundled novelty CD. LOW-MED. |
+| 394 | Uno University of North Carolina | RESKIN | Existence unconfirmed after a real search - nothing UNO-specific found. LOW. |
 | 395 | Uno Ultimate Thanos Promo Card | MECHANIC | Standing-penalty "Enemy" card for the Ultimate Marvel system. See A7. |
-| 396 | Uno New York Knicks Special Edition (2006) | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 397 | Uno Fandom Monster High | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 398 | Uno Magic Tree House | RESKIN | Cosmetic reskin, standard UNO rules. |
+| 396 | Uno New York Knicks Special Edition (2006) | RESKIN | Existence unconfirmed - likely conflated with the Sababa Toys MLB (Yankees/Mets) line; no NBA/Knicks product found. LOW. |
+| 397 | Uno Fandom Monster High | RESKIN | Confirmed (Mattel Creations, March 2024 Fandom line): likely special rule "Frankie's Hand" (view and swap a card with another player's hand) per trade press. Confirmed distinct from #426 "Fandom Monster High Fearbook," a separate product. MED. |
+| 398 | Uno Magic Tree House | RESKIN | Existence unconfirmed after a real search - nothing found at all. LOW. |
 | 399 | Uno Pocket Sunset Boulevard | UNKNOWN | Still unresolved after a dedicated search across 3 angles (the film, the musical, the restaurant chain). "Uno Pocket" itself is a confirmed real reduced-deck promo-giveaway family (Wendy's, Pizza 73, Nivea, etc.) - this specific branding just left no discoverable trace. |
 | 400 | Uno Master | MECHANIC | Likely shorthand for Masters of the Universe's "Power of Greyskull" card. |
 | 401 | Uno Xbox 360 Live | DIGITAL-ONLY | Not a separate SKU - these are features of #113's same 2006 release (literal webcam video chat + 4 enumerated theme decks). See Part E1. |
-| 402 | Uno McDonald's 2007 | RESKIN | Cosmetic reskin, standard UNO rules. |
+| 402 | Uno McDonald's 2007 | RESKIN | Existence unconfirmed for this date/market. Other McDonald's UNO promos exist in different years/markets (Japan 2026, Croatia) with their own special/hologram cards, not confirmable for a 2007 release. LOW. |
 | 403 | Uno ColorADD | ACCESSIBILITY | Colorblind ColorADD symbol markings. See A11. |
 | 404 | Uno Arcade Edition (Apple Arcade) | DIGITAL-ONLY | Dev. Mattel163, June 2025. Single Player/Quick Match/Custom Games; new cards incl. Wild Swap Hands, Double Discard All. See Part E3. |
 | 405 | Uno Teams! | MECHANIC | Deeper 2v2 team play with card-passing/pooled hands. See A3. |
@@ -790,14 +790,14 @@ on RESKIN entries in bulk.
 | 407 | Uno Show 'Em No Mercy Deadpool Reverse Draw 10 Promo Card | MECHANIC | Reverse + draw-10 combined effect. |
 | 408 | Uno Elite NFL Core Edition (2024) | MECHANIC | "Elite Icon" drafted-player-power system. See A7. |
 | 409 | Uno Elite NFL Draft Expansion Pack (2024) | MECHANIC | More Player Cards for the Elite Icon system. |
-| 410 | Uno Beetlejuice Beetlejuice | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 411 | Uno Crayon Shinchan (Japan) | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 412 | Uno One Piece (2024) (Japan) | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 413 | Uno Chiikawa (Japan) | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 414 | Uno Fandom Batman The Animated Series | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 415 | Uno Fandom Batman Batmobiles & Gadgets | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 416 | Uno Fandom Batman Classic TV Series | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 417 | Uno Moana 2 | RESKIN | Cosmetic reskin, standard UNO rules. |
+| 410 | Uno Beetlejuice Beetlejuice | RESKIN | Confirmed (2024 Mattel/WB film tie-in): "Beetlejuice Beetlejuice Beetlejuice" card - draw 3, give them to a chosen opponent while saying "Beetlejuice" three times (sources differ slightly on exact penalty wording). MED. |
+| 411 | Uno Crayon Shinchan (Japan) | RESKIN | Confirmed (Ensky, ¥1,250); no special card confirmed, though plausible by Ensky-pattern analogy. LOW-MED. |
+| 412 | Uno One Piece (2024) (Japan) | RESKIN | Unresolved: two distinct products exist - an older ~2016 Bandai/Mattel edition (confirmed "Hiken no Ace"/"Ace's Fire Fist" doubling card + a Hancock/"Mero Mero Mellow" card, matching #271/#273's existing findings) and a separate Nov 2024 Ensky edition (¥1,760) matching this doc's date. Not confirmed whether the 2024 Ensky edition reuses those same 2 cards. Flag for cross-referencing against #139/#271/#272/#273 - risk of yet another One Piece double-count. MED mechanic exists in the license, LOW-MED for this specific SKU. |
+| 413 | Uno Chiikawa (Japan) | RESKIN | Confirmed (Ensky, Aug 2024): "Shooting Star" (流れ星) card - lets you chant a wish (up to 3 times per the source), exact trigger/resolution mechanics beyond that not confirmed. MED. |
+| 414 | Uno Fandom Batman The Animated Series | RESKIN | Confirmed as part of the Fandom line via 2024 reseller listings; specific bonus card not found (don't attribute the unrelated "Bat Signal" rule, which belongs to a different non-Fandom "UNO Batman Comics" edition, JBG35). LOW-MED existence, LOW card. |
+| 415 | Uno Fandom Batman Batmobiles & Gadgets | RESKIN | Confirmed (Batman 85th-anniversary Fandom deck): "Bat-Bomb" wild foil card - collects everyone's cards and deals new hands (single source). MED. |
+| 416 | Uno Fandom Batman Classic TV Series | RESKIN | Confirmed (1966 Adam West series theme): "BAM! THWACK! ZAMM!" foil wild card - choose the color in play, every player must shout a comic-book sound effect each time that color is played thereafter. MED-HIGH. |
+| 417 | Uno Moana 2 | RESKIN | Confirmed (2024 Mattel): "Wild Wayfinder" - search the draw pile top-to-bottom for a Draw Two/Four card and place it on the discard pile. MED. |
 | 418 | Mini Uno Bullseye | MECHANIC | Choose-the-target ("Bullseye") rule. See A3. |
 | 419 | Uno Add-On Packs! Speed Pack | MECHANIC | Escalating discard-speed-level mechanic. See Part C roadmap. |
 | 420 | Uno Add-On Packs! Swap Pack | MECHANIC | Hand-swap card cluster. See A3. |
@@ -808,23 +808,23 @@ on RESKIN entries in bulk.
 |---|-------|----------|-----------------|
 | 421 | Uno Add-On Packs! Reverse Pack | MECHANIC | Reverse-combo cards + penalty-reflect wild. See A2. |
 | 422 | Uno Add-On Packs! Stack Pack | MECHANIC | Officialized stacking + random-N stack. See A2. |
-| 423 | Uno Pixar (2025) | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 424 | Uno Barbie (2025) | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 425 | Uno Fandom She-Ra Princess of Power | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 426 | Uno Fandom Monster High Fearbook | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 427 | Uno The Quintessential Quintuplets (Japan) | RESKIN | Cosmetic reskin, standard UNO rules. |
+| 423 | Uno Pixar (2025) | RESKIN | Very likely the SAME Mattel SKU (GVP47) as #260's existing "Uno Pixar (2021)" entry - the rule found here (name a movie, name characters, draw per correct answer) matches #260's "Pixar Pop Quiz" almost exactly. Flag for cross-reference/possible merge; "2025" vs "2021" date needs a source check. MED. |
+| 424 | Uno Barbie (2025) | RESKIN | Very likely the SAME Mattel SKU (HPY59) as #316's existing "Uno Barbie (2013)" entry, already corrected to "Played With Too Much" (2023 Barbie The Movie tie-in) - not a genuinely distinct 2025 product. Flag for cross-reference/possible merge. MED mechanic, LOW on this date. |
+| 425 | Uno Fandom She-Ra Princess of Power | RESKIN | Confirmed (2024 Fandom line): "Unite Etheria" rule on an alt-art foil Wild card (draw a card, discard two - exact full wording unconfirmed, single source). Distinct from the unrelated Masters-of-the-Universe-movie "Sword of Power" deck (JNP53) - don't conflate. LOW-MED. |
+| 426 | Uno Fandom Monster High Fearbook | RESKIN | Confirmed (Mattel JFP08, 2025): "Fearbook" rule on an alt-art foil Wild card - other players must show a matching pair of cards forming a "complete Fearbook" or draw until they can. Confirmed distinct from #397's "Frankie's Hand" - a separate Monster High Fandom product, not a duplicate. MED. |
+| 427 | Uno The Quintessential Quintuplets (Japan) | RESKIN | Existence unconfirmed despite Japanese-language searches - no product page found. LOW. |
 | 428 | Uno Expo 2025 (Japan) | MECHANIC | "WORLD" wild: restrict play to one color until broken by a Wild/Wild+4. |
-| 429 | Uno Blue Lock (Japan) | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 430 | Uno Fandom Star Wars Troopers | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 431 | Uno Fandom Star Wars Posters | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 432 | Uno Fandom Star Wars Droids | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 433 | Uno Demon Slayer (Japan) | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 434 | Uno Superman (2025) | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 435 | Uno Simpsons (2009) | RESKIN | Cosmetic reskin, standard UNO rules. |
+| 429 | Uno Blue Lock (Japan) | RESKIN | Existence unconfirmed despite Japanese-language searches - no product page found. LOW. |
+| 430 | Uno Fandom Star Wars Troopers | RESKIN | Deck confirmed real (Walmart exclusive, ~$5); specific rule/card name not found despite targeted searches - likely one of Mattel item codes JCW36-39 (unconfirmed which). LOW-MED. |
+| 431 | Uno Fandom Star Wars Posters | RESKIN | Deck confirmed real (Walmart exclusive); specific rule/card name not found - same JCW36-39 code-range candidate as #430/#432. LOW-MED. |
+| 432 | Uno Fandom Star Wars Droids | RESKIN | Deck confirmed real with a foil card (Walmart listing, 14 reviews); specific rule/card name not found - same JCW36-39 code-range candidate. LOW-MED. |
+| 433 | Uno Demon Slayer (Japan) | RESKIN | Confirmed (Ensky "Devil Blade" accessory deck, April 2025): ships 4 exclusive/secret special rule cards (2 independent sources agree on the count), exact names/effects not found. MED. |
+| 434 | Uno Superman (2025) | RESKIN | Confirmed (distinct from the 2024 "Ultimate DC" and Batman 35th Anniversary decks): "Kryptonite" Wild Rule targeting green cards - sources disagree whether it sends all green cards in play to one opponent or strips green cards from every hand. MED. |
+| 435 | Uno Simpsons (2009) | RESKIN | Likely a date-confused duplicate: all current search hits for "UNO: The Simpsons" point to the same SKU as #483 "The Simpsons (2025)" below (which has a confirmed bonus rule), not a genuinely distinct 2009 product. Also likely overlaps with #259 "The Simpsons Springfield" - 3 doc entries may be 1 product. Flag for a future merge/cross-reference pass. LOW. |
 | 436 | Uno Card Premium Pack With A UNIQUE Uno Card Box | RESKIN | Collector packaging item, standard UNO rules. |
-| 437 | Uno Jurassic World Rebirth | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 438 | Uno Chainsaw Man Reze Arc (Japan) | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 439 | Uno Jujutsu Kaisen (Japan) | RESKIN | Cosmetic reskin, standard UNO rules. |
+| 437 | Uno Jurassic World Rebirth | RESKIN | Confirmed (Mattel JFT28, 2025 film tie-in): "Attack of the T. Rex" Wild card - name a color, anyone who can't match it draws 5; also the foil collectible insert. MED. |
+| 438 | Uno Chainsaw Man Reze Arc (Japan) | RESKIN | Confirmed (Ensky-style, July 2025); ships 4 original special rule cards (2 sources agree on count), exact names/effects not found. LOW-MED. |
+| 439 | Uno Jujutsu Kaisen (Japan) | RESKIN | Confirmed (Ensky, late Aug 2025, ¥1,540); ships 4 original special rule cards (Ensky house pattern), exact names/effects not found. LOW-MED. |
 | 440 | Uno Fandom NFL Jacksonville Jaguars | MECHANIC | Fandom NFL mechanic, team art only. See A7. |
 | 441 | Uno Fandom NFL Cincinnati Bengals | MECHANIC | Fandom NFL mechanic, team art only. |
 | 442 | Uno Fandom NFL New Orleans Saints | MECHANIC | Fandom NFL mechanic, team art only. |
@@ -861,14 +861,14 @@ on RESKIN entries in bulk.
 | 473 | Uno Elite NFL Alt Jerseys Edition Starter Pack (Hypnotic Cards) (2025) | MECHANIC | Elite Icon system; Hypnotic rarity tier, rule-uniqueness unconfirmed. |
 | 474 | Uno Elite NFL Alt Jerseys Edition Booster Set Plus (Hypnotic Cards) (2025) | MECHANIC | Elite Icon system, booster format. |
 | 475 | Liar's Uno Trust No One | DIFFERENT-GAME | Face-down bluff/challenge subsystem. See A8. |
-| 476 | Uno Hotwheels (Italy) (2021) | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 477 | Uno Attack On Titan (Japan) | RESKIN | Cosmetic reskin, standard UNO rules. |
+| 476 | Uno Hotwheels (Italy) (2021) | RESKIN | Very likely the SAME international Hot Wheels UNO SKU as #324 "Uno Hotwheels (2014)" (already corrected to "a special rule and 4 corresponding action cards" - near-identical wording found for both), not a distinct Italian edition. Flag for cross-reference/possible merge. LOW-MED. |
+| 477 | Uno Attack On Titan (Japan) | RESKIN | Existence itself unconfirmed - searches repeatedly surfaced the unrelated "Union Arena" AoT trading-card game instead. May not be a real UNO product. LOW. |
 | 478 | Uno Add-On Packs! Billie Eilish | MECHANIC | Original rule cards + colorblind-friendly symbol markings. See A8/A11. |
-| 479 | Uno Wednesday | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 480 | Uno Fandom Gremlins | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 481 | Uno Fandom Chucky | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 482 | Uno Wicked | RESKIN | Cosmetic reskin, standard UNO rules. |
-| 483 | Uno The Simpsons (2025) | RESKIN | Cosmetic reskin, standard UNO rules. |
+| 479 | Uno Wednesday | RESKIN | Confirmed (2024 Mattel/Netflix tie-in): "Wild Black is My Happy Color" - forces a draw+lose-turn unless the active player can play this unique black Wild, the only card that can change the active color. HIGH. |
+| 480 | Uno Fandom Gremlins | RESKIN | Confirmed (Mattel JLG94, official instruction-sheet filename found): Wild card "Never Feed Them After Midnight" + foil duplicate; exact draw-count effect not fully recovered. MED-HIGH. |
+| 481 | Uno Fandom Chucky | RESKIN | Confirmed (Fandom line, likely a newer wave per a 2026 copyright notice on one listing): special rule "Amulet" - swap a card in your hand for any card in the deck. MED. |
+| 482 | Uno Wicked | RESKIN | Confirmed (2025 Mattel film tie-in): special rule "Defy Gravity" - skip other players based on how many green cards you hold (exact skip-count-per-card unconfirmed). MED. |
+| 483 | Uno The Simpsons (2025) | RESKIN | Confirmed (current SKU, UPC 194735326846): "Woo-hoo! D'OH!" rule - triggered outcome is either safe ("Woo-hoo!") or forced to draw cards ("D'OH!"); also "Ay Caramba!" replaces the UNO call-out. Very likely the SAME underlying product as #435 "Simpsons (2009)" and #259 "The Simpsons Springfield" - 3 doc entries for what may be 1 product. HIGH existence/name, MED exact mechanic. |
 | 484 | Uno America's Newest Card Game Craze! (1973) | RESKIN | Historical baseline print; predates Wild Draw Four (introduced 1992). |
 
 ### #485–503 (never released)
@@ -929,8 +929,32 @@ user request, separate from Part E's digital-only pass). Progress:
   Structural finding: #319 "Boston Red Sox (2004)" and #347 "World Series Champions 2004 Boston Red Sox"
   look like the same product double-counted under two titles (same pattern as #271/#273 in batch 3) -
   flagged for a future merge/cross-reference pass, not fixed inline.
-* **Remaining RESKIN titles**: ~58 RESKIN-tagged rows remain unchecked across Parts C/D as of this
-  batch (108 minus this batch's 50); continue in further batches of 50 in title-number order.
+* **Batch 5 (FINAL - titles #349, #351, #353, #356-358, #360, #371, #387-389, #393-394, #396-398, #402,
+  #410-417, #423-427, #429-434, #435, #437-439, #476-477, #479-483 - 47 titles): done.** This closes out
+  every RESKIN-tagged row in the doc. Highlights: Harry Potter 2003's "Sorting Hat" (HIGH), Wednesday's
+  "Black is My Happy Color" (HIGH), The Simpsons' "Woo-hoo! D'OH!" (HIGH), Fandom Gremlins' "Never Feed
+  Them After Midnight" (MED-HIGH via official Mattel instruction sheet). Three NEW likely-duplicate
+  findings (same double-counting pattern as #271/#273 and #319/#347 from earlier batches), all flagged
+  for a future merge/cross-reference pass rather than fixed inline: (a) #435 "Simpsons (2009)," #483
+  "The Simpsons (2025)," and the existing #259 "Simpsons Springfield" are likely 3 doc entries for 1
+  product; (b) #423 "Pixar (2025)" is likely the same SKU as the existing #260 "Pixar (2021)" entry
+  ("Pixar Pop Quiz"); (c) #424 "Barbie (2025)" and #476 "Hotwheels (Italy) (2021)" are likely the same
+  SKUs as the existing #316 "Barbie (2013)" and #324 "Hotwheels (2014)" entries respectively. Confirmed
+  #397 "Fandom Monster High" ("Frankie's Hand") and #426 "Fandom Monster High Fearbook" are genuinely
+  TWO separate products, not a duplicate. #412 "One Piece (2024) (Japan)" needs cross-referencing
+  against #139/#271/#272/#273 - a real risk of a 4th One Piece double-count. Existence could not be
+  confirmed at all for several titles despite a real search effort (candidates for a future
+  existence-verification pass): #358, #360, #394, #396, #398, #402, #427, #429, #477.
+* **Reskin verification pass: COMPLETE.** All ~255 RESKIN-tagged rows and both remaining UNKNOWN rows
+  have now been checked across 5 batches (totaling ~247 titles researched). Outstanding follow-up work
+  identified across the whole pass, for a future dedicated session: (1) merge/cross-reference the
+  several likely-duplicate title pairs/triples flagged above and in batches 3-4; (2) retag the
+  electronic-hardware miscategorizations (#248 "Disney (2002)," #263 "Master Disney Pixar Cars") away
+  from plain RESKIN; (3) a dozen-plus titles across batches 4-5 where existence itself could not be
+  confirmed online, which may be doc errors, extremely obscure regional releases, or simply
+  under-indexed - worth a manual check against physical collections/BGG catalog IDs if pursued further;
+  (4) the 2 titles left as explicit UNKNOWN (#377, #399) per the user's standing permission to leave
+  them for manual verification.
 
 ---
 
