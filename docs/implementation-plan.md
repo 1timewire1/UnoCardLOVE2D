@@ -8,8 +8,8 @@ This is the build plan that follows the research in `docs/gameversions.md` and t
    collision once?** (Parts 4-6)
 
 It is grounded in the engine as it stands today (Part 1), because most of the ordering is forced by
-what the current code can't express yet. Part 7 lists the decisions that are yours to make before or
-during the work; each has a recommended default so work can start without waiting on them.
+what the current code can't express yet. Part 7 records the ten design decisions settled before work
+started; the phases below already reflect them.
 
 Conventions: "spec 01" means `docs/mechanics/01-stacking-penalties-house-rules.md` and so on. "#N" is a
 Part D row in `docs/gameversions.md`. Effort is S (a day or two), M (about a week), L (several weeks).
@@ -53,9 +53,12 @@ pickers. That's why Phase 0 below is a refactor with no visible changes.
 3. **Official rules are the default; house rules are options.** Where a sheet rules (Jump-In cancels,
    No Mercy 7-0 is built in, All Wild can't be challenged), that's the default. Popular house variants
    (Jump-In adds to a stack) become sub-options.
-4. **Decks are presets, rules are layers.** A "deck mode" (Classic, Flip, No Mercy, All Wild, ...)
-   fixes the card list and any rules the product prints. House-rule toggles layer on top, and the
-   compatibility table (Part 5) decides which toggles a deck greys out, locks or forbids.
+4. **Free toggles with guardrails (D3).** Every deck mode (Classic, Flip, No Mercy, All Wild, ...)
+   and every house rule is a toggle the player can reach. A deck mode fixes the card list and the rules
+   the product prints. When a toggle the player turns on conflicts with one already on, the old one
+   switches off automatically and a short notice says so ("Flip turned off Swap Pack"). Toggles that
+   only partly apply stay usable and say so ("7 only: this deck has no 0s"); rules a mode builds in
+   show as on and locked. The compatibility table (Part 5) is the data behind all three behaviors.
 5. **Popularity breaks ties.** Flip is the most reused mechanic in the survey, No Mercy the most
    requested modern one, Jump-In the most common house rule. Among things with equal prerequisites,
    those go first.
@@ -131,13 +134,18 @@ later.
 
 ```lua
 { key = "jumpIn", kind = "toggle", default = false,
-  inertWhen = function(deck) ... end,     -- grey out with a reason string
-  lockedBy  = function(deck, rules) ... end, -- forced on/off by a mode
-  conflicts = { "speedPack" } }
+  group = "deck",                            -- deck modes form one exclusive group
+  conflicts = { "speedPack" },               -- turning this on switches these off
+  partialWhen = function(rules) ... end,     -- still usable; returns a note ("7 only")
+  lockedBy  = function(rules) ... end }      -- shown on and locked by a mode
 ```
 
-`rulePages()`, `saveSettings()`/`loadSettings()` and the `persist` test are generated from the
-descriptors. Old keys (`sevenZero=`, `stack=`, ...) keep loading.
+Turning a toggle on runs one resolver: it switches off everything in `conflicts` (both directions,
+so the table only needs one side) and anything else in the same exclusive `group`, then returns the
+list of what changed for the on-screen notice. The resolver is pure data plus one function, so the
+tests can call it directly. `rulePages()`, `saveSettings()`/`loadSettings()` and the `persist` test
+are generated from the descriptors. Old keys (`sevenZero=`, `stack=`, ...) keep loading, and a saved
+file that somehow holds two conflicting toggles is repaired on load by the same resolver.
 
 **0d. Match state.** Split `recent[3]` into the card on top and a separate `match` record
 `{color, face, number, tags}`. `calcLegality()` becomes "is this def legal against `match` under the
@@ -157,6 +165,13 @@ self-play rule matrix is generated from the rules descriptors, skipping combinat
 `specLegal` stays an independent implementation (re-derived from the defs, not from the engine's
 legality code) so it still catches engine bugs.
 
+**0g. Seat list (D6).** All new Phase 0 code (effect targets, `pickSeat`, replay v2, rule
+descriptors) takes seats from a list instead of assuming 0-3, and `getNext()`, `getPrev()` and
+`getOppo()` move onto an ordered active-seat list now rather than in Phase 6. Replay v2's header
+records the seat count. `getOppo()` is redefined as "partner seat" and used only by Teams/2vs2, since
+"opposite" means nothing with odd or larger seat counts. The table layout, hand fans, animations and
+AI stay four-seat; lifting that is its own phase after Teams.
+
 *Exit criteria:* all current tests pass; old replays and settings load; a 10,000-game self-play run
 shows identical win distributions to before the refactor on the same seeds.
 
@@ -167,8 +182,15 @@ shows identical win distributions to before the refactor on the same seeds.
   old hand under the *discard* pile. Today's cards stay available under their real identities: the
   current Wild Swap Hands is the classic/Comeback card of that name, and the current Refresh Hand is
   Captain Marvel's Cosmic Crush, so both move into the Phase 2 card catalog rather than being lost.
-* **Hand cap policy.** Decide what happens at `MAX_HOLD_CARDS` (Part 6, C12) before any phase adds
-  bigger penalties.
+* **Hand cap setting (D5).** `MAX_HOLD_CARDS` becomes a setting with a "no cap" choice; draws that
+  hit the cap stay in the draw pile instead of vanishing (C12). The on-screen hand fan compresses so
+  hands above 26 cards still fit. The "reaching the cap knocks you out" toggle comes in Phase 6, once
+  seats can be knocked out.
+* **UNO call, simple version (D7), on by default.** An UNO button for you that's live while you're
+  about to play down to one card and until the next player acts; CPUs call with a per-difficulty
+  forget chance and try to catch a missed call with a per-difficulty catch chance; a caught player
+  draws 2. Calls, misses and catches are logged in the replay (`UN` opcode) so seeded games still
+  reproduce. Phase 7 extends it for the cards that react to a call.
 * **Match play.** Per-deck scoring tables; "first to N points" (500 default; 250 for Express-sized
   decks; 1000 for No Mercy), "first to 3 hands" (H2O), and Challenge UNO (eliminate at 500 points
   held). Include the official rule that a Draw Two or WD4 played as the last card still makes the
@@ -176,7 +198,7 @@ shows identical win distributions to before the refactor on the same seeds.
 * **Two-player rule table.** Formalize the existing Reverse-as-Skip into a per-effect 2-player
   override (Part 6, C13), so later phases fill in a row instead of adding special cases.
 
-*Content wave:* official Swap Pack; classic match play to 500.
+*Content wave:* official Swap Pack; classic match play to 500; calling UNO.
 
 ### Phase 2: Effect primitives and themed bonus cards (M)
 
@@ -254,9 +276,10 @@ size bounds, color set, and the rules it forces. Presets in order:
 
 ### Phase 6: Elimination and Show 'Em No Mercy (L)
 
-* **Seat deactivation.** `getNext()`, `getOppo()` and `getPrev()` iterate an active-seat list instead
-  of fixed 2/3/4 patterns; a knocked-out seat is skipped, can't be targeted, and its hand goes aside.
-  This is also the deferred "shrinking table" mode from Part C, which comes almost free here.
+* **Seat deactivation.** The active-seat list from Phase 0g gains knockouts: a knocked-out seat is
+  skipped, can't be targeted, and its hand goes aside. This is also the deferred "shrinking table"
+  mode from Part C, which comes almost free here.
+* **Cap knockout toggle (D5):** reaching the hand cap knocks you out, in any deck mode.
 * **No Mercy** (HWV18): the `equalOrHigher` stack policy, draw-until-playable then must play, Mercy
   Rule at 25+ cards checked after *every* hand change, Discard All, Skip Everyone, Wild Reverse Draw 4
   (and its 2-player rule), Color Roulette (the victim names the color), built-in 7-0, scoring
@@ -279,9 +302,11 @@ size bounds, color set, and the rules it forces. Presets in order:
   seat). Defense Pack, Wild NO U, Super Star, Agent P, Avengers Assemble, BFF Power, Flitterific, This
   is the Way, Invisibility, Wild Petty Play.
 * **Out-of-turn plays** that aren't reactions: Avatar State.
-* **UNO call.** A press-UNO button with an AI timing model and the classic 2-card catch penalty,
-  default off (the original game didn't have it). Hail Mary, Dawg Pound and Flip Attack's missed-UNO
-  rule hang off it.
+* **UNO call, extended.** Phase 1's call becomes an event other cards can react to: Hail Mary,
+  Dawg Pound, Flip Attack's missed-UNO rule (2 presses), and Teams' partner calling for you.
+* **Your reaction prompt (D10).** A short timed prompt appears only when you hold a card that can
+  legally respond or jump in, and times out to "pass". An "always wait for me" option removes the
+  timer.
 
 *Content wave:* Jump-In, Defense Pack, Reverse Pack's Wild NO U, about a dozen response bonus cards.
 
@@ -353,8 +378,9 @@ Kevin's Chili, Touchdown!) resolve with simulated AI reaction times against a hu
 ### Not planned
 
 * **Different games under the UNO brand** (Skip-Bo, Phase 10, Dos, Stacko, ...): separate projects.
-* **More than four seats** (UNO Party!, Teams with 3-4 teams, Flip at 10 players): blocked until the
-  seat refactor in D6 is chosen.
+* **More than four seats on screen** (UNO Party!, Teams with 3-4 teams, Flip at 10 players): the
+  engine is seat-count agnostic from Phase 0g (D6); the table layout, AI tuning and tests for 5+ seats
+  are a dedicated phase after Teams, not scheduled yet.
 * **Real-time reaction hardware** (Flash, Reflex, Showdown, Blitzo) beyond Phase 15's simulated races.
 * **UNO 52's poker hands**: a different scoring game bolted onto UNO, revisit last.
 * **Wagering / payout multipliers** (UNO Mobile): excluded on principle.
@@ -427,14 +453,17 @@ Rules this pipeline settles in one place:
 ## Part 5: Compatibility of deck modes and rule toggles
 
 Legend: ✓ works unchanged · **P** works with the rule in the footnote · **L** locked by the deck
-(forced on or off, shown but not editable) · — inert (greyed out, with the reason) · ✗ not offered.
+(forced on or off, shown but not editable) · — does nothing with this deck (stays selectable, with
+the reason shown) · ✗ conflicts: turning one on switches the other off, with a notice (D3).
+
+Deck modes are themselves one exclusive group: turning on Flip switches off No Mercy, and so on.
 
 | Deck mode ↓ / toggle → | 7-0 | Jump-In | Stacking | Draw to match | Bullseye | WD-type challenge | Swap / Add-On packs | Bonus Wild | Teams |
 |---|---|---|---|---|---|---|---|---|---|
 | Classic 108 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | Iconic (112) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | Express / Pocket | P¹ | ✓ | P² | ✓ | ✓ | P³ | P⁴ | ✓ | ✓ |
-| Junior / My First | ✓ | ✓ | P² | ✓ | P⁵ | — | ✗⁶ | ✗⁶ | ✗⁶ |
+| Junior / My First | ✓ | ✓ | P² | ✓ | P⁵ | — | P⁴ ⁶ | P⁶ | ✓ |
 | All Wild | — | ✗⁷ | P² | — | ✓ | L (off) | ✗⁸ | ✓ | ✓ |
 | Flip | P¹ | P⁹ | P¹⁰ | ✓ | P⁵ | P³ | ✗¹¹ | ✗¹¹ | ✓ |
 | No Mercy | L (on) | P¹² | L (≥ value) | L (on, must play) | P⁵ | — | P¹³ | ✓ | P¹⁴ |
@@ -453,7 +482,7 @@ Legend: ✓ works unchanged · **P** works with the rule in the footnote · **L*
 4. Add-On Packs are printed for 108-card decks; allowed, with a warning that they swamp a 56-card deck.
 5. Bullseye retargets the deck's own +N and Skip cards. Skip Everyone, Wild Draw Color and targeted
    draws already choose their own target and ignore it.
-6. Kids' decks are kept simple: optional packs and Teams aren't offered.
+6. Allowed, but the description warns that it makes a kids' deck much more complicated.
 7. With every card wild, "identical face" matches constantly and Jump-In becomes the whole game.
 8. Colored add-on cards have no meaning in a colorless deck.
 9. "Identical" means the same face on the active side.
@@ -540,8 +569,10 @@ chain inside a Spin "2x" is still one chain). In a chain, only the last card's a
 card says otherwise (NDJOLIJEAN: all fire). Two +2s in one turn count as one stack contribution under
 `sameType` (Progressive's one-per-turn rule).
 
-**C9. Inert toggles.** Driven by `inertWhen` on each descriptor (Part 5). The settings screen shows the
-reason ("this deck has no 0s").
+**C9. Conflicting and inert toggles (D3).** Driven by `conflicts`, `group`, `partialWhen` and
+`lockedBy` on each descriptor (Part 5, Phase 0c). Turning on a toggle switches off whatever conflicts
+with it and shows what changed; inert or partial toggles stay selectable and show the reason ("this
+deck has no 0s").
 
 **C10. Challenges.** The Phase 3 challenge object. Who may challenge: only the seat the penalty lands
 on. Who plays next after a challenge (sheets are silent; Wikipedia's reading): success, the challenger
@@ -555,7 +586,9 @@ Express, Junior, Flip Express).
 **C12. Hand cap.** `MAX_HOLD_CARDS = 26` silently drops extra draws today, which changes outcomes and
 breaks card conservation under big penalties. Options: (a) raise the cap and compress the hand fan,
 (b) keep the cap and leave capped draws in the deck (documented, conserved), (c) under No Mercy the
-Mercy Rule makes the cap moot at 25. Recommended: (b) now, (a) when the hand UI is reworked.
+Mercy Rule makes the cap moot at 25. Decided (D5): the cap is a setting (including no cap), capped
+draws stay in the deck as in (b), the hand fan compresses as in (a), and a separate toggle makes
+reaching the cap a knockout.
 
 **C13. Two-player overrides.** One table, filled per effect:
 
@@ -569,7 +602,7 @@ Mercy Rule makes the cap moot at 25. Recommended: (b) now, (a) when the hand UI 
 | No Mercy Wild Reverse Draw 4 | Its player draws 4 unless the opponent stacks it back (sheet HWV18) |
 | 50/50 coin (#6) | You must be one of the two players (sheet HBF05) |
 | "Everyone except you", "fewest cards" | The opponent |
-| Teams | Not offered with 2 players |
+| Teams | Conflicts with a 2-player game: turning Teams on sets 4 players, as 2vs2 does today |
 
 **C14. Discards outside normal play.** Each discard primitive carries `actionsFire = true/false` from
 its sheet (spec F2 item 11): true for Roboto, Eye Eye, Wild Jackpot, Spin 2005, Blast and NDJOLIJEAN;
@@ -590,34 +623,36 @@ in development.
 
 ---
 
-## Part 7: Decisions for you
+## Part 7: Decisions (settled 2026-10-23)
 
-Each has a recommended default so work can start without waiting.
-
-| # | Decision | Recommendation |
+| # | Decision | Outcome |
 |---|---|---|
-| D1 | Should the Swap Pack toggle switch to the official card behavior? | Yes. Keep today's two variants as the separately named classic Wild Swap Hands and Cosmic Crush-style card (Phase 1). |
-| D2 | Jump-In default | Official cancel-and-replace, with "adds to stack" as a sub-option. |
-| D3 | Free toggles or curated presets? | Presets for deck modes, free toggles on top, greyed out by Part 5. No "anything goes" mode. |
-| D4 | Themed bonus cards use licensed names (Marvel, Disney, NFL, ...)? | Use original, generic names and art in the game ("Power Surge: all others draw 3"), with the inspiring product noted only in the docs. This keeps the project clear of trademarks and matches how the new card art is already drawn. |
-| D5 | Hand cap | Keep 26, leave capped draws in the deck (C12 option b). |
-| D6 | Break the four-seat limit? | Not yet. Revisit after Phase 6's active-seat list, which is most of the work. |
-| D7 | UNO call | Add it in Phase 7, off by default. |
-| D8 | Honor-system cards | Ship only those with a draw-penalty fallback (Phase 15). |
-| D9 | Unprinted numbers (copy counts, device odds, Flip face pairing) | Pick documented values, keep them in data files, and say "provisional" in the deck description. |
-| D10 | Response-window prompt for the human | A short timed prompt that only appears when you hold a legal response; off by default, with an "always ask" option. |
+| D1 | Swap Pack accuracy | The Swap Pack toggle switches to the official sheet: Wild Force Trade swaps any two players, Swap 1 lets you choose the card you give back, Refresh Hand goes under the discard pile. Today's Wild Swap Hands and Refresh Hand stay as separately named cards (the classic deck's Wild Swap Hands and a Cosmic Crush-style card), offered through later options (Phase 1). |
+| D2 | Jump-In | Official cancel-and-replace by default, with an "adds to stack" sub-option (Phase 7). |
+| D3 | How free combinations are | Every toggle, deck modes included, is available. Turning one on automatically switches off any conflicting toggle with a notice; toggles that only partly apply stay usable and explain why; rules a mode builds in show as locked (Phase 0c, Part 5, C9). |
+| D4 | Themed bonus card names | Original, generic names and icons in the game; the inspiring product is noted only in the docs. |
+| D5 | Hand cap | A setting, including "no cap"; capped draws stay in the deck; the hand fan compresses (Phase 1). A separate toggle makes reaching the cap a knockout (Phase 6). |
+| D6 | More than four seats | Split: the engine becomes seat-count agnostic in Phase 0 (0g); the screen layout and AI for 5+ seats get their own phase after Teams. |
+| D7 | Calling UNO | Simple version in Phase 1 (button, CPU forget and catch chances, draw 2 if caught), on by default; extended for reaction cards in Phase 7. |
+| D8 | Honor-system cards | Only cards that print a draw-penalty fallback, with the fallback as the real effect (Phase 15). |
+| D9 | Unprinted numbers | Documented values in easy-to-tune data files, marked "provisional" in the deck description. |
+| D10 | Your reaction prompt | A short timed prompt only when you hold a legal response or Jump-In card, timing out to "pass"; an "always wait for me" option removes the timer (Phase 7). |
 
 ---
 
 ## Part 8: Testing strategy per phase
 
-* **Self-play matrix** generated from rules descriptors and deck presets, skipping ✗ cells in Part 5,
-  run on fixed seeds. Invariants: card conservation against the deck manifest, hand sizes within the
+* **Self-play matrix** generated from rules descriptors and deck presets, run on fixed seeds. Because
+  every toggle is reachable (D3), the matrix samples random toggle sets, passes each through the
+  conflict resolver, and plays whatever comes out; the resolver itself gets unit tests that no
+  conflicting pair survives and that every switched-off toggle is reported. Invariants: card conservation against the deck manifest, hand sizes within the
   cap, legality against `specLegal`, termination (with draw-until caps), replay reproduction.
 * **Policy-specific tests** for every row of the toggle-against-toggle table, as scripted hands
   (`tests/humanplay.lua` style) that set up the exact situation (a +2 stack with a Jump-In waiting, a
   reflect on a reflect, a Flip played onto a pending stack).
 * **Golden replays**: one recorded game per official product, checked into `tests/`, that must replay
   identically after every change.
+* **UNO call**: with forget and catch chances at 0 and 1, scripted hands check the 2-card penalty
+  fires exactly when it should, and replays reproduce every call.
 * **Refactor guard** (Phase 0): win-rate and game-length distributions on 10,000 seeded games must
   match before and after.
