@@ -1,282 +1,411 @@
 # Final review 1: Stacking, penalties and official house rules
 
-> Reference spec for `docs/gameversions.md` (see its Part F). Gathered from web-search snippets only; direct page fetches were blocked during research, so treat anything below HIGH as needing a check against the official instruction sheet before shipping.
+> Reference spec for `docs/gameversions.md` (see its Part F). **Verified against Mattel's official instruction sheets** (service.mattel.com) in a second pass. Claims marked "(sheet CODE)" quote or closely paraphrase that sheet. Anything still resting on web snippets, fan wikis or package art is marked as such.
 
-Research cluster: UNO Show 'Em No Mercy (and its expansion and Deadpool editions), the 2024-25 Add-On Packs, official house-rule definitions, and UNO Attack.
+Research cluster: UNO Show 'Em No Mercy (base, Expansion Pack, No Mercy Attack, Deadpool edition), all ten UNO Add-On Packs, official classic rules and house rules, and UNO Attack (1999, 2010s, 2020).
 
-**Method and limits.** WebFetch and curl were blocked, so everything here comes from WebSearch result snippets (33 queries). Some snippets quote Mattel instruction sheets directly: HVW18 (No Mercy), JCV58 (Stack Pack), JHG45 (Billie Eilish), T8219, GXY78 and GNL02 (UNO Attack). Others come from retailers (Mattel shop, Kmart, Silicon Power and Shop of Magic listings), GeekyHobbies, GameRules, Miexto, Wikipedia and BGG.
+**Method.** First pass: WebSearch snippets only (fetches blocked). Second pass: downloaded and read the official sheets for HWV18/HXT57, JJB29, JNK69, JCV56-59, JHG45, JMM16-18, JPH28, classic 42003 (current and pre-2008 printings), 41940 "UNO Basic" (2008, with house rules), 41943 (UNO Attack 1999), T8219, GTX66, GXY78/GXY81 and GNL02 (UNO Attack). Card counts that the sheets don't print were checked against Mattel's own shop listings and package-back art (shop.mattel.com). BoardGameGeek and the UNO fandom wikis still return 403, so they are only reachable through search snippets.
 
 **Confidence tags:**
-- **HIGH**: two or more independent sources agree.
-- **MED**: one detailed, plausible source, or a direct quote from a Mattel sheet seen in only one snippet.
-- **LOW**: thin, inferred, or from my own prior recollection. These are marked **[recall]** and must be checked against the physical sheet.
+- **HIGH (sheet CODE)**: printed on that official Mattel instruction sheet.
+- **MED-HIGH (pkg CODE)**: read off Mattel's own package art or shop listing, not the sheet.
+- **MED**: one detailed secondary source, or two agreeing secondary sources.
+- **LOW**: thin or inferred. Don't implement from it without a check.
+- **UNVERIFIED**: no official source found in either pass.
 
-**Mattel instruction-sheet URLs.** These can't be fetched here; a human with a normal browser should check them.
-- No Mercy: `https://service.mattel.com/instruction_sheets/HVW18-Eng.pdf`
-- Stack Pack: `https://service.mattel.com/instruction_sheets/JCV58-Stack.pdf`
-- Billie Eilish: `https://service.mattel.com//instruction_sheets/JHG45_English.pdf`
-- UNO Attack (classic): `https://service.mattel.com/instruction_sheets/T8219.pdf`
-- UNO Attack (2020): `GXY78-FR.pdf`, `GXY81-Eng.pdf`, `GNL02-SP.pdf`
-- Swap Pack / Reverse Pack / Speed Pack: by product-code pattern, likely JCV59 / JCV56 / JCV57. The add-on pack sheets also turn up as `JCW36.pdf` to `JCW39.pdf`.
+**Official sheet URLs** (all fetchable from service.mattel.com):
+- No Mercy: `instruction_sheets/HVW18-Eng.pdf`. The *file name* transposes the letters; the part number printed on the sheet is **HWV18** (HWV18-4B70, HWV18-9564). The tin edition HXT57 serves the same sheet.
+- No Mercy Expansion: `JJB29_English.pdf` (vector art; text extracts with MuPDF, not pypdf).
+- No Mercy Attack: `JNK69_0970G1_DOM_IS_(-9994).pdf`.
+- Add-On Packs: `JCV56-Reverse.pdf`, `JCV57-Speed.pdf`, `JCV58-Stack.pdf`, `JCV59-Swap.pdf`, `JHG45_English.pdf`, `JMM16_2LB.pdf` (Frenemies), `JMM17_2LB.pdf` (Comeback), `JMM18_2LB.pdf` (Defense), `JPH28_DOM.pdf` (Love Island).
+- Classic UNO: `42003-Wild.pdf` (current, with Wild Swap Hands), `42003-Eng.pdf` / `42001.pdf` (older 112-card printing with 4 Blank cards; text is hex-encoded), `UNO%20Basic%20IS.pdf` (41940, 2008, 108 cards plus official house rules).
+- UNO Attack: `41943-0821-g1.pdf` (1999), `T8219.pdf`, `GTX66-Eng.pdf`, `GXY81-Eng.pdf` (served for both GXY78 and GXY81), `GNL02-Eng.pdf`.
 
 ---
 
-## 1. UNO Show 'Em No Mercy (2023, Mattel HVW18, 168 cards)
+## 1. UNO Show 'Em No Mercy (2023, Mattel HWV18; tin HXT57; 168 cards)
+
+The sheet's contents line says only "168 Cards"; it **prints no per-card counts**. Effects below are sheet wording.
 
 ### Card table
 
-| Card | Copies | Exact effect (official wording where snippet-quoted) | Confidence |
+| Card | Copies | Exact effect (HWV18 sheet) | Confidence |
 |---|---|---|---|
-| Number cards 0-9 (4 colors) | 80 (2 of each number per color) **[recall]** | Face value. 1-9 have no special effect. 0 and 7 have the effects below. | effect HIGH; count LOW |
-| 7 | (part of the number cards) | "Drop a 7 to swap hands with the player of your choice." (Nintendo/Ubisoft listing). Swapping is mandatory, not optional. | HIGH |
-| 0 | (part of the number cards) | Every player passes their hand to the next player in the direction of play. | HIGH (Sainsbury's loosely says "swap hands with another player"; Epic, Nintendo and Ubisoft say pass. Use pass.) |
-| Skip | 12 (3/color) **[recall]** | Next player loses their turn. | effect HIGH; count LOW |
-| Reverse | 12 (3/color) **[recall]** | Reverses direction. With 2 players it acts like a Skip (standard rule). | effect HIGH; count LOW |
-| Draw 2 (colored) | 12 (3/color) **[recall]** | Next player draws 2 and loses their turn. Stackable. | effect HIGH; count LOW |
-| Draw 4 (colored, *not* wild) | 8 (2/color) **[recall]** | Next player draws 4 and loses their turn. Plays on color or symbol like any colored card. Stackable. | existence HIGH (the stacking list "+2, +4, +6, +10" includes it, and Miexto lists "Draw 4"); count LOW |
-| Discard All | 12 (3/color) | "Discard all the cards in your hand that match the color of the Discard All Card. Place the extra cards under the Discard All Card." (HVW18 snippet) | effect HIGH; count MED (Miexto "Discard All Card – 12") |
-| Skip Everyone | 8 (2/color) **[recall]** | "Skip all the other players and take another turn." (HVW18 / Ubisoft) | effect HIGH; count LOW |
-| Wild Reverse Draw 4 | 8 **[recall]** | Choose a color, reverse direction; the next player *in the new direction* draws 4 and loses their turn. HVW18 snippet: "With just two players this card skips the other player and makes YOU draw 4 cards! You may use the stacking rule to send the penalty back to the other player." | effect HIGH; 2-player clause MED (single quoted snippet); count LOW |
-| Wild Draw 6 | 4 **[recall]** | "The next player must draw 6 cards and lose their turn." (HVW18) | effect HIGH; count LOW |
-| Wild Draw 10 | 4 **[recall]** | "The next player must draw 10 cards and lose their turn." (HVW18 via Ubisoft) | effect HIGH; count LOW |
-| Wild Color Roulette | 8 | Snippet (attributed to Mattel): "**The next player chooses a color.** After that, they must reveal cards one at a time from the Draw Pile until they get a card of that color (Wild Cards do NOT count). Then they add all the revealed cards to their hand and lose their turn." | effect MED. **Conflict on who picks the color:** the Mattel snippet says the *next* player; Miexto says "the color **you** decide". Count MED (Miexto "Wild Color Roulette Card – 8") |
+| Number cards 0-9 (4 colors) | 80 (2 of each number per color) | Face value. 0 and 7 have the special rules below. | effect HIGH (sheet HWV18); count MED (fan wiki, sums to 168) |
+| 7 | (part of the number cards) | "7's Swap - When you play a 7 card of any color, you MUST swap your hand with another player of your choice. Play then continues in current order." | HIGH (sheet HWV18) |
+| 0 | (part of the number cards) | "0's Pass - When you play a 0 card of any color, ALL players must pass their hand to the next player in the current direction of play." | HIGH (sheet HWV18) |
+| Skip | 12 (3/color) | "When played, the next player in current order loses their turn." | effect HIGH (sheet HWV18); count MED |
+| Reverse | 12 (3/color) | Reverses direction. "With just two players a Reverse skips the other player, letting you take another turn." | effect HIGH (sheet HWV18); count MED |
+| Draw Two (colored) | 12 (3/color) | "The next player in current order must draw 2 cards and lose their turn." Stackable. | effect HIGH (sheet HWV18); count MED |
+| Draw Four (colored, *not* wild) | 8 (2/color) | "When played, the next player must draw 4 cards and lose their turn." Listed under *Color* Action Cards in the scoring table, so it is a colored card. Stackable. | effect and colored status HIGH (sheet HWV18); count MED |
+| Discard All | 12 (3/color) | "Discard all the cards in your hand that match the color of the Discard All Card. Place the extra cards under the Discard All Card." | effect HIGH (sheet HWV18); count MED |
+| Skip Everyone | 8 (2/color) | "Skip all the other players and take another turn." | effect HIGH (sheet HWV18); count MED |
+| Wild Reverse Draw 4 | 8 | "Reverse the direction of play, then the next player in the new direction must draw 4 cards and lose their turn. With just two players this card skips the other player and makes YOU draw 4 cards! You may use the stacking rule to send the penalty back to the other player." | effect HIGH (sheet HWV18); count MED |
+| Wild Draw 6 | 4 | "The next player must draw 6 cards and lose their turn." | effect HIGH (sheet HWV18); count MED |
+| Wild Draw 10 | 4 | "The next player must draw 10 cards and lose their turn." | effect HIGH (sheet HWV18); count MED |
+| Wild Color Roulette | 8 | "**The next player chooses a color.** After that, they must reveal cards one at a time from the Draw Pile until they get a card of that color (Wild Cards do NOT count). Then they add all the revealed cards to their hand and lose their turn." | effect HIGH (sheet HWV18), **chooser conflict resolved: the next player (the victim) picks**; count MED |
 
-**Count check.** The recalled counts sum to 168 (80 + 12 + 12 + 12 + 8 + 12 + 8 + 8 + 4 + 4 + 8), which matches the official total (HIGH). The only counts confirmed by a source are Discard All (12) and Wild Color Roulette (8), both from Miexto (MED). Before shipping, check the counts against the HVW18 contents box or the matteluno.fandom.com page "Uno_Show_'Em_No_Mercy".
+**Count check.** The breakdown above (80 + 12 + 12 + 12 + 8 + 12 + 8 + 8 + 4 + 4 + 8 = 168) is the fan-wiki list (cardgameuno.fandom.com, via search snippet); it is the only full breakdown found and the only one that sums to 168. Miexto independently gives Discard All 12 and Color Roulette 8; retailers agree on Wild Draw 6 = 4 and Wild Draw 10 = 4. Mattel's sheet and shop listing don't print counts. Treat the counts as **MED**, not sheet-verified.
 
-### Core rules
+### Core rules (all HIGH, sheet HWV18)
 
-1. **Stacking (HVW18, quoted in a snippet; MED-HIGH):** "If someone plays a Draw Card (+2, +4, +6, +10) you can 'Stack' the penalty by playing a Draw Card from your hand of **equal or higher value**. If you do, the card you played adds to the total penalty for the next player." The stack continues until a player can't or won't stack; that player draws the whole accumulated total. Two further sources (a Nintendo article and Lilach Bullock) independently give the "equal or higher" wording, so the rule itself is HIGH.
-   - Value is the number printed on the card. Colored Draw 4, Wild Draw 4 and Wild Reverse Draw 4 are all value 4. So +2 can go on +2. +4 (colored or Wild Reverse) can go on +2 or +4. +6 can go on +2, +4 or +6. +10 can go on anything, including +10.
-   - Lower can't go on higher: no +2 on +4, no +4 on +6.
-   - **Wild Reverse Draw 4 stacks** as a +4 and reverses direction, so the stack returns to the previous player (HVW18 explicitly mentions "use the stacking rule to send the penalty back"). HIGH that it stacks; MED on the exact sending-back mechanic for 3+ players.
-   - Color matching is not required when stacking (implied by "equal or higher value"). A colored Draw 4 or Draw 2 can be laid on a Wild Draw 6 or similar regardless of color, as long as the value is high enough. MED (implied, not quoted).
-   - Wild Color Roulette, Skip Everyone, Reverse and Skip are **not** Draw Cards, so they can't be used to answer or deflect a stack. Inferred from the wording; MED.
-   - Whoever finally draws the total also loses their turn. Implied by "lose their turn" on each card; MED.
-2. **Draw until you can play (HIGH):** "If you don't have a matching card, you keep drawing until you find one" (Nintendo listing plus fan guides). LOW: whether the drawn playable card must be played immediately. Most sources imply yes.
-3. **Mercy Rule (HIGH):** "If your hand has 25 or more cards, you're out, no second chances!"
-   - The check is ≥25, not >25.
-   - It applies whenever a hand reaches 25, including in the middle of a penalty draw, and during a 0 or 7 hand swap. The swap case is inferred; LOW.
-   - **What happens to an eliminated player's cards: NOT FOUND (gap).** Two plausible readings: shuffled into the Draw Pile, or placed at the bottom of it. Recommend making this an engine option and verifying against HVW18.
-4. **Win condition (HIGH):** Win the round by emptying your hand **or** by being the last player standing after everyone else is knocked out (Ubisoft: "get rid of all your cards, or you can knock other players out by filling their hand with too many cards").
-5. **Scoring (MED that it exists, values LOW):** The HVW18 snippet says "All number cards (0-9) face value." I recall the target as 1,000 points. **[recall]** Action cards 20, Skip Everyone/Draw 4 around 25-30, Wilds 50. None of these values were confirmed; check the sheet.
-6. **UNO call:** standard. No No-Mercy-specific penalty was found.
+"4 special rules and 6 super-tough Action Cards have been added." The four special rules are Stacking, Mercy, 7's Swap and 0's Pass. The six new action cards are Discard All, Skip Everyone, Wild Reverse Draw 4, Wild Draw 6, Wild Draw 10 and Wild Color Roulette.
+
+1. **Setup:** deal 7 each. If the first Discard Pile card is an Action Card, "ignore it and flip over the next card." The player left of the dealer starts; play proceeds clockwise.
+2. **Stacking (sheet text):** "If someone plays a Draw Card (+2, +4, +6, +10) you can 'Stack' the penalty by playing a Draw Card from your hand of equal or higher value. If you do, the card you played adds to the total penalty for the next player. For example, if someone plays a +4 card on you, and you can play a +6 on top of it, the next player is now forced to draw 10 cards (unless they can play a Draw +6 or higher, then it goes on to the next player). This continues until someone can't play a Draw Card that equals or exceeds the value of the last card played. That player then takes the full penalty of all stacked Draw Cards. Ouch!"
+   - The comparison is against **the last card played**, not the running total. Colored Draw 4 and Wild Reverse Draw 4 are both value 4.
+   - Only Draw Cards (+2, +4, +6, +10) stack. Color Roulette, Skip Everyone, Skip and Reverse aren't Draw Cards and can't answer a stack. This is explicit from the list, HIGH.
+   - The sheet doesn't mention color when stacking. Reading "equal or higher value" as color-agnostic remains an inference (MED).
+   - Wild Reverse Draw 4 stacks and reverses, so the penalty heads back the other way. The 2-player clause ("send the penalty back") is printed.
+3. **Draw until you can play, then play it:** "If you DO NOT HAVE a matching card, you MUST draw cards from the Draw Pile UNTIL YOU DRAW A CARD YOU CAN PLAY. Then, play that card." The drawn playable card **must** be played (closes the earlier LOW gap).
+4. **Mercy Rule:** "If a player ever has 25 or more cards in their hand, they are out of the game. Set aside their hand of cards until the deck runs out and needs to be reshuffled."
+   - The threshold is ≥25. "Ever" supports checking after every hand-size change, including penalty draws and 0/7 hand passes (the swap case is still inference, MED-HIGH).
+   - **Knocked-out player's cards (gap closed):** set aside, **out of play**, until the Draw Pile runs out. Then they go back in with the reshuffle ("if there are no cards left in the Draw Pile, reshuffle the Discard Pile to form a new Draw Pile").
+5. **Win condition:** "When a player plays their final card, they win. Alternatively, if all other players are knocked out of the game (see Mercy Rule), you win."
+6. **Calling UNO:** "if someone catches you and calls out 'UNO' before you (and before the next player begins their turn), then you must draw 2 cards!"
+7. **Scoring ("Keeping Score (Optional Victory Method)"):** the winner of a hand scores the cards left in opponents' hands.
+   - Number cards 0-9: face value.
+   - "Any Color Action Card" (Skip, Reverse, Draw 2, Draw 4, Discard All, Skip Everyone): **20**.
+   - "Any Wild Action Card" (Wild Reverse Draw 4, Wild Draw 6, Wild Draw 10, Wild Color Roulette): **50**.
+   - "250 Points for each player knocked out of the game during the hand (ignore the cards in their hand at the time they were knocked out)."
+   - First to **1000** points wins. (Corrects the first pass's "Skip Everyone/Draw 4 around 25-30".)
 
 ### Edge cases & rulings
-- **2-player Wild Reverse Draw 4** (MED, quoted): the card skips the opponent and **the player who played it draws 4**, unless they stack it back. This is the oddest official clause; implement it literally behind a flag.
-- **2-player Reverse** = Skip (standard).
-- **2-player Skip Everyone** is the same as a Skip: you take another turn.
-- **Discard All:** "extra cards go under the Discard All card." The Discard All itself stays on top, so its color is the active color. LOW: whether you may go out by discarding your whole hand this way. Normally yes, since the card says "all".
-- **Color Roulette chooser conflict:** the next player choosing the color reads as the official wording (MED). Note that if the victim chooses, they would pick the color most likely to show up early. The next player draws and loses their turn.
-- **Skip Everyone:** after the skip, you take another turn immediately and may play any legal card.
-- Whether 0, 7 or Discard All can be played as an "answer" during a pending stack: **no**, only Draw Cards answer (inferred, MED).
+- **2-player Wild Reverse Draw 4** (HIGH, sheet HWV18): the player who played it draws 4, unless they stack it back. Implement literally.
+- **2-player Reverse** = take another turn (printed). **2-player Skip Everyone** = take another turn (follows from its text).
+- **Discard All:** the Discard All card stays on top, with the extra cards placed *under* it, so its color stays active. Whether you may go out this way isn't addressed; the text says "all" (LOW that it's forbidden).
+- **Color Roulette:** the victim chooses the color, reveals until that color appears (Wilds don't count), takes all revealed cards and loses their turn.
+- **Skip Everyone:** you take another turn immediately.
+- Only Draw Cards can answer a pending stack. 0, 7 and Discard All can't (HIGH, follows from the stacking text).
+- No Wild Draw 4 challenge exists in No Mercy; the sheet never mentions one (HIGH by absence).
 
-### No Mercy Expansion Pack (Mattel JJB29, 2024-25)
+### No Mercy Expansion Pack (Mattel JJB29, ©2024; 24 cards, 6 coins)
 
-| Item | Copies | Effect | Confidence |
+"These cards and coins are designed to be combined with a UNO Show 'em No Mercy card game and cannot be played with on their own." Expansion cards carry an identification icon in the bottom-left corner so they can be separated from the core deck (sheet JJB29).
+
+**Correction:** the first pass's "Wild Discard All + #10 + unknown third card" was incomplete. The pack has **five** card types.
+
+| Card | Copies | Exact effect (JJB29 sheet) | Confidence |
 |---|---|---|---|
-| "#10" number cards with "Ten Replay" modifier | 8 (BGG) | Number card 10. The player who plays it immediately takes another turn. | MED (BGG and BoardGameBliss) |
-| Wild Discard All | 8 | Choose a color, then discard every card you hold of that color. | MED (BGG and fandom) |
-| Third card type | 8 (inferred: 24 − 16) | **NOT FOUND.** My recollection of a "Wild Sudden Death"-type card is unverified and LOW; don't implement from this. | gap |
-| Mercy Coin | (6 coins total, split unknown; likely 3+3, LOW) | Throw out your hand and draw a new one. Once per round. | HIGH (Mattel shop and retailers) |
-| No Mercy Coin | (see above) | Doubles the penalty of a played card. Once per round. | HIGH |
+| 10's Play Again (colored number 10, all 4 colors) | not printed; 8 (2/color) per BGG snippet | "When you play this card, immediately take another turn." | effect HIGH (sheet JJB29); count LOW-MED |
+| Wild Discard All | not printed | "This card matches anything so you can play it no matter what card is on the Discard Pile. Pick the color you want to discard and discard all the cards in your hand of that color. This card goes on top of those cards. Since this a Wild Card, you also get to choose the color that continues play." | HIGH (sheet JJB29) |
+| Wild Reverse Draw 8 | not printed | "Reverse the direction of play AND make the next player in that direction draw 8 cards and lose their turn. You choose the color that continues play." It is a Draw Card of value 8, so it fits between +6 and +10 under the stacking rule (inference, HIGH). | HIGH (sheet JJB29) |
+| Wild Final Attack | not printed | "First, reveal your hand. The next player loses their turn and must draw 1 card for each Action Card and Wild Card in your hand (number cards don't count). If you reveal 7 or more Action and/or Wild Cards, that player must draw 25 cards instead AND all other players must draw 5 cards. You choose the color that continues play." | HIGH (sheet JJB29) |
+| Wild Sudden Death | not printed | "All players, including YOU, must draw cards from the Draw Pile until they have 24 cards in their hand – ouch! You choose the color that continues play." | HIGH (sheet JJB29) |
 
-The pack can't be played on its own; it needs the No Mercy base deck (HIGH).
+Counts: the 24 cards split over 5 types; nothing official prints the split. 8 tens + 4 of each wild = 24 is the most plausible (LOW-MED).
 
-### Deadpool edition / "Wild Reverse Draw 10"
-**NOT FOUND.** No snippet mentioned a Deadpool No Mercy edition or a Wild Reverse Draw 10. If the card exists, the natural model is Wild Reverse Draw 4 with value 10: it stacks on anything ≤10 and sends the stack back to the previous player. That is inference only (LOW).
+**Coins (6, two-sided; corrects "3+3").** Each coin has a **Mercy** face and a **No Mercy** face (sheet art plus package back). "Each player gets 1 coin and must declare at the beginning of each game if they are going to use the 'Mercy' or the 'No Mercy' side. You can use it on your turn whenever you want, but only once per game so choose wisely!" (sheet JJB29). The limit is once per **game**, not per round.
+
+| Coin side | Exact effect (JJB29 sheet) |
+|---|---|
+| Mercy | "You may immediately discard your ENTIRE HAND to the bottom of the Discard Pile, and then draw 7 fresh cards from the Draw Pile to create a new hand. You may use this even if you would have been knocked out for having more than 25 cards." |
+| No Mercy | "Immediately doubles the penalty of any Draw Card you play. For example, if you play a Wild Reverse Draw 8 it becomes a Wild Reverse Draw 16! NOTE: the new value of the penalty applies even when stacking." |
+
+So No Mercy doubles **that card's** value (not the running stack total), and the doubled value is what the next player must equal or exceed (the "applies even when stacking" note). HIGH (sheet JJB29).
+
+### UNO Show 'Em No Mercy Attack (Mattel JNK69, ©2026; 168 cards + two-button launcher) — NEW
+
+"This ain't your father's UNO Attack." It is the No Mercy rules plus a launcher with a Yellow "Hit" button (normal Attack) and a Red "Ultra Hit" button that charges up. The sheet prints **no per-card counts**. Card list from the action-card sections and scoring table (all HIGH, sheet JNK69):
+
+| Card | Exact effect (JNK69 sheet) |
+|---|---|
+| Number cards | Face value. 7's Swap and 0's Pass exactly as in base No Mercy. |
+| Skip | Next player loses their turn. |
+| Reverse | Direction reversed. |
+| Discard All | "Discard all the cards in your hand that match the color of the Discard All Card. Place the discarded cards under the Discard All Card." |
+| Skip Everyone | "Skip all the other players and take another turn." |
+| Hit 2x | "Next player must hit the Yellow Button twice and lose their turn." |
+| Hit 4x | Next player hits Yellow 4 times and loses their turn. |
+| Wild Reverse Hit 4x | Reverse, then the next player in that direction hits Yellow 4 times and loses their turn. Wild; you choose the color. |
+| Wild Hit 6x | Next player hits Yellow 6 times and loses their turn. Wild; you choose the color. |
+| Wild Ultra Hit | "The next player must point the Launcher toward themselves, lift the protective cover, and press the Red Button FOR AS LONG AS THEY LIKE ... If no cards shoot out, they are safe and then take their turn as normal. If the button becomes fully charged, it's an ULTRA ATTACK ... That player must then collect all the cards." You choose the color either way. |
+| Wild Duel to the Death | "First, choose another player. Then, beginning with them, take turns pointing the Launcher at yourselves and holding down the Red Button for as long as you dare. Continue back and forth until someone causes an Ultra Attack! That player must then collect all the cards ... the surviving player chooses the color that continues play." |
+
+There is no plain Wild, Color Roulette, Draw 10 or Hit 10 in the card list.
+
+Rules (HIGH, sheet JNK69):
+- **No matching card:** press Yellow. If nothing comes out, your turn is over. If cards shoot out, add them all to your hand and your turn is over. "You may choose to press the Yellow Button instead of playing a card, even if you have a playable card in your hand." There is no draw-until-playable here.
+- **Red button charge persists:** it "charges the launcher. The longer you hold it, the more it charges. Cards won't fire out until the unit is fully charged," so a short press raises the danger for the next player. A digital port needs a persistent charge meter.
+- **Stacking:** "If someone plays a Hit Card (2x, 4x, 6x) on you, you can 'Stack' the penalty by playing a Hit Card from your hand of equal or higher value." The worked example is 4x + 6x = 10 presses. Ultra Hit and Duel are not Hit Cards in that list, so they don't stack.
+- **Must finish presses:** "you must hit the button as many times as required even if cards shoot out before you have finished." This is the **opposite** of the classic Attack Mega Hit forfeit rule.
+- **Mercy:** 25 or more cards and you're out; your hand is set aside until the deck needs reshuffling. Special case: "if an Ultra Attack causes a player's hand to exceed 25 cards ... they are out of the game and must take all the Ultra Attack cards, plus their hand, shuffle them, and put them on top of the Draw Deck inside the Launcher."
+- **UNO penalty:** hit Yellow twice. Cards left in the launcher opening go to the presser. If no one has won when the launcher is empty, reshuffle the Discard Pile into it.
+- **Scoring (optional):** number cards face value; "Any Action Card" (Reverse, Skip, Hit 2, Hit 4, Skip Everyone, Discard All) 20; Wild Reverse Hit 4 and Wild Hit 6 **40**; Wild Ultra Hit **50**; Wild Duel to the Death **100**; 250 per knockout; first to 1000 wins.
+
+### Deadpool edition (2024)
+
+**Partly found, effects UNVERIFIED.** Not listed on service.mattel.com (searched "deadpool", "uno deadpool", "uno no mercy deadpool", "uno marvel"), so no official sheet is available. Secondary sources:
+- BamSmackPow (July 2, 2024): a **Target exclusive**, $19.99, with new cards "**Wild Maximum Effort**" and "**Wild GIMME!**". It says Skip and Reverse get a "Deadpool twist" without describing it.
+- Fan wiki (matteluno.fandom, snippet only): lists a **Wild Reverse Draw 10** "and three other custom cards", including Wild Gimme!.
+- eBay listings: an SDCC 2024 version sold as the "Chimichanga" edition.
+
+**Rock-Paper-Scissors-Shoot!** appeared in no source. **No effect text was found for any Deadpool card.** Natural model for Wild Reverse Draw 10 is Wild Reverse Draw 4 with value 10 (LOW, inference only). Don't implement Gimme! or Maximum Effort without a card photo or sheet.
 
 ---
 
-## 2. UNO Add-On Packs (2024-2025; 16 cards each; need a classic deck; HIGH)
+## 2. UNO Add-On Packs (2024-2026; 16 cards each; classic deck required)
 
-GeekyHobbies: "The normal rules of UNO still apply… Each pack adds 16 new cards."
+Every sheet says: "THESE CARDS ARE DESIGNED TO BE COMBINED WITH A CLASSIC UNO® CARD GAME AND CANNOT BE PLAYED WITH ON THEIR OWN." Each pack contains 16 cards (sheet, every pack). Normal UNO rules apply otherwise. **No sheet prints per-type counts.** Where noted, counts come from the package-back art (Mattel shop images), which shows a fan of 4 cards per type.
 
 ### 2a. Swap Pack (JCV59)
 
-| Card | Copies | Exact effect | Confidence |
+| Card | Copies | Exact effect (JCV59 sheet) | Confidence |
 |---|---|---|---|
-| Swap 1 (colored) | unknown (16 total ÷ 4 types → probably 4, i.e. 1 per color) | "Take a random card from another player's hand and give them a card from your hand." (Kmart, Mattel shop) | effect HIGH; count LOW |
-| Refresh Hand (colored) | probably 4 (1/color) | "Put your entire hand at the bottom of the draw pile and draw a new hand of the same size." | effect HIGH; count LOW |
-| **Wild Force Trade** | probably 4 | The player who plays it **chooses any two players** (Mattel listing: "including themselves") who must trade hands. The player who played it chooses the color. | HIGH (several retailers plus the Mattel shop) |
-| Wild Pass Hands | probably 4 | Every player, including whoever played it, passes their hand to the next player in the current direction of play. | HIGH |
+| Swap 1 (colored) | 4 (1/color) | "Play this card on a card of matching color or another Swap 1 card. Then you take a random card from another player's hand and give them a card from your hand." | HIGH (sheet JCV59); count MED-HIGH (pkg JCV59) |
+| Refresh Hand (colored) | 4 (1/color) | "Play this card on a card of matching color or another Refresh Hand card. Place your entire Hand at the bottom of the **Discard Pile**, and then draw the same number of cards from the Draw Pile to make a new hand." | HIGH (sheet JCV59); count MED-HIGH (pkg) |
+| Wild Force Trade | 4 | "When you play this card, choose any two players (include yourself if you want to) and force them to swap hands. Then choose the color that continues play." | HIGH (sheet JCV59); count MED-HIGH (pkg) |
+| Wild Pass Hands | 4 | "When you play this card, all players (including you) must pass their hand to the next player in the current order. After everyone has passed their hand, you choose the color that continues play." | HIGH (sheet JCV59); count MED-HIGH (pkg) |
 
-**Check against the project's implementation (`src/card.lua`, `src/uno.lua`, `README.md`):**
-- **Name mismatch.** The real card is **"Wild Force Trade"**, not "Wild Swap Hands". "Wild Swap Hands" is the classic-deck card (1 per 2018+ classic deck). Rename it, or keep the old name as an alias.
-- **Rule mismatch.** Wild Force Trade lets the player pick **any two players**, which may or may not include themselves. The project currently implements "swap with a chosen player" (always including self). The official card is a superset: a 3rd-party swap must be allowed.
-- **Swap 1.** The official card *takes a random card* from the target and *gives them one from your hand*. The wording implies **you choose** which card to give. The project swaps a random card for a random card. Retailer wording is "give that player a card from your hand"; it isn't explicit that the given card is chosen, so LOW-MED.
-- **Refresh Hand.** "Bottom of the draw pile, draw the same number" matches the project.
-- **Copy counts.** The project uses 4 Wild Swap, 4 Wild Pass and 1 per color of each colored card, totalling 16. That is consistent with 16 cards and 4 types × 4, but the per-type split is unconfirmed.
+**Check against the project's implementation (`src/card.lua`, `src/uno.lua`):**
+- **Wild Force Trade vs the project's "Wild Swap Hands".** Official Force Trade: the player who played it picks **any two players, themselves optional**, and those two swap hands. The project's "Wild Swap Hands" only swaps the player who played it with one chosen player. That is a strict subset of Force Trade, and it is exactly the **classic deck's** Wild Swap Hands (sheet 42003) and the **Comeback Pack's** Wild Swap Hands (sheet JMM17). To match the Swap Pack, rename the card and allow a third-party pair.
+- **Swap 1.** Official: take a **random** card from one other player, and give them **a card from your hand**. The sheet doesn't say the given card is random; the natural reading is that you choose it (MED-HIGH). The project (`Uno:swapOneCard`) swaps random-for-random. Make the given card a choice, keeping random as an option.
+- **Refresh Hand: correction.** Official: old hand goes to the bottom of the **Discard Pile**. The project (`Uno:refreshHand`) and the first pass put it at the bottom of the **Draw Pile**. Fix needed.
+- **Matching.** Swap 1 and Refresh Hand match by color **or** by their own symbol (stated on the sheet).
 
 ### 2b. Reverse Pack (JCV56)
 
-| Card | Copies | Exact effect | Confidence |
+| Card | Copies | Exact effect (JCV56 sheet) | Confidence |
 |---|---|---|---|
-| Reverse Draw 2 (colored) | probably 4 | Reverses direction **and** the next player (in the new direction) draws 2 and loses their turn. | HIGH (GeekyHobbies and a retailer) |
-| Reverse Skip (colored) | probably 4 | Reverses direction **and** skips the next player. | HIGH |
-| Wild Power Reverse | probably 4 | Choose a color, reverse direction, and the player who played it takes another turn. | MED-HIGH |
-| Wild NO U | probably 4 | Reverses direction and changes color. It can be played **in response to a draw penalty** to bounce it. **Conflict:** one listing says it bounces the penalty "back to the previous player"; another says "back on the player who played it". | MED. Both phrasings likely mean the player who played the *draw* card, which with direction reversed is the previous player. Verify. |
+| Reverse Draw 2 (colored) | 4 (1/color) | "Reverse the direction of play AND make the next player in that direction draw 2 cards and lose their turn. This card matches all other Reverse cards and Draw 2 cards and can be played on either type regardless of color." | HIGH (sheet JCV56); count MED-HIGH (pkg JCV56) |
+| Reverse Skip (colored) | 4 (1/color) | "Reverse the direction of play AND the next player in that direction is skipped and loses their turn. This card matches all other Reverse cards and Skip cards and can be played on either type regardless of color." | HIGH (sheet JCV56); count MED-HIGH (pkg) |
+| Wild Power Reverse | 4 | "Reverse the direction of play, choose the color that continues play, AND take another turn!" The package back calls it "Reverse AND skip everyone!" | HIGH (sheet JCV56); count MED-HIGH (pkg) |
+| Wild NO U | 4 | "You may play this card: • In response to any Action Card that makes you draw cards. You reverse the direction of play, force **the player who played the Action Draw Card** to take the penalty, and choose the color that continues play. • On any card as a normal Wild Card to reverse the direction of play and then choose the color that continues play." | HIGH (sheet JCV56), **target conflict resolved**; count MED-HIGH (pkg) |
 
-Edge cases: Wild NO U is the only add-on card explicitly designed to be played **out of the normal matching rules, as a response**. The engine needs a "response window" when a draw penalty is pending. With 2 players, Reverse Skip and Wild Power Reverse both just give the player who played them another turn. Reverse Draw 2 with 2 players means the other player draws 2 and you play again. That follows from the standard Reverse = Skip rule (inferred, MED).
+Edge cases: Wild NO U is a **response card**, played out of normal matching when a draw penalty hits you; the engine needs a response window. It answers "any Action Card that makes you draw cards", which includes Wild Draw 4 and Draw 2. With 2 players, Reverse Skip and Wild Power Reverse both give the player who played them another turn, and Reverse Draw 2 makes the opponent draw 2 and returns the turn to the player who played it. Standard Reverse = Skip logic (inference, MED).
 
-### 2c. Stack Pack (JCV58; official sheet partly quoted)
+### 2c. Stack Pack (JCV58)
 
-| Card | Copies | Exact effect | Confidence |
+| Card | Copies | Exact effect (JCV58 sheet) | Confidence |
 |---|---|---|---|
-| Stack 1 (colored) | probably 4 | Play on a matching color; the next player draws 1 and loses their turn. "It can also be played in response to a Draw Card (+2, +4) **when its color matches the Draw 2 or the chosen color for a Wild Draw 4**; the total penalty goes to the next player." | MED-HIGH (JCV58 snippet plus retailers) |
-| Stack 2 (colored) | probably 4 | Same as Stack 1, but 2 cards. | MED-HIGH |
-| Wild Stack 3 | probably 4 | Play on anything and choose a color; the next player draws 3 and loses their turn. It can be played in response to a Draw or Stack card, adding +3. | MED-HIGH |
-| Wild Stack Number | probably 4 | Like Wild Stack 3, but "Flip the top card of the Draw Pile to find out how many!" The next player draws that many. | MED. Gap: what happens if the flipped card is an action or wild card, and what happens to the flipped card afterwards. |
+| Stack 1 (colored) | 4 (1/color) | You may play it "• on a card of the matching color. The next player must draw 1 card and lose their turn. • in response to a Draw Card (+2, +4) if your card matches the color of the Draw 2 Card, or the chosen color for the Wild Draw 4. The total penalty is passed to the next player. For example, if a player plays a Wild Draw 4 and calls 'red,' you may play a red Stack 1 card which makes the next player have to draw 5 cards and lose their turn. • in response to a Stack Card. The penalty increases by 1 and the next player must draw the total of the Stack Cards. For example, if you play a Stack 1 in response to a Stack 2, the next player must draw 3 cards and lose their turn." | HIGH (sheet JCV58); count MED-HIGH (pkg JCV58) |
+| Stack 2 (colored) | 4 (1/color) | "Just like Stack 1, only you force the next player to draw 2 cards." | HIGH (sheet JCV58); count MED-HIGH (pkg) |
+| Wild Stack 3 | 4 | "• on any other card. You choose the color that continues play and the next player must draw 3 cards and lose their turn. • in response to any Draw Card or Stack Card. You choose the color that continues play and the penalty increases by 3 and passes to the next player." | HIGH (sheet JCV58); count MED-HIGH (pkg) |
+| Wild Stack Number | 4 | "Same as the Wild Stack 3, except: To determine how many cards the next player must draw, flip over the top card of the Draw Pile until you reveal a Number Card. The number on the card is how many cards the next player must draw! Put any cards you flipped over under the Discard Pile." | HIGH (sheet JCV58); count MED-HIGH (pkg) |
 
 Edge cases and key rulings:
-- **Stack Pack stacking is color-gated** for the colored Stack cards (they must match the Draw 2's color or the Wild Draw 4's chosen color). Wilds can stack on anything. This differs from No Mercy, where stacking is by value.
-- The pack only lets **Stack cards** respond to Draw cards. Snippets don't say whether a base Draw 2 may then be stacked onto a Stack 1. Literal reading: the base-game no-stacking rule still applies to base cards, so only Stack-Pack cards respond (MED inference).
+- **Color gate applies only when answering a base Draw Card.** A colored Stack card answering a Draw 2 / Wild Draw 4 must match its color or the called color. Answering **another Stack Card has no color condition** on the sheet (HIGH, by the separate bullet).
+- **Wild Stack Number gap closed:** flip until a Number Card. Flipped action/wild cards are skipped, and all flipped cards go **under** the Discard Pile. Remaining gap: a flipped **0** literally means draw 0 (LOW; the sheet is silent).
+- Stack 1/2 on another card with the same symbol: the sheet only says "matching color" (unlike Swap 1's "or another Swap 1 card"). Allowing symbol-on-symbol is standard UNO matching (MED).
+- Base Draw 2 / Wild Draw 4 can't answer anything; the pack grants response rights only to Stack Cards (MED inference, unchanged).
 
 ### 2d. Speed Pack (JCV57)
 
 | Card | Copies | Effect | Confidence |
 |---|---|---|---|
-| Colored cards with one "Speed Up" icon | unknown (16 total minus wilds) | The card plays normally (its number/action identity is unknown from the snippets) and raises the speed level by 1. | MED |
-| Wild Double Speed Up | unknown (probably 4) | Wild: choose a color, raise the speed level by 2. | MED-HIGH (two retailers) |
+| Colored **number** cards with one "Speed Up" icon | 12 (3/color) | Play as a normal number card; raises the Speed Level by 1. Mattel shop: "All 16 cards in this pack have a 'Speed Up' icon." Which numbers appear isn't readable (photos show e.g. yellow 1, red 5). | identity MED-HIGH (pkg JCV57 art and product photo); count MED-HIGH (pkg back shows 12 colored + 4 wild) |
+| Wild Double Speed Up | 4 | "Increases the speed by 2 levels and you get to choose the color that continues play!" | effect HIGH (sheet JCV57); count MED-HIGH (pkg) |
 
-**Speed-level rule** (GeekyHobbies plus retailers; MED-HIGH overall):
-1. The game starts at **speed level 1** (normal UNO: play 1 card).
-2. Each Speed Up icon raises the level by 1; the Wild Double Speed Up raises it by 2. The first icon makes the level 2, the next makes it 3, and so on. The increase affects the **next player** onward. MED: whether icons played earlier in your own chain change your own required count. Most likely they don't; the level is fixed at the start of your turn.
-3. At level N, on your turn you must play **N cards** as a chain. The first card must match the top of the Discard Pile, and each later card must match **the card you just played** (color or number/symbol).
-4. **Action-card effects apply only if the action card is the last card of your chain.**
-5. If you can't reach N: "play as many cards as you can," then "draw cards equal to the current speed" as a penalty, and **the speed level resets to 1**. Retailers phrase this as "discard what they can".
-6. There is no separate reset card. Gap: no cap on the level was found.
+**Speed-level rule (HIGH, sheet JCV57):**
+1. Normal UNO is Speed Level 1. "Every card with a 'Speed Up' icon you play increases the speed by one level. **Starting with the next player**, everyone must play an extra card on their turn for each icon played." Icons played in your own chain don't change your own requirement (gap closed).
+2. At level N you must play N cards. "When playing multiple cards on your turn, each card must match the previous played card."
+3. "Action Cards (Draw 2, Skip, Reverse, etc.) only take effect if they are the last card played. If you play 3 cards on your turn and the first or second card is an Action Card, the next player does not have to do the action."
+4. Can't keep up: "they play what they can and then draw cards equal to the current Speed Level. For example, if the current speed is 4 and you are only able to play 2 cards, you play those 2 cards and then draw 4 cards. The speed is then reset to 1."
+5. No cap on the level is printed (gap remains; no cap is the literal reading).
 
-### 2e. Billie Eilish Add-On Pack (JHG45; 16 cards; every card has color-blind symbols)
+### 2e. Billie Eilish Add-On Pack (JHG45; 16 cards; ©2025 Lash Music)
 
-| Card | Copies | Exact effect | Confidence |
+| Card | Copies | Exact effect (JHG45 sheet) | Confidence |
 |---|---|---|---|
-| Wild Pass Color | unknown | "First, choose a color. Next, every player passes all the cards in their hand of that color to the player on their left. If a player has no cards of that color they don't have to pass but must still accept the cards passed to them." (JHG45) | HIGH (official quote). Note it is always "to the left", not the direction of play. |
-| Trick Wild | unknown | Choose a color. The next player may play a card of that color; if they can't, you immediately play another card (GeekyHobbies). The Mattel shop phrases it as "take another turn". | MED |
-| Wild Color Challenge | unknown | Choose a color. All other players must show a card of that color; anyone who can't draws 2. **Mattel shop adds: if all of them *do* have it, the player who played it draws 3.** GeekyHobbies omits that backfire clause. | MED (the conflict is reported; the Mattel version is more authoritative) |
-| Reveal Hands | unknown | All players lay their hands face up and play normally with them visible; "once it is your turn again" the cards go back into hands. | MED |
+| Wild Pass Color | unknown | "First, choose a color. Next, every player passes all the cards in their hand of that color to the player on their left. If a player has no cards of that color they don't have to pass but must still accept the cards passed to them. Play continues with the color you chose." | HIGH (sheet JHG45). Always to the **left**, not the direction of play. |
+| Trick Wild Card | unknown | "First, choose a color. If the next player can't play a card of that color, you may immediately play again." | HIGH (sheet JHG45). Gap: whether the next player still draws or loses their turn isn't stated. |
+| Wild Color Challenge | unknown | "First, choose a color. After that, all other players must show you a card of that color from their hand. Anyone who can't must draw 2 cards. If ALL players show a card of that color, you must draw 3 cards. Play continues with the color you chose." | HIGH (sheet JHG45). The backfire clause is official. |
+| **Reverse Hands** (sheet name; shop and secondary sources say "Reveal Hands") | unknown | "When you play this card, everyone immediately lays their hands face up on the table, and play continues like this until your start your next turn." | HIGH (sheet JHG45) |
 
-Gap: the per-type copy counts (probably 4 each).
+The sheet's own heading mislabels the cards as "REVERSE PACK CARDS" (a copy-paste error). Per-type counts are still UNVERIFIED (probably 4 each). Whether Reverse Hands is wild or colored isn't clear from the grayscale art.
+
+### 2f. Frenemies Pack (JMM16) — NEW
+
+All four card types are wilds (sheet JMM16 art; "+3" and "+1-4" icons).
+
+| Card | Exact effect (JMM16 sheet) |
+|---|---|
+| Wild Nemesis | "Choose another player to be your 'enemy,' and anytime you play a card that makes them draw cards, they must draw 2 extra cards! This continues until you decide to end the beef! You also get to choose the color that continues play." |
+| Wild Petty Play (+3) | "Choose another player to draw 3 cards. Also, if another player makes you draw cards for any reason, you may play this card out of turn and make them draw 3 cards." |
+| Wild Eliminator | "All other players must discard all Wild Cards from their hand. Place all discarded Wild Cards on the bottom of the Discard pile. You also get to choose the color that continues play." |
+| Wild Instigator (+1-4) | "Choose as many players as you want and make them draw cards. You also decide on how many cards each one will draw from 1-4. You also get to choose the color that continues play." |
+
+Confidence: effects HIGH (sheet JMM16). Per-type counts UNVERIFIED (the sheet doesn't print them). Gaps: Petty Play out of turn doesn't say whether you still draw your own penalty, or whether a color is chosen. Nemesis has no stated way to "end the beef" beyond declaring it.
+
+### 2g. Comeback Pack (JMM17) — NEW
+
+| Card | Exact effect (JMM17 sheet) |
+|---|---|
+| Wild Swap Hands | "Swap hands with any player. You also get to choose the color that continues play." |
+| Wild Double Down (-1) | "Discard this card and an additional card on top of it. You also get to choose the color that continues play." |
+| Wild Match the Max | "Choose a player. That player must draw cards until their hand contains the same number of cards as the player with the largest hand. You also get to choose the color that continues play." |
+| Wild Misery Loves Company | "All other players must draw cards until their hand contains the same number of cards as the player with the largest hand. You also get to choose the color that continues play." |
+| **U-N-O Rule** (pack-wide) | "the cards have letters in the corner, either an 'U', 'N', or 'O'. If you have three cards in your hand that can spell out U-N-O, you may discard down to one card on your turn for an INSTANT UNO! Put all the cards under the 3 U-N-O cards on the Discard Pile and then select the next color in play. When you discard the U-N-O cards together, none of their actions are activated. And don't forget to yell 'UNO!'" |
+
+Confidence: effects HIGH (sheet JMM17). Counts and the letter-to-card mapping are UNVERIFIED; the sheet art shows letters varying by copy. Note that this pack's Wild Swap Hands is exactly the project's current "Wild Swap Hands" behaviour.
+
+### 2h. Defense Pack (JMM18) — NEW
+
+| Card | Exact effect (JMM18 sheet) |
+|---|---|
+| Wild Block | "If someone plays a Draw or Skip card on you, block the penalty by playing this card. You also get to choose the color that continues play. You may also play this as a regular Wild Card." |
+| Wild Block & Rebound (+1) | "If someone plays a Draw card (Draw 2, Wild Draw 4) on you, bounce it back to them and they must draw the cards, plus one more to boot! You may also play this as a regular Wild Card. You also get to choose the color that continues play." |
+| Wild Block & Deflect | "If someone plays a Draw or Skip card on you, play this card to block and deflect the penalty to the next player in current order. You also get to choose the color that continues play. You may also play this as a regular Wild Card." |
+| Wild Redirect | "If someone plays a Draw card on you, deflect it to a player of your choice! You also get to choose the color that continues play. You may also play this as a regular Wild Card." |
+
+Confidence: effects HIGH (sheet JMM18). Counts UNVERIFIED. Gaps: Rebound doesn't reverse direction (unlike NO U). Whose turn follows a block, rebound or redirect isn't stated.
+
+### 2i. Love Island Add-On Pack (JPH28; ©2026 ITV) — NEW
+
+Contents: 16 cards, **including** two placeholder cards (Coupled Up, Eggs In One Basket) and one "I've Got a Text" Special Rules reference card, which are removed before play. That leaves 13 playable cards; the split is UNVERIFIED.
+
+| Card | Exact effect (JPH28 sheet) |
+|---|---|
+| Wild Coupled Up | Choose another player to be coupled with you; put the placeholder in front of them. "While coupled, if that player cannot play a card on their turn, you may immediately play a playable card from your hand for them instead. They do not draw a card. If the played card requires any choices ... you make those choices. Play then continues in turn order from the coupled player who originally could not play a card. The coupling remains in effect until another Wild Coupled Up Card is played." Wild. |
+| Wild Eggs In One Basket | Choose another player; placeholder in front of them "for the rest of the game." While in effect: "Any time that player reaches UNO, you immediately discard cards from your hand until you also have one card. All discarded cards are placed on the bottom of the Discard Pile." And "If that player is forced to draw cards due to a Draw 2 or Wild Draw 4 Card, you must draw the same number of cards as well." Wild. |
+| Wild Pull You For A Chat | "Choose another player and secretly view their entire hand. You may take one card from their hand and replace it with one card from yours." Wild. |
+| I've Got a Text (colored, per sheet art) | Choose one: "• Everyone except you draws one card. • Swap hands with any player. • All players except you must reveal a card from their hand that matches the color of the card you played. If a player cannot, they must draw cards until they reveal a matching color. Drawing a Wild Card does not count." |
+
+Confidence: effects HIGH (sheet JPH28).
 
 ---
 
-## 3. Official house-rule definitions
+## 3. Official classic rules and house-rule definitions
 
-| Rule | Definition as worded by Mattel / Ubisoft / sources | Confidence |
+### 3a. Classic UNO (current deck, sheet 42003 "Wild" printing)
+
+**Contents (HIGH, sheet 42003):** 112 cards = 19 per color (0-9: one 0 and two each of 1-9), 8 Draw Two, 8 Reverse, 8 Skip (2 per color each), 4 Wild, 4 Wild Draw Four, **1 Wild Swap Hands**, **3 Wild Customizable**. "For a classic game of UNO, take the Wild Swap Hands card and 3 Wild Customizable cards out of the deck." The 2008 "UNO Basic" printing (41940) is the 108-card deck without them.
+
+| Rule | Official wording | Confidence |
 |---|---|---|
-| **Stacking in base UNO (official ruling)** | Not allowed. The @realUNOgame tweet of **May 4, 2019** said "You cannot stack Draw 2 & Draw 4 cards": if a +4 is played the next player draws 4 and loses their turn, and you can't add a +2 to make it 6. A follow-up the next day said +2 on +2 isn't allowed either. **Sept 28, 2022:** a repeat tweet said you can't stack +2 on +2. UNO also said the mobile and online versions use custom rules, including common house rules. | HIGH (Today, Gigazine, WRDW, JPost). Often cited as 2022; it was originally **2019**, with a 2022 repeat. |
-| **Wild Draw Four challenge (official)** | A WD4 is legal only if you hold **no card matching the current color** (matching number or symbol cards and other wilds don't count against you). The next player may challenge. The challenged player shows their hand **privately to the challenger**. If the play was illegal (guilty), the player who played the WD4 draws 4 and the challenger does **not** draw; play continues with the challenger. If it was legal (not guilty), the challenger draws **6** (4 + 2) and loses their turn. The color chosen with the WD4 stands either way. | HIGH (Wikipedia plus multiple rule sites agree on 4/6). "Play continues with challenger" is MED. |
-| **Progressive UNO** (Mattel's older suggested variant) | "If a draw card is played then the 'victim' can play **the same type of card**, thus passing the result on to the next player" (Noble Knight summary of Mattel's sheet). Same type means +2 on +2 and WD4 on WD4; **no +4 on +2 or +2 on +4**. The total passes on until someone can't stack and draws it all. | MED (one source quoting Mattel). The "no mixing" reading follows from "same type". Several low-quality pages agree no +2 goes on a +4. |
-| **Jump-In** | If a player holds **exactly the same card (both number and color)** as the top discard, they may play it immediately even if it isn't their turn. **Play continues from the player who jumped in**; the players in between are skipped. | HIGH (Wikipedia plus a 2006 Wikipedia mirror plus Ubisoft/MobyGames). |
-| Jump-In on wilds/actions | 2006 Wikipedia variant text: you may jump in with a WD4 only on another WD4. Jump-in on a +2/WD4: either wait until the victim has drawn, or the jumped card **cancels** the penalty unless the victim already drew. An alternative variant lets the jump-in card add to the stack (the common Ubisoft/Mobile behaviour), but no official wording was found. Plain Wild on Wild: unresolved. | LOW-MED (variant sources only) |
-| **Seven-O** | Playing a 7: the player **must** swap hands with a player of their choice. Playing a 0: **all** players pass their hands to the next player in the current direction. | HIGH |
-| **Draw to Match** (Ubisoft) | "Drawing is continued until a card can be played instead of just one draw." | MED (MobyGames description of Ubisoft options) |
-| **Force Play** (Ubisoft) | "A drawn card that can be played is played automatically." (Base Mattel rules give the option to play the drawn card if it's playable; Force Play removes the choice.) | MED |
-| **No Bluffing** (Ubisoft) | Named as a toggle but not defined in any snippet. Most likely it disables the WD4 challenge or bluff, i.e. a WD4 may only be played legally or can't be challenged. **Gap.** | LOW |
-| **2v2** (Ubisoft) | Partners sit opposite each other and can see each other's hand (mobile port review). Team-only quick chat. Win condition: the team wins when **one** partner empties their hand (Mattel mobile: "reduce your hand (or your partner's) to zero"). By contrast, UNO Wonder "Teams" (2026) requires **both** partners to empty their hands. The Ubisoft win condition is not confirmed. | MED/LOW |
+| **Drawing / reneging** | "If you don't have a card that matches ... you must take a card from the DRAW pile. If the card you picked up can be played, you are free to put it down in the same turn." "You may also choose NOT to play a playable card from your hand. If so, you must draw a card ... If playable, that card can be put down in the same turn, however you may not play any other card from your hand after the draw." | HIGH (sheets 42003, 41940) |
+| **Wild Draw Four legality and challenge** | "You may only play this card when you do NOT have another card in your hand that matches the COLOR on the DISCARD pile (but it is acceptable to play this card if you have matching number or Action Cards)." "If you suspect that a Wild Draw 4 card has been played on you illegally ... you may challenge that player. The challenged player must show you (the challenger) their hand. If guilty, the challenged player must draw the 4 cards instead of you. However, if the challenged player is innocent, you must draw the 4 cards PLUS an additional 2 cards (6 total)!" The older printing adds: "Only the person required to draw the 4 cards can make the challenge." | HIGH (sheets 42003, 41940, 42001/42003 old) |
+| WD4 challenge: who plays next | Not stated on any sheet. Wikipedia: after a successful challenge "play continues with the challenger"; after a failed one the challenger "misses their turn". The chosen color stands either way. | MED (Wikipedia only) |
+| **UNO call** | "If you don't yell 'UNO' and you are caught before the next player begins their turn, you must draw **two** cards." The **pre-2008 printing said FOUR** cards, and defined "beginning a turn" as drawing from the DRAW pile or drawing a card from hand to play. You can't be caught until your second-to-last card touches the pile; catching yourself first makes you safe. | HIGH (sheets 42003, 41940; old 42001/42003) |
+| Last card is Draw Two / WD4 | The next player must still draw; those cards count in the score. | HIGH (sheet 42003) |
+| **Scoring** | Numbers face value; Draw Two, Reverse, Skip 20; Wild, Wild Draw Four 50; **Wild Swap Hands 40; Customizable 40**. First to 500 wins. Alternative: keep a running tally of points held; when someone reaches 500, the lowest total wins. | HIGH (sheet 42003) |
+| **Wild Swap Hands (classic)** | "Choose any opponent and swap all the cards in your hand with all the cards in their hand ... you choose the color that resumes play." | HIGH (sheet 42003) |
+| **Two players** | Printed only on the **older** sheet: "1. Playing a Reverse card works like playing a Skip card. By playing the Reverse card, you may immediately play another card. 2. By playing a Skip card, you may immediately play [another card]. 3. After playing a Draw 2 card or a Wild Draw 4 card, your opponent draws the number of cards indicated, and play is back to you." The current 42003 and 41940 sheets omit 2-player rules. | HIGH (old sheet 42001/42003-Eng) |
+| **Partners (4 players)** | "Sit across from your partner. When either partner goes out, the hand is over. Total all of the points in both opposing partners' hands and score for the winning team." Variation: rotate partners over 12 hands (4 players) or 28 hands at two tables (8 players). | HIGH (old sheet 42001/42003-Eng) |
+| **Challenge UNO** | Keep a running total of points *held*; anyone reaching the target (500 suggested) is eliminated; the last two play head-to-head under the 2-player rules; the winner of the final hand wins. "THE MAKERS OF UNO FIND THIS VARIATION THE MOST CHALLENGING WAY TO PLAY." | HIGH (old sheet; same text on Attack sheets 41943, T8219) |
+| **Stacking in base UNO (official ruling)** | Not allowed. @realUNOgame, **May 4, 2019**: you cannot stack Draw 2 and Draw 4 cards; repeated Sept 28, 2022 for +2 on +2. The ruling refers to the core rules: the 2008 sheet's own "Progressive UNO" house rule *does* allow same-type stacking. | HIGH (multiple news sources); consistent with the sheets |
+
+### 3b. Official house rules (sheet 41940 "UNO Basic", ©2008)
+
+The sheet lists these under "HOUSE RULES: You may want to try some of the following 'House' Rules". They are all **HIGH (sheet 41940)**.
+
+| Rule | Exact official text |
+|---|---|
+| **Progressive UNO** | "1. When a player plays a Draw Two card, the next player may play another Draw Two card, causing the next player to draw 4 cards. 2. Same rule applies to Wild Draw Four cards: When a player plays a Wild Draw Four card, the next player may play another Wild Draw Four card, causing the next player to draw 8 cards. The last player to play a consecutive Wild Draw Four card calls the color to continue play. If a Wild Draw Four card is played illegally and the player is challenged, the usual rules apply ... except that the penalty will increase depending on the number of cards played. 3. Players can continue to play consecutive Draw Two or Wild Draw Four cards, as long as they have them in their hands. For example, if 4 players in a row played Draw Two cards, the next player (who doesn't have a Draw Two card) would have to draw 8 cards. 4. You can only play one Draw Two or Wild Draw Four during your turn, even though you may have multiples of these cards in your hand." So stacking is same type only (+2 on +2, +4 on +4), never mixed. |
+| **Seven-O** | "1. Every time a '0' is played, all players pass their hands to the next player in direction of play. 2. Every time a '7' is played, the player who played the '7' card must trade their hand with another player of their choice." |
+| **Jump-In** | "If you are holding the exact same card (identical color and number) as the card on top of Discard Pile, you may play it immediately, regardless of whose turn it is ... Play resumes from the player who played the last card (the player who 'jumped in'). Two important things to remember: 1. If you have 2 matching cards in your hand, you may play them back-to-back, but they must be played one at a time ... This gives another player a chance to 'jump in' and stop you from playing a second card. 2. If you 'jump in' with a Skip, Reverse, Draw Two or Wild Draw Four, **the second identical card played cancels out the first**. (Follow normal UNO card game rules for these cards beginning with the player who played the second identical card.)" |
+| Combining | "For a truly twisted game, try combining multiple UNO CARD GAME HOUSE RULES. If the rules conflict, let YOUR HOUSE define the best way to play!" |
+
+**Corrections:** Progressive UNO was previously sourced from a Noble Knight summary (MED); it's now sheet-verified, including the "one per turn" clause and the challenge-penalty scaling. Jump-In on action cards was previously LOW-MED variant text. The official ruling is that the jump-in card **cancels and replaces** the first, with effects applied from the jumper; it does **not** add to a stack. WD4 is explicitly allowed as a jump-in card.
+
+### 3c. Ubisoft / digital-only toggles (unchanged, not on any sheet)
+
+| Rule | Definition | Confidence |
+|---|---|---|
+| **Draw to Match** (Ubisoft) | "Drawing is continued until a card can be played instead of just one draw." | MED (MobyGames) |
+| **Force Play** (Ubisoft) | "A drawn card that can be played is played automatically." The official sheets make playing the drawn card optional. | MED |
+| **No Bluffing** (Ubisoft) | Named but undefined. Likely disables illegal WD4 plays or challenges. | UNVERIFIED |
+| **2v2** (Ubisoft) | Partners sit opposite and see each other's hand; team wins when **one** partner empties their hand. Matches the official Partners rule ("When either partner goes out, the hand is over"). UNO Wonder "Teams" (2026) instead needs both partners out. | Win condition MED-HIGH (official Partners rule agrees); hand visibility MED |
 
 ### Edge cases & rulings
-- The Mattel tweets state that the official ban covers the physical game, while the digital versions intentionally ship stacking as an option.
-- WD4 challenge with stacking enabled: no official ruling. Logical: a challenge can only happen on a WD4 that ends up resolving on you. If you stack instead, you've waived the challenge (inference).
-- Jump-In and draw penalties: see the cross-mechanic notes below.
+- WD4 challenge with stacking: Progressive UNO (sheet 41940) is the only official ruling. A challenge on a stacked WD4 follows the usual rules, but the penalty scales with the number of cards played.
+- Jump-In and draw penalties: officially the jumped card **cancels** the first and its effect starts from the jumper (sheet 41940).
 
 ---
 
 ## 4. UNO Attack
 
-### 4a. Original UNO Attack (1998/1999; 112 cards plus electronic launcher)
-Sources disagree on the year: BoardGameMatcher says 1999, Wikipedia says 1998.
+### 4a. Original UNO Attack! (1999, Mattel 41943; 112 cards plus launcher)
 
-| Card | Copies | Effect | Confidence |
+| Card | Copies | Effect (41943 sheet) | Confidence |
 |---|---|---|---|
-| Number cards 1-9 (no 0s), 2 per color | 72 (18/color) | Face value. | HIGH (BGM count plus Mattel T8219 snippet "72 numbered cards (18 per color)") |
-| Hit 2 | 8 (2/color) | Next player presses the launcher **twice**, then loses their turn. | HIGH |
-| Reverse | 8 | Reverse direction. | MED |
-| Skip | 8 | Next player loses their turn. | MED |
-| Discard All | 4 | Discard all cards of one color (this card's color); "a Discard All can also go on another Discard All". | MED-HIGH |
-| Trade Hands | 4 | Trade hands with any player of your choice. | MED (count from BGM; effect from name/standard) |
-| Wild | 4 | Standard wild. | HIGH |
-| Wild All Hit | 2 | Choose a color; "everyone except whoever played the card each press the Launcher button once." | HIGH (Wikipedia plus BGM) |
-| Wild Hit-Fire | 2 | Choose a color; "the next player must hit the launcher button **until it fires**." | HIGH |
+| Number cards 1-9 (no 0s) | 72 (18/color) | Face value. | HIGH (sheet 41943) |
+| Hit 2 | 8 (2/color) | "The next player must hit the Launcher button twice. His/her turn is then over." | HIGH (sheet 41943) |
+| Reverse | 8 (2/color) | Reverse direction. | HIGH (sheet 41943) |
+| Skip | 8 (2/color) | Next player loses their turn. | HIGH (sheet 41943) |
+| Discard All | **4 (1/color)** | Discard all cards of one color with the Discard All on top; "You may also discard a Discard All card on top of another Discard All card." | HIGH (sheet 41943) |
+| Trade Hands | **4 (1/color)** | "The player discarding the Trade Hands card MUST trade his/her hand with another player of his/her choosing." "A player may not go out on a Trade Hands card." | HIGH (sheet 41943) |
+| Wild | 4 | Standard wild. | HIGH (sheet 41943) |
+| Wild All Hit | 2 | Call a color; "each player (beginning with the person to the discard player's left) must press the Launcher button once ... The player who played the Wild All Hit card does not press." | HIGH (sheet 41943) |
+| Wild Hit-Fire | 2 | Call a color; "the next player in the direction of play must press the Launcher button until the Launcher shoots out cards ... and forfeits his/her turn." | HIGH (sheet 41943) |
 
-The total is 112 (HIGH). There is **no "Skip All" and no "Wild Hit 4"** in the original. "Wild Hit 4" is the 2010-era single card, and "Skip All" doesn't appear in any Attack edition found.
+Total 112. Scoring: numbers face value; Reverse, Skip, Hit 2 20; Discard All, Trade Hands 30; Wild, Wild All Hit, Wild Hit-Fire 50; 500 to win (sheet 41943).
 
-### 4b. 2010-era Attack (T8219, 112 cards) and 2020 revision (GXY78 / GXY81 / GNL02)
-From the T8219 snippet (MED-HIGH, sums to 112): 72 numbered, 8 Hit 2, **4 Reverse**, 8 Skip, **8 Discard All**, 4 Wild, **4 Wild Attack-Attack**, **3 Customizable (blank)**, **1 Wild Hit 4**.
+### 4b. Later editions
 
-GameRules gives a different split: 1 Reverse per color, 2 Hit 2 and 2 Skip per color, 3 Wild Customizable, 1 Wild Hit 4. Treat the Mattel sheet as authoritative.
+**Correction:** the first pass attributed "4 Reverse, 3 Customizable, 1 Wild Hit 4" to T8219. The T8219 sheet doesn't contain them; they come from **GTX66**.
 
-BoardGameMatcher: "in the 2010 edition, Trade Hands cards are replaced with another set of Discard All, and Wild All-Hit/Wild Hit-Fire are replaced with 4 Wild Attack-Attack."
-
-| 2010/2020 card | Effect | Confidence |
+| Edition (sheet) | Contents (all 112 cards; 72 numbers 1-9 in each) | Confidence |
 |---|---|---|
-| Wild Attack-Attack | Choose a color **and choose any player to attack**. Turn the launcher toward them; they press it **twice**. | MED (Vietnamese retailer guide; consistent with Mega Hit text) |
-| Wild Hit 4 (1 copy) | Choose a color; the next player presses 4 times (inferred from name). | LOW |
-| Customizable (3, blank) | Write your own rule. | MED |
-| Discard All | As in the original. | MED |
+| **T8219** (2010s) | 8 Hit 2, **8 Reverse**, 8 Skip, 8 Discard All (2/color), 4 Wild, **4 Wild Attack-Attack** | HIGH (sheet T8219) |
+| **GTX66** | 8 Hit 2, **4 Reverse** (1/color), 8 Skip, 8 Discard All, 4 Wild, 4 Wild Attack-Attack, **3 Wild Customizable, 1 Wild Hit 4** | HIGH (sheet GTX66) |
+| **GXY78 / GXY81 (2020, "Mega Hit")**; GNL02 | **4 Reverse** (1/color), 8 Skip, 8 Discard All, **4 Hit 1** (1/color), 8 Hit 2, 4 Wild, 4 Wild Attack-Attack | HIGH (sheets GXY81, GNL02). The GXY78 product page serves the GXY81 sheet. |
 
-The **2020 revised set (#54)** couldn't be separated cleanly from the 2010 set. The GXY78 manual (manualsnet) gives 112 cards but no breakdown. **Gap:** confirm whether GXY78 changed any counts versus T8219.
+| Card | Effect | Confidence |
+|---|---|---|
+| Wild Attack-Attack | Call a color and "choose ANY OTHER PLAYER in the game to 'Attack.'" **The sheets differ on who presses and who plays next:** *T8219*: the launcher faces the victim and "the 'attacking' player gets to press the Launcher button twice"; play continues to the left of the player who played it. *GTX66 / GXY81*: the chosen player "must hit the button twice. The game then continues with the next player in turn order after the player who got attacked." *GNL02*: the attacked player presses twice; play continues with "the second player to the left ... of the player who played the Wild Attack-Attack card." All allow going out on it ("may use this command card as normal before the game ends"). | HIGH per sheet; **editions conflict**. Recommend the GXY81 version (newest). |
+| Hit 1 | "The next player in current order must hit the Launcher button once. His/her turn is then over." | HIGH (sheets GXY81, GNL02) |
+| Wild Hit 4 (1 copy) | "Next player must hit the Launcher button FOUR TIMES. Their turn is then over ... This card is also a wild card." | HIGH (sheet GTX66) |
+| Wild Customizable (3) | Write your own house rule in pencil; decide before the game how many (1-3) to include; wild. | HIGH (sheet GTX66) |
+| Discard All | As in the original. The 2020 wording is "you may discard multiple yellow cards in your hand, as long as a yellow Discard All card is placed on top." | HIGH |
 
-### 4c. Launcher rules (HIGH unless noted)
-- "Hit" = press the launcher button once. **One press per hit**; the launcher fires a random number of cards, often zero. Press once per required hit, not until cards come out, **except Wild Hit-Fire**, which means press until it fires.
-- If you can't play: press the launcher **once**, take whatever comes out, and your turn ends.
-- **Pressing the launcher any number of times ends your turn immediately, even if a drawn card is playable** (Wikipedia). This conflicts with the base rule's "play the drawn card".
-- Cards left sticking out of the launcher go into the presser's hand.
-- If cards fire before you finish the required presses, **you may forfeit the remaining presses** (GXY78/GNL02 quote; MED-HIGH).
-- Forgetting to call UNO: press the launcher **twice**.
+Scoring by sheet: T8219 has Reverse/Skip/Hit 2 20, Discard All 30, Wild/Attack-Attack 50. GTX66 adds Wild Hit 4 40 and Wild Customizable 50. GXY81 and GNL02 have Hit 1 20, **Hit 2 40**, Discard All 30, Wild/Attack-Attack 50. All play to 500.
+
+### 4c. Launcher rules
+- **No playable card:** press once. If nothing comes out, play moves on. If cards shoot out, add them to your hand (all editions, HIGH).
+- **Turn ends on any press (2020 era):** "in UNO ATTACK, if cards shoot out when you press the button and one or more of them are playable, you MAY NOT throw them down ... ONCE YOU PRESS THE LAUNCH BUTTON YOUR TURN IS OVER" (sheets GXY81, GTX66). The older sheets imply the same.
+- **Reneging:** "You may choose not to play a playable card from your hand. If so, you must hit the Launcher button. Your turn is then over" (sheets 41943, T8219, GNL02; GXY81 words it inside Let's Play).
+- Cards left sticking out of the launcher go to the player who activated it (all sheets).
+- **Forfeit on fire:** "If any cards shoot out ... before you finish pressing the button the required number of times, you may forfeit the remaining presses" (sheets GXY81, GNL02, inside the Mega Hit section). No Mercy Attack reverses this (see §1).
+- **UNO not called:** press twice (all sheets).
+- **Penalties:** "Any player making a card suggestion to another player must hit the Launcher button 4 times" (sheets 41943, T8219, GNL02).
+- **Two players:** Reverse acts as Skip and you may play again; Skip lets you play again; after the opponent completes a Hit 2, play is back to you (all sheets).
 - Rotate the launcher to face whoever's turn it is.
 
-### 4d. "Mega Hit" stacking (GXY78 / GNL02; MED-HIGH, official quote)
-- A Mega Hit stack can start when **the first card is an Attack-Attack** and the attacked player holds a **Hit** card. The attacked player plays it. "The next player in the current order from the attacked player must then either play a Hit card or perform **all the hits in the stack**."
-- When it resolves: "game play continues with the next player in the current order from **THE PLAYER WHO LAID DOWN THE FIRST HIT CARD**."
-- The forfeit-on-fire rule still applies to the accumulated presses.
-- Gap: whether #339 "Mega Hit" in the survey doc is this rule or a separate product. The snippets show it as a rule within the 2020 Attack sheets.
+### 4d. "Mega Hit" rule (sheets GXY81 and GNL02; HIGH)
+"Mega Hit" is both the 2020 product name (GXY81 / GNL02 "UNO Attack Mega Hit") **and** a rule printed in those sheets. It is not in T8219 or GTX66.
+- "Whenever someone plays a Hit card against you (Hit 1, Hit 2, or Wild Attack-Attack), you can play ANY Hit card from your hand on top of it (regardless of color)." There's **no value restriction**, unlike No Mercy. "(a) you don't have to perform the hit, and (b) the next player in current order will have to perform BOTH hits," and so on until "a player that has no Hit card in their hand. That player will then have to perform ALL THE ADDED-UP HITS."
+- A Wild Attack-Attack in the stack "adds 2 more hits to the stack ... and allows them to send the attack to any player" (worked example: Hit 1 + Hit 2 + Attack-Attack = 5 presses, sent back to the original player).
+- "If the first card played is a Wild Attack-Attack card and the player being attacked has a Hit card, they may play it and start a Mega Hit stack. The next player IN THE CURRENT ORDER FROM THE ATTACKED PLAYER must then either play a Hit card or perform all the hits in the stack."
+- "After a Mega Hit stack has played out, game play continues with the next player in the current order from THE PLAYER WHO LAID DOWN THE FIRST HIT CARD."
+- The forfeit-on-fire rule applies to the accumulated presses.
 
 ---
 
 ## Cross-mechanic interaction notes
 
-1. **There are four incompatible official stacking models.** The engine needs a "stack policy" enum rather than one boolean:
-   - **Base UNO (official):** no stacking at all (2019 and 2022 tweets).
-   - **Progressive UNO (Mattel variant):** same card type only (+2 on +2, WD4 on WD4); no mixing.
-   - **No Mercy:** any Draw card of **equal or higher value**, color-agnostic. Reverse-draw stacks and sends the penalty back.
-   - **Stack Pack:** colored Stack 1/2 cards must **match the color** of the Draw 2 or the WD4's chosen color; Wild Stack 3 and Wild Stack Number stack on anything.
-   - **UNO Attack Mega Hit:** Hit cards stack only after an Attack-Attack, and play resumes after the *first* Hit player, not after the victim.
+1. **There are six incompatible official stacking/response models**, so the engine needs a "stack policy" enum, not a boolean:
+   - **Base UNO:** no stacking (2019/2022 rulings).
+   - **Progressive UNO (sheet 41940):** same type only (+2 on +2, WD4 on WD4), one per turn; the last WD4 player calls the color; challenge penalties scale.
+   - **No Mercy (HWV18) and No Mercy Attack (JNK69):** any Draw/Hit Card of **equal or higher value than the last card played**. The No Mercy Coin doubles that card's value, and the doubled value counts when stacking (JJB29).
+   - **Stack Pack (JCV58):** colored Stack cards answer a Draw 2/WD4 only on matching color; on other Stack cards with no color condition; Wild Stack 3/Number answer anything.
+   - **UNO Attack Mega Hit (GXY81/GNL02):** any Hit card on any Hit card, regardless of color or value. Play resumes after the *first* Hit player.
+   - **Deflectors (no adding):** Wild NO U (JCV56) sends the penalty to whoever played the draw card. Defense Pack (JMM18): Block cancels it, Block & Rebound returns it +1, Block & Deflect passes it to the next player, Redirect sends it to any player. Frenemies' Wild Petty Play (JMM16) is an out-of-turn +3 counter.
 
-   If No Mercy and Stack Pack are both enabled, a Stack 1 (value 1) could never legally follow a +2 under the No Mercy "equal or higher" rule. The engine must choose a precedence; suggest the pack's own text overrides for its own cards.
-2. **Wild NO U (Reverse Pack) vs No Mercy Wild Reverse Draw 4:**
-   - Both send a pending penalty back.
-   - NO U **bounces** the penalty without adding to it.
-   - WRD4 **adds 4** and reverses.
-   - With 2 players, No Mercy's literal rule makes the WRD4 player draw 4 themselves. That clashes with intuition and with NO U's 2-player behaviour, so flag it.
-   - No source rules on NO U inside a No Mercy value-stack (value 0?), on NO U against Color Roulette, or on a NO U answered by another NO U. Recommend: NO U answers any pending draw total; a second NO U bounces it again.
-3. **Jump-In vs active stacks:** there's no official ruling.
-   - Old variant text says a jump-in on a +2/WD4 **cancels** the penalty unless the victim already drew. The other variant allows jumping in only after the draw.
-   - Ubisoft-style play typically lets an identical +2 jump in and **add to the stack**, with the turn passing from the jumper.
-   - These are three different behaviours; make it a sub-option. Jump-In under No Mercy/Stack Pack was never addressed officially.
-4. **Jump-In with wilds:** identical "color+number" can't really apply to wilds. The variant text allows WD4 on WD4 only. For No Mercy's many wilds, decide whether "identical" means the same face (Wild Draw 6 on Wild Draw 6) or is banned.
-5. **Seven-O vs No Mercy:** No Mercy builds Seven-O in natively (7 = swap with your choice, 0 = pass in the direction of play), identical to the house rule. Enabling both must not double-apply it.
-   - Under the Mercy Rule, a swap or pass can push someone to 25+. Unresolved whether elimination is checked after a hand passes; suggest checking after every hand-size change.
-   - Billie Eilish's Wild Pass Color always passes **to the left**, regardless of direction, unlike Seven-O's 0 and Wild Pass Hands (which follow the direction of play).
-6. **Wild Force Trade vs Seven-O's 7:** Force Trade can swap two *other* players; the 7 always involves the player who played it. Hand-swap code should take two arbitrary seats.
-7. **Draw to Match vs No Mercy:** No Mercy's base rule already *is* draw-until-playable. Draw to Match is redundant there.
-   - Combining it with the Mercy Rule creates real elimination risk while drawing.
-   - Force Play combined with draw-until-playable makes the drawn card auto-play (Ubisoft Force Play definition).
-8. **Speed Pack vs everything:**
-   - Under the "action effect only if it's the last card in the chain" rule, a +2 or Stack card mid-chain does nothing. That suppresses stacking and Seven-O mid-chain; 0 and 7 are number cards with effects, and probably only fire when played last (inference).
-   - Failing the speed requirement means drawing N cards. N stacks with No Mercy's 25-card elimination, and there's no ruling on combining that draw with a pending stack.
-9. **WD4 challenge vs stacking:** none of the stacking modes (No Mercy, Progressive, Stack Pack) defines a challenge.
-   - The No Mercy snippets never mention challenging. Wild Draw 6/10 appear playable at any time, so their legality is unrestricted. Inferred, MED.
-   - The base WD4 color restriction and challenge only apply to the classic Wild Draw 4. Recommend: the challenge is available only when the WD4 would resolve on you, i.e. you choose not to stack.
-10. **UNO Attack launcher vs "draw then play":** pressing the launcher ends your turn even if you got a playable card, the opposite of base UNO's play-the-drawn-card option. An Attack mode should disable Force Play and Draw to Match.
-11. **No Mercy Coin (doubles a played card's penalty) vs stacks:** unresolved whether it doubles only that card's value or the whole running stack total. It can't be implemented without the JJB29 sheet.
+   With No Mercy and Stack Pack both on, a Stack 1 (value 1) can never follow a +2 under "equal or higher". Recommend: each pack's own text governs its own cards.
+2. **Wild NO U vs Wild Reverse Draw 4.**
+   - NO U **bounces** the penalty to "the player who played the Action Draw Card" without adding to it. WRD4 **adds 4** and reverses.
+   - In a multi-card stack, "the player who played the Action Draw Card" most naturally means the last player who added (MED).
+   - No sheet rules on NO U against Color Roulette (not a draw *card penalty* in the stacking sense; Roulette is a reveal) or NO U on NO U. Recommend allowing NO U on NO U.
+3. **Jump-In vs active stacks (official, sheet 41940):** an identical +2/WD4 jumped in **cancels** the first and applies its own effect from the jumper, so the original victim draws nothing and the player after the jumper draws 2/4. It never adds to a stack. Ubisoft's "jump in and add" is a digital house variant; keep it only as an optional sub-mode. Jump-In under No Mercy, Stack Pack or Mega Hit was never addressed officially.
+4. **Jump-In with wilds:** the sheet explicitly allows jumping in with a Wild Draw Four (an identical card). For No Mercy's many wilds, "identical" most naturally means the same face (Wild Draw 6 on Wild Draw 6) (MED).
+5. **Seven-O vs No Mercy:** No Mercy's 7/0 rules are word-for-word Seven-O (sheets HWV18, 41940), so enabling both must not double-apply them.
+   - Mercy: "If a player **ever** has 25 or more cards," so check after every hand change, including passes and swaps.
+   - **Threshold wording differs across sheets:** "25 or more" (HWV18, JNK69 Mercy rule) vs "more than 25" (JJB29 Mercy Coin) vs "exceed 25" (JNK69 Ultra Attack note). Use ≥25 as the rule and treat the others as loose wording (MED).
+   - Billie Eilish's Wild Pass Color always goes **left**. The Swap Pack's Wild Pass Hands and the No Mercy 0 follow the current direction.
+6. **Hand-swap code needs two arbitrary seats.** Wild Force Trade (JCV59) can swap two *other* players. The 7, classic Wild Swap Hands (42003), Comeback Wild Swap Hands (JMM17), Attack Trade Hands (41943) and Love Island's "swap hands with any player" all involve the player who played them.
+7. **Draw rules differ by edition.** No Mercy: draw until playable, then you **must** play it (HWV18). Classic: draw one, optionally play it (42003). Attack and No Mercy Attack: press, and your turn is over. Draw to Match is redundant under No Mercy, and No Mercy already behaves like Force Play.
+8. **Speed Pack vs everything (sheet JCV57):** actions only fire when last in the chain, so a mid-chain +2, Stack card, 0 or 7 does nothing (0/7 count as action-like here, inference). The speed-failure draw (N cards) has no official interaction with a pending stack or the Mercy Rule.
+9. **WD4 challenge vs stacking:** only Progressive UNO rules on it (scaled penalty). No Mercy, the Stack Pack and the Defense Pack never mention challenges. Recommend: the challenge is available only to the player the WD4 (or stack) finally lands on.
+10. **UNO Attack launcher vs "draw then play":** pressing ends your turn (2020 sheets explicit). An Attack mode must disable Force Play and Draw to Match. No Mercy Attack: you must finish all presses even if cards fire. Classic Attack Mega Hit: you may stop once cards fire.
+11. **No Mercy Coin (resolved):** it doubles the played Draw Card's own value, and that doubled value is what the next player must meet or beat. It is once per **game**; the side is declared at game start (JJB29).
+12. **Love Island persistent effects:** Coupled Up and Eggs In One Basket create standing links between two players that react to other cards. Eggs In One Basket's "must draw the same number" triggers only on Draw 2 / Wild Draw 4, so a literal engine excludes other draw sources such as Stack cards or Wild Petty Play. Frenemies' Wild Nemesis (+2 on every draw you cause to one player) is another standing link. The engine needs a per-player modifier list.
 
 ### Open gaps (highest priority first)
-1. Per-card copy counts for No Mercy. The recalled set sums to 168, but only Discard All 12 and Roulette 8 are corroborated.
-2. Where an eliminated No Mercy player's cards go.
-3. No Mercy point values.
-4. Who picks the Color Roulette color (the Mattel snippet says the next player).
-5. The third 8-card type in the No Mercy Expansion, plus the coin split and the No Mercy Coin's interaction with stacks.
-6. The Deadpool "Wild Reverse Draw 10": nothing found.
-7. Per-type counts for all add-on packs, the identities of the Speed Pack's colored cards, and the Wild NO U target wording.
-8. Ubisoft's definitions of No Bluffing and 2v2.
-9. UNO Attack 2020 (GXY78) card counts versus T8219, and #339 Mega Hit as a product versus a rule.
+1. **No Mercy per-card counts:** not printed on HWV18. The fan-wiki breakdown sums to 168 (MED). Confirm from a physical deck or a card photo.
+2. **Deadpool edition:** card names known (Wild Reverse Draw 10, Wild Gimme!, Wild Maximum Effort), effects UNVERIFIED. Rock-Paper-Scissors-Shoot! wasn't found at all.
+3. **Per-type counts:** JJB29 (24 cards, 5 types), JNK69 (168 cards), Billie Eilish, Frenemies, Comeback, Defense, Love Island (13 playable). Swap/Reverse/Stack (4 each) and Speed (12 + 4) rest on package art only.
+4. Speed Pack: which numbers the 12 colored cards carry. Comeback: which letter each card carries.
+5. Wild Attack-Attack: who presses and where play resumes differs across T8219 / GXY81 / GNL02.
+6. Smaller sheet silences: who plays next after a WD4 challenge; Trick Wild's effect on the next player; Wild Stack Number flipping a 0; turn order after Defense Pack blocks.
+7. Ubisoft's definitions of No Bluffing (and 2v2 hand visibility).
