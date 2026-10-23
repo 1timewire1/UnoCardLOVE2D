@@ -213,7 +213,8 @@ this section is just the headline takeaways:
   companions in particular are a genuine gameplay system (limited-use active powers, not cosmetic) worth
   studying as a template for an optional "character power" framework (see A7/C's Tier 3 roadmap note).
   See Part E3.
-* **Uno Undercover (#235)**'s 9 power-up cards, **Uno CD-ROM (#236)**'s hand-size-hiding Spy Card, and
+* **Uno Undercover (#235)**'s 13 Command Cards (15 defined, 2 cut; decompiled, see
+  `docs/mechanics/09-uno-undercover.md`), **Uno CD-ROM (#236)**'s hand-size-hiding Spy Card, and
   **Uno Famicom's (#364)** Board Game mode are the most structurally novel finds of the whole digital
   research pass - none of them are just reskins with a bonus wild card. See Part E4.
 
@@ -291,7 +292,7 @@ plus a few leaked prototype cards) but never sold as real products. Numbering fo
 | 494 | "Everyone Else Draws 4" | All-opponents Draw-4 (not just next player). | EASY |
 | 495 | Mazda "Wild Card" (car noises until a red card) | Real-world roleplay effect gated on a real rule (color-based end condition). | NOT FEASIBLE (unenforceable) for the roleplay part |
 | 496 | Dare! pre-written dares | Sample content for Uno Dare!, not a new mechanic. | See A8 |
-| 497 | Cut command cards from Uno Undercover | Prototype cards for an existing secret-mission mechanic; specifics undocumented. | N/A |
+| 497 | Cut command cards from Uno Undercover | **Resolved by decompiling the game** (`docs/mechanics/09-uno-undercover.md` section 3). "Command Card" is the shipped name. Two cut cards remain in the files: **Plunder** (remove any card from your hand and bank its points; art exists, popup disabled, code a stub) and **Personal Shield** (paired card sets N turns of bouncing draw penalties back; folded into Lucky Croc Tooth). Also cut: two-color first-draft art for the three combo cards, a 3-card Deck Customization loadout screen, "Pass" and "Amplified" penalty (stacking) modes, an Elimination game type, and Wild Vouchers. | EASY (Plunder, Shield) / see spec 09 |
 | 498 | Customizable Wild "Thought Starters" | Sample prompts for a blank/write-your-own wild. | See A5 (Wild Jackpot Roller row) |
 | 499 | Happy Birthday pre-written custom cards | Same customizable-wild idea, birthday-themed samples. | See A5 |
 | 500 | "What Would Your Wild Card Do?" | Open-ended, player-invented effect by definition. | NOT FEASIBLE (unenforceable) as a fixed rule |
@@ -671,7 +672,7 @@ on RESKIN entries in bulk.
 | 232 | Uno WWE (2010) | RESKIN | Resolved: 2010 Cena/Mysterio "Wrestling Edition" with the Locked Up card (lower value takes both). Same rule as #231 (FNC47 sheet). HIGH. |
 | 233 | Uno Nascar (2005) | MECHANIC | "Drafting" bonus-plays wild. See A8. |
 | 234 | Uno X Games | MECHANIC | BoardGameGeek (#12228, 1999) and two mirrors list the renamed cards: Can-Can (Wild, draw 10), Nuclear Air (Wild, draw 5), Dirt-Dive (discard all but 5), Fakie (Wild, all players trade hands), Drop a Hill (Wild, draw a new hand), Alley-Oop (Reverse + discard all of one color), and Tailwhip/Lipslide trick cards replacing Reverse/Skip. HIGH (though the three sources may share one origin). Colors and copy counts not found. See A8. |
-| 235 | Uno Undercover | DIGITAL-ONLY | Dev. Golden Goose/RealArcade, PC only (no DS version - that's a separate plain Gameloft port). Standard deck + 9 named "power-up cards," some played as 2-card combos. See Part E4. |
+| 235 | Uno Undercover | DIGITAL-ONLY | Dev. Golden Goose/RealArcade, 2008, Windows (plus a Mac build; no DS version - that's a separate plain Gameloft port). Standard 108-card deck + up to 7 of the player's 13 unlocked **Command Cards** (15 defined, 2 cut), one copy each, human-only. Several take a second "pairing" card that sets a turn count. Verified by decompiling the game, see Part E4 and `docs/mechanics/09-uno-undercover.md`. HIGH. |
 | 236 | Uno CD-ROM | DIGITAL-ONLY | Mattel Media/Interactive, ~1999-2002. Adds Spy Card (hides your hand-size from opponents) + Mutant/Shark Cards (names known, effects undocumented). See Part E4. |
 | 237 | Uno Game Boy Color | DIGITAL-ONLY | Dev. HotGen (not Genki), 1999. Adds a Challenge mode that inverts scoring: reaching a point ceiling eliminates you instead of winning. See Part E4. |
 | 238 | Uno + Skip-Bo 2 Game Pack (Game Boy Advance) | RESKIN | Confirmed correct (Destination Software, 2006): two unmodified, separate single-player-vs-AI games on one cartridge, no shared/crossover mechanic found. MED-HIGH. |
@@ -1096,6 +1097,9 @@ user request, separate from Part E's digital-only pass). Progress:
   Remember Me and Lion King's Circle of Life aren't hand swaps, #316 Barbie is a different deck from
   #424 (which matches #165), and My Scene (#315) does exist. 24 official products missing from the
   source list were added as N1-N24.
+* **UNO Undercover decompile: done.** A decompile of the shipped game (`docs/mechanics/09-uno-undercover.md`)
+  replaced the secondary-source summary of #235: 13 obtainable Command Cards (not 9 "power-up cards"),
+  four effects corrected, four cards added, and #497's cut cards identified (Plunder, Personal Shield).
 
 ---
 
@@ -1406,52 +1410,56 @@ also confirmed to offer a **turn/match time limit**: 3 minutes, 5 minutes, or Un
 
 ### E4. Legacy / miscellaneous digital (#235, #236, #237, #244, #364, #384, #385)
 
-**#235 — UNO Undercover — the title specifically flagged for this research pass.** PC only (Windows,
-via RealArcade), released July 2008. Dev. **Golden Goose Productions**, distributed by
-RealNetworks/RealArcade under Mattel's license; also ported to BREW/J2ME/Windows Mobile. **Correction:
-there is no DS version of "Uno Undercover" specifically** — a separate, plain "UNO" (standard rules, no
-spy theme) was released for DS by Gameloft in Dec 2009, a different product this doc's earlier "(PC/DS,
-~2008, likely Gameloft)" tag appears to have conflated with Undercover.
+**#235 — UNO Undercover.** **Verified by decompiling the shipped game** (Alawar/Real PC release,
+`App.swf` via JPEXS FFDec plus the game's XML data); the full write-up, with class names and per-claim
+confidence, is `docs/mechanics/09-uno-undercover.md`. This replaces the earlier secondary-source
+summary, which had the card count, the name and four card effects wrong.
 
-Standard 108-card deck plus **9 added "power-up cards"** shuffled into play in both modes. MED-HIGH,
-converging across MobyGames/RealArcadeapedia/Giant Bomb, paraphrased not verbatim:
-* **Redecorate** — changes the color of the discard pile *and* every card in the deck to the same
-  color/tone (a mass color-unification wild).
-* **Clone** — mimics/assumes the effect of any other card in the deck (a copy-a-card wild).
-* **Lucky Croc Tooth** — protects the holder from a draw-card penalty for a number of turns equal to the
-  value of a paired numbered card.
-* **Toe Hold** — forces a target opponent to hold 3 random cards for several turns, duration tied to a
-  paired card's number.
-* **Highland Two-Step** — makes two chosen opponents swap hands with each other.
-* **Double Cross** — a wild that changes the pile's color *and* two other cards in the deck.
-* **Sleep** — discarded together with a numbered card; makes one selected opponent skip turns, count set
-  by the numbered card's value.
-* **Tsunami** — discarded together with a numbered card; forces a selected opponent to draw cards, count
-  set by the numbered card's value.
-* **Switcheroo** — makes two opponents swap *seats* (turn order), not hands.
+* **Platform:** Windows, July 2008, dev. **Golden Goose Productions**, distributed by RealNetworks
+  (RealArcade, GameHouse). A Mac OS X build also exists (MED). The earlier BREW/J2ME/Windows Mobile port
+  claim has **no evidence** and was probably a mix-up with unrelated UNO phone games. No DS version: the
+  2009 DS "UNO" is a separate plain Gameloft port.
+* **"Command Cards" is the shipped name**, in code (`com.ggg.uno.CommandCard`), data and UI. "Power-up
+  cards" is press wording only. The earlier conclusion that the game never says "command cards" was
+  wrong.
+* **15 defined, 13 obtainable** (one per campaign mission), not 9. Up to 7 of the *human's* unlocked
+  cards are shuffled into the 108-card deck, one copy each; the AI never holds them. Switcheroo and
+  Highland Two-Step are left out of 2-player games. They score 0 in practice, although the help screen
+  prints 20-70 points.
+* **Effects as coded** (where card text, pop-up text and code disagree, the code wins):
 
-Sleep and Tsunami are genuinely new to this project: **two-card combo plays** (a special card + a
-numbered card whose value parameterizes the effect) — no "play two cards as one action" primitive exists
-in this codebase yet, so these would need real new plumbing, not just a new content/status value.
+| Card | Color | Effect (code) |
+|---|---|---|
+| Redecorate | Wild | Choose a color; every non-wild card **in your own hand** becomes that color. |
+| Clone | Blue | Choose a card in your hand; a **duplicate** of it is added to your hand. |
+| Lucky Croc Tooth | Yellow, paired | For N turns, any Draw Two / WD4 aimed at you **bounces back** to its player. |
+| Shooting Star | Red | Play up to **4 cards of one color** at once. |
+| Toe Hold | Blue, paired | Choose an opponent; up to 3 random cards in their hand are locked for N of their turns. |
+| Double Cross | Wild | Choose a color; recolor 1-2 chosen cards **in your own hand**. |
+| Highland Two-Step | Green | Two chosen opponents swap hands. |
+| Sleep | Green, paired | Choose an opponent; they lose N turns. |
+| Tsunami | Blue, paired | Choose an opponent; they take N random cards **from the other players' hands** (skipping Command Cards and 1-card hands). |
+| Switcheroo | Yellow | Two opponents swap **seats** (turn order). |
+| Reverse Skip | Yellow | Reverse, then skip the next player (2 players: you go again). |
+| Reverse Draw-Two | Red | Reverse; the next player draws 2 and loses their turn. |
+| Skip Draw-Two | Green | Skip the next player; the one after draws 2 and loses their turn. |
 
-**On "command cards" specifically (the term that prompted this whole research pass):** every source
-found for the *shipped* game calls these "power-up cards"/"power cards," **never** "command cards." This
-strongly suggests this project's existing Part B note (#497, "Cut command cards from Uno Undercover")
-refers to an earlier prototype/internal name for a mechanic that shipped under a different name (most
-likely these same 9 cards, renamed before release) — or a genuinely different, never-shown cut set that
-can't be distinguished from that possibility with available sources. **No source** (fan wiki, a Cutting
-Room Floor-style preservation site, developer interview, marketing archive) documents specific cut
-"command cards" by name or effect — this remains "specifics undocumented," now with much more confidence
-that it can't be resolved further without whatever original source generated this project's ~500-item
-list in the first place. **Do not treat the shipped power-up cards as confirmed to *be* the cut command
-cards** — that's an inference, not a sourced fact.
-
-Mission/story structure: a spy narrative wrapper (protagonist "Felicia Blue" infiltrating locations to
-track "Madame Zero") over the *same* standard-rules-plus-power-cards deck throughout — different
-venues/opponents appear to just mean different AI personalities/difficulty, not different card-legality
-rules per mission; no source describes a mission-specific rule change. A separate **Quick-Play mode**
-offers the same ruleset without the story wrapper. MED-HIGH — effectively reskinned standard UNO plus a
-fixed 9-card bonus set, not per-mission rule variants.
+* **Paired cards:** after the Command Card is played, a second card from your hand is dropped into a
+  slot and tucked under the discard pile. A number card sets N to its value, any other card counts
+  as 1, and a 0 makes the effect do nothing. Timed effects count down at the start of the affected
+  player's turn, show on their portrait, and clear at round end.
+* **Base rules as coded:** deal 7; the human always starts; a wild start card is redrawn, a starting
+  action has no effect; WD4 playable any time and never challengeable; no stacking; draw 1 and play
+  only that card or pass; Manual or Automatic UNO calls (caught = draw 2). Modes: **Single** (first out
+  wins, the default) and **Standard** (to **300** points).
+* **Missions:** the Felicia Blue vs. Madame Zero spy plot is confirmed. AI play is identical for every
+  character (random playable card, UNO called 50% of the time). Missions vary player count (2-6),
+  game type, scripted losses and a hidden **AI handicap** ("easing") that ramps 95 → 50 over missions
+  1-4: the AI may refuse to play its last card or to hit the human with Skip/Draw Two/WD4, and extra
+  Wilds are added to the deck.
+* **Cut content (#497):** Plunder, Personal Shield, two-color combo-card art, a 3-card Deck
+  Customization screen, Pass and Amplified penalty modes, an Elimination game type (highest scorer out
+  each round until 2 remain), Wild Vouchers, and a hidden cheat console. See spec 09 section 3.
 
 **#236 — UNO CD-ROM.** Dev/pub Mattel Media/Mattel Interactive; dating is inconsistent across sources
 (GameFAQs "2000," an Internet Archive listing "2002") — likely one base release ~1999-2000 with a later
@@ -1554,6 +1562,7 @@ confidence tags and sheet codes, live in `docs/mechanics/`:
 | `06-followup-gap-fill.md` | Wild Draw Four history, X Games and Deadpool No Mercy card lists, the last never-verified RESKIN rows |
 | `07-themed-bonus-cards.md` | ~95 licensed-deck bonus cards with official wording, grouped by A14 primitive |
 | `08-fandom-line.md` | Every UNO Fandom deck, including each Fandom NFL team's own rule card |
+| `09-uno-undercover.md` | UNO Undercover (#235) from the decompiled game: all 15 Command Cards as coded, the paired-card mechanic, the cut content behind #497, base rules and the AI handicap |
 
 ### F1. Facts from the specs that change how things get built
 

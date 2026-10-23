@@ -1,7 +1,7 @@
 # Implementation plan: mechanics from the UNO survey
 
 This is the build plan that follows the research in `docs/gameversions.md` and the specs in
-`docs/mechanics/01`-`08`. It answers two questions:
+`docs/mechanics/01`-`09`. It answers two questions:
 
 1. **In what order should the ~500 surveyed versions' mechanics be built?** (Parts 2-3)
 2. **Where do mechanics from different versions collide, and how does the engine settle each
@@ -192,11 +192,16 @@ shows identical win distributions to before the refactor on the same seeds.
   draws 2. Calls, misses and catches are logged in the replay (`UN` opcode) so seeded games still
   reproduce. Phase 7 extends it for the cards that react to a call.
 * **Match play.** Per-deck scoring tables; "first to N points" (500 default; 250 for Express-sized
-  decks; 1000 for No Mercy), "first to 3 hands" (H2O), and Challenge UNO (eliminate at 500 points
+  decks; 1000 for No Mercy; 300 for UNO Undercover's Standard mode), "first to 3 hands" (H2O), and Challenge UNO (eliminate at 500 points
   held). Include the official rule that a Draw Two or WD4 played as the last card still makes the
   next player draw before hands are scored.
 * **Two-player rule table.** Formalize the existing Reverse-as-Skip into a per-effect 2-player
   override (Part 6, C13), so later phases fill in a row instead of adding special cases.
+
+* **Easy-difficulty handicap (from UNO Undercover's "easing", spec 09).** Two behavior knobs per
+  difficulty: the chance a CPU holds back its last card, and the chance it avoids hitting the human
+  with Skip, Draw Two or WD4. They sit beside D7's forget and catch chances. Undercover's deck-side
+  handicap (extra Wilds, Wilds withheld from the AI) is left out: it's hidden from the player.
 
 *Content wave:* official Swap Pack; classic match play to 500; calling UNO.
 
@@ -218,14 +223,25 @@ Build the A14 primitives on the queue and pickers, each with an AI evaluator:
 | Multi-skip / skip-by-predicate | pointer steps | Web Swing, Skip Everyone |
 | Card tags + tag overlay art | `def.tags`, `tools/gen_cards.py` | Voldemort/Harry 2-6-9, Triforce 3-6-9, Bat-family 1-4 |
 | Coin / drop randomizer | `RN` opcode | 50/50 coin (#6), Welcome to the Jam (#191) |
+| Paired sizing card (spec 09) | `pickCards(self, 1, 1)`; the card is tucked under the discard pile | Sets N for the card it pairs with: a number card's value, 1 for any other card, 0 means no effect. Used by Sleep, Toe Hold, Lucky Croc Tooth, Tsunami and Personal Shield |
+| Chained actions | queue steps | Reverse Skip, Reverse Draw-Two, Skip Draw-Two |
+| Card mutation and creation (C18) | def swap on a hand card, logged | Redecorate (recolor your hand), Double Cross (recolor 1-2 cards), Clone (duplicate a card) |
+| Take from others' hands to a target | `pickSeat` + random picks, logged | Tsunami (N random cards from the other players to the target; skips special cards and 1-card hands) |
+| Seat swap (C19) | reorders the Phase 0g seat list | Switcheroo; Highland Two-Step is the existing `swap(a, b)` between two opponents |
 
 Then add a **Bonus Wild** setting: pick one themed card (or "random each game") and shuffle 4 copies
 into the classic deck, matching the official 108+4 = 112 layout of most licensed decks (spec 07, 08).
+Next to it, a **bonus card pool** setting in UNO Undercover's style: choose a set of special cards
+(Undercover deals up to 7 at random from your collection, one copy each; its cut design was a
+3-card loadout), with a "human-only" sub-option (C20).
 Also add the cheap Add-On Packs whose cards are pure primitives (Reverse Pack minus Wild NO U,
 Comeback, Billie Eilish), each as its own toggle.
 
 *Content wave:* the ~60 sheet-verified bonus cards from spec 07 and the Fandom line that need nothing
-from later phases. Cards that need responses, standing effects or duels wait for their phase; spec 07
+from later phases, plus the UNO Undercover Command Cards that need nothing later: the three combo
+cards, Redecorate, Double Cross, Clone, Highland Two-Step, Switcheroo, Tsunami and the cut Plunder.
+Sleep, Toe Hold and Lucky Croc Tooth wait for Phase 8 (timed statuses; the Tooth also needs Phase 7's
+reflect), and Shooting Star for Phase 12. Cards that need responses, standing effects or duels wait for their phase; spec 07
 already groups them by primitive, so the backlog is mechanical.
 
 ### Phase 3: Stacking policies and parameterized challenges (M)
@@ -233,7 +249,11 @@ already groups them by primitive, so the backlog is mechanical.
 * **Stack policy enum** replacing `stackRule`: `none`, `sameType` (Progressive: +2 on +2, WD4 on WD4,
   one per turn), `classicMixed` (today's rule 2, kept for compatibility), `equalOrHigher` (No Mercy),
   `colorGated` (Stack Pack), `anyHit` (Attack Mega Hit, play resumes after the first hitter). Each card
-  def may carry its own stack rule, which beats the global one (C1).
+  def may carry its own stack rule, which beats the global one (C1). UNO Undercover's cut penalty modes
+  (spec 09) add two optional policies that cover *every* effect card, not just draw cards: `passSame`
+  ("Pass Penalties": a card of the same type passes the pending effect on to the next player without
+  adding to it, so a Skip on a Skip passes the skip) and `amplifySame` ("Amplified Penalties": a card of
+  the same type passes both effects on, so the penalties add up).
 * **Challenge object** `{canChallenge, legalityCheck, onGuilty, onInnocent, wildsCountAsMatch}` used
   by WD4 (4/6), Flip's Wild Draw Two (2/4) and Wild Draw Color (until color / plus 2), Express's Wild
   Draw Two (4/4), Progressive's scaled penalty, and Flex's regular-side WD4.
@@ -280,6 +300,9 @@ size bounds, color set, and the rules it forces. Presets in order:
   skipped, can't be targeted, and its hand goes aside. This is also the deferred "shrinking table"
   mode from Part C, which comes almost free here.
 * **Cap knockout toggle (D5):** reaching the hand cap knocks you out, in any deck mode.
+* **Elimination by score** (UNO Undercover's cut game type, spec 09): after each round the highest
+  scorer is knocked out, until two players remain. A sub-option of match play, beside Challenge UNO's
+  "out at 500 points held".
 * **No Mercy** (HWV18): the `equalOrHigher` stack policy, draw-until-playable then must play, Mercy
   Rule at 25+ cards checked after *every* hand change, Discard All, Skip Everyone, Wild Reverse Draw 4
   (and its 2-player rule), Color Roulette (the victim names the color), built-in 7-0, scoring
@@ -313,14 +336,21 @@ size bounds, color set, and the rules it forces. Presets in order:
 ### Phase 8: Standing effects, on-draw triggers and player links (M)
 
 * A per-player and a global list of standing modifiers, each with a "starts", an "ends when" and a
-  query hook (C12): color locks (Forces of Nature, the Expo color lock), immunity (Save the Day),
+  query hook (survey Part F2, item 12): color locks (Forces of Nature, the Expo color lock), immunity (Save the Day),
   repeating triggers (Hyperspeed, Black is My Happy Color).
+* **Timed statuses** (spec 09): a turn counter on a seat's modifier that counts down at the start of
+  that seat's turn, shows as a badge on its portrait, and clears at round end. A count of 0 expires on
+  the next turn start, so the effect does nothing. UNO Undercover's Sleep (lose N turns), Toe Hold (up
+  to 3 random cards locked for N turns, via a per-seat legality filter) and Lucky Croc Tooth (N turns of
+  bouncing Draw Two / WD4 back to its player, a passive reflect using Phase 7's reflect operation) are
+  the first users; any "until your next turn" card from other decks is a count of 1.
 * **On-draw hook** that fires in every draw path, including penalty draws and draw-until loops:
   Creeper, Crash-Up.
 * **Links between players:** Frenemies' Nemesis, Love Island's Coupled Up and Eggs In One Basket,
   Drawn Together.
 
-*Content wave:* Frenemies Pack, Love Island deck, the remaining standing-effect bonus cards.
+*Content wave:* Frenemies Pack, Love Island deck, the remaining standing-effect bonus cards, and
+UNO Undercover's Sleep, Toe Hold, Lucky Croc Tooth and the cut Personal Shield.
 
 ### Phase 9: Randomizer devices (M)
 
@@ -352,7 +382,9 @@ box's "2-4 teams" needs more seats (Part 7, D6).
 ### Phase 12: Multi-play and multi-pile (L)
 
 * A **multi-play state** with a cap and a single "contribution" rule (C8): Speed Pack chains (only the
-  last card fires), Power Sword, Team Attack, NDJOLIJEAN multi-discard, Fire Fist Ace.
+  last card fires), Power Sword, Team Attack, NDJOLIJEAN multi-discard, Fire Fist Ace, UNO
+  Undercover's Shooting Star (up to 4 cards of one color; spec 09 doesn't say which of their actions
+  fire, so it follows C8: only the last one).
 * **Triple Play** (three piles, overload draw 1-4, Wilds set no color, the timer) and **Tippo**
   (two trays, Stop cards, the tilt penalty). Both need `match` to become per-pile.
 
@@ -599,6 +631,9 @@ reaching the cap a knockout.
 | Wild Pass Hands, 0 (7-0) | Swap with the opponent |
 | 7, Wild Swap Hands, Swap 1, Bullseye, any "chosen player" | Auto-target the opponent |
 | Wild Force Trade (any two seats) | Swaps you and the opponent |
+| Reverse Skip (Undercover) | You go again (as coded) |
+| Skip Draw-Two (Undercover) | "The player after the skipped one" is you, so the opponent is skipped and draws 2 instead (spec 09 doesn't cover it; our rule) |
+| Highland Two-Step, Switcheroo, Tsunami (Undercover) | Need two opponents. Left out of the deck in 2-player games, as Undercover does for the first two |
 | No Mercy Wild Reverse Draw 4 | Its player draws 4 unless the opponent stacks it back (sheet HWV18) |
 | 50/50 coin (#6) | You must be one of the two players (sheet HBF05) |
 | "Everyone except you", "fewest cards" | The opponent |
@@ -621,6 +656,26 @@ UNO-call timings are logged too, so replays don't depend on frame timing.
 default evaluator ("treat as a Wild worth N") exists only so self-play tests can run while a card is
 in development.
 
+**C18. Card mutation and creation** (Redecorate, Double Cross, Clone). A recolored card is given a
+new def for the rest of the game (logged in the replay), so legality, Jump-In's "identical card",
+scoring and AI all just read its current def. A cloned card is a real card from then on: it goes to
+the discard pile and is reshuffled like any other. Card conservation counts card *objects* against
+the deck manifest plus a logged "created" count, so a Clone doesn't fail the self-play invariant.
+
+**C19. Seat swaps** (Switcheroo). Swapping two seats reorders the active-seat list, so turn order and
+"next player" change while the hands and statuses stay with the players; on screen the two players'
+positions swap. In Teams or 2vs2, a seat swap would break partners sitting across from each other, so
+Switcheroo is left out of the deck with those modes on.
+
+**C20. Human-only special cards** (Undercover's Command Cards are never dealt to the AI). Treat
+"human-only" as a dealing rule only. If a hand swap, pass or Tsunami moves such a card to a CPU, it
+belongs to that CPU and can be played (which C17 already requires to work). The alternative, cards
+that refuse to move, would make every hand-movement effect special-case them.
+
+**C21. Paying a paired card with your last card.** If the paired sizing card is the last card in your
+hand, you go out once the effect resolves (4.2 step 6), as with any other card that empties your hand.
+Spec 09 doesn't say what Undercover does here; this is our rule.
+
 ---
 
 ## Part 7: Decisions (settled 2026-10-23)
@@ -637,6 +692,21 @@ in development.
 | D8 | Honor-system cards | Only cards that print a draw-penalty fallback, with the fallback as the real effect (Phase 15). |
 | D9 | Unprinted numbers | Documented values in easy-to-tune data files, marked "provisional" in the deck description. |
 | D10 | Your reaction prompt | A short timed prompt only when you hold a legal response or Jump-In card, timing out to "pass"; an "always wait for me" option removes the timer (Phase 7). |
+
+---
+
+### Open questions from the UNO Undercover decompile (spec 09)
+
+Each has a working default already written into the plan; confirm or change before the phase that
+needs it.
+
+| # | Question | Default in the plan |
+|---|---|---|
+| U1 | Command Card points: the help screen prints 20-70, but the shipped game scores them 0 | Use the help-screen points; 0 looks like a missing `setValue` call, not a design choice |
+| U2 | Can special cards moved to a CPU (by a hand swap, pass or Tsunami) be played by it? | Yes; "human-only" only controls dealing (C20) |
+| U3 | Skip Draw-Two with 2 players | The opponent is skipped and draws 2 (C13) |
+| U4 | Shooting Star: which of the up-to-4 cards' actions fire? | Only the last card's, as in C8 |
+| U5 | Pairing your last card as the sizing card | Allowed; you go out once the effect resolves (C21) |
 
 ---
 
