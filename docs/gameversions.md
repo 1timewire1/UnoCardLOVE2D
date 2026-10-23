@@ -6,18 +6,20 @@ versus which ones are **cosmetic reskins** (same rules, licensed artwork). The g
 a "mix-and-match" settings menu for this LÖVE port could realistically offer, from easiest to hardest,
 and what's simply off the table for a pure digital card-rules engine.
 
-**Bottom line up front:** of ~500 entries, the overwhelming majority (roughly 350+) are cosmetic
-reskins — a licensed movie, TV show, sports team, or brand printed on an unmodified 108-card UNO
-deck. Genuinely distinct mechanics cluster into a much smaller number of *families* (a few dozen),
-because the same mechanic gets reused across many themed reissues (e.g. every "Fandom NFL" team deck
-uses the same one added rule card; every "Ultimate Marvel" expansion pack just adds one more
-character to the same power system). Part A below catalogs those families. Part C is the full
-title-by-title table for traceability back to the source list.
+**Bottom line up front:** of ~500 entries, about 254 are tagged RESKIN (a licensed movie, TV show,
+sports team, or brand on a 108-112 card UNO deck). A full verification pass over all of them (see the
+note at the end of Part D) found that most of those "reskins" still ship one or two bespoke themed bonus
+cards; only a small minority are genuinely plain. Structurally distinct mechanics still cluster into a
+few dozen *families*, because the same mechanic gets reused across many themed reissues (e.g. every
+"Fandom NFL" team deck uses the same one added rule card; every "Ultimate Marvel" expansion pack just
+adds one more character to the same power system). Part A catalogs those families, Part C is the
+implementation roadmap, and Part D is the full title-by-title table for traceability back to the
+source list.
 
 ## Methodology and confidence
 
 This survey was produced by six research passes (one per ~80-item chunk of the source list) plus a
-manual pass for the "never released" ideas at the end, using product pages, BoardGaneGeek,
+manual pass for the "never released" ideas at the end, using product pages, BoardGameGeek,
 GeekyHobbies, the UNO Fandom wiki, Mattel's own rules PDFs, and similar sources. Two important caveats:
 
 * **Reskins are asserted from a strong prior, not verified one-by-one.** With ~350 licensed decks,
@@ -25,19 +27,23 @@ GeekyHobbies, the UNO Fandom wiki, Mattel's own rules PDFs, and similar sources.
   themed deck with 0-2 bespoke cards, rules otherwise standard) is extremely well established and
   called out explicitly by multiple sources, so it's a safe default — but a specific title tagged
   RESKIN here could turn out to have one overlooked bonus card.
-  **Update:** a dedicated verification pass has started (see the note at the end of Part D), and the
-  first batch of 50 titles blew this prior apart — only 3 of 50 (#14, #39, #49) came back as genuinely
-  plain reskins with zero card/rule differences. The other 47 had at least one documented or
-  strongly-evidenced bonus card, mostly single-movie/TV tie-ins from the mid-2000s through today that
-  each shipped with one bespoke wild card Mattel just doesn't advertise loudly. Treat "strong prior" as
-  reversed until more batches say otherwise — assume a RESKIN row *has* a bonus card until checked, not
-  the other way around. RESKIN rows without a "correction"/"confirmed" note in Part D have simply not
-  been re-checked yet.
-* **A handful of entries are tagged UNKNOWN** where no reliable source could be found at all (mostly
-  obscure regional/promotional items). These are called out in Part C and should be treated as "we
-  don't actually know," not "confirmed cosmetic."
+  **Update (verification complete):** a dedicated pass has now re-checked every RESKIN row individually
+  (5 batches plus a deep-dive follow-up; see the note at the end of Part D). It reversed this prior:
+  most single-movie/TV tie-ins from the mid-2000s on ship one bespoke wild card or house rule that Mattel
+  doesn't advertise loudly. The rows that came back genuinely plain are mostly sports-team commemorative
+  tins and novelty brand decks. Every RESKIN row in Part D now carries a "Correction"/"Confirmed"/
+  "Unverified"/"Follow-up" note with a confidence tag. The RESKIN tag was kept even when a bonus card
+  was found, meaning "standard rules plus at most a small themed card", as opposed to MECHANIC, which
+  marks a structurally different ruleset.
+* **Sourcing caveat for everything in this doc:** the research environment could not fetch pages
+  directly (Mattel's instruction-sheet site, Wikipedia, BGG and fandom wikis were all blocked), so
+  findings come from web-search result snippets. HIGH means 2+ independent sources agreed, not that
+  an official PDF was read end to end.
+* **Two entries are still tagged UNKNOWN** (#377, #399) where even the product's identity couldn't be
+  pinned down. They're called out in Part D and should be treated as "we don't actually know," not
+  "confirmed cosmetic."
 * Where a family (Fandom NFL, Ultimate Marvel, Elite NFL, Burger King Desafio, Add-On Packs) repeats
-  across dozens of numbered entries, Part A describes the mechanic **once**; Part C just points back
+  across dozens of numbered entries, Part A describes the mechanic **once**; Part D just points back
   at it.
 
 ## How feasibility tags work
@@ -210,6 +216,50 @@ this section is just the headline takeaways:
 
 See the dedicated table below (Part B) — these are one-off marketing/prototype cards, not full
 products, and are mostly either trivial numeric variants or unenforceable novelty prompts.
+
+### A14. Themed bonus cards from the reskin pass, grouped by engine primitive
+
+The reskin verification pass (Part D) turned up ~150 named themed bonus cards. Individually each is a
+one-off, but almost all of them reduce to a short list of reusable effect primitives. Building the
+primitive once makes every card in its row nearly free (a name, an art asset, and a parameter set),
+so this grouping matters more for implementation order than any single card. Card numbers point at
+Part D rows; only cards with a known effect (MED confidence or better) are listed.
+
+| Primitive | What the engine needs | Example cards (Part D #) | Already in codebase? | Tag |
+|---|---|---|---|---|
+| **Forced draw to a chosen/derived target** | Draw-N with a target selector: next, chosen, all opponents, fewest-cards player | Power of Greyskull, all others draw 3 (#149/#330); Victory Lap (#32); Exterminate, fewest-cards player draws 4, challengeable (#140); Rockin' Blockin' (#310); Wild Draw 6 (#125, #127); Beetlejuice, give 3 drawn cards to a chosen opponent (#410) | Partly: draw-N + Bullseye's chosen target | EASY |
+| **Draw until a condition** | "Draw until predicate(card)" loop with a safety cap, predicate over color, number set, or card tag | Sorting Hat (#177, #388); Soft Kitty (#138); Just Keep Swimming, until blue (#171); N-Zone, until red (#210); King Pig, all others until chosen color (#156); Evil Minion (#301); Oogie Boogie, until drawn numbers total 11+ (#185); From the Sewers, until one of each color (#194); Bat Signal (#371) | Partly: Draw to Match is the same loop with predicate = "playable" | EASY once a predicate hook exists |
+| **Reveal-or-draw check** | Per-player check "holds a card matching X?" then penalty; needs a reveal animation/log | The Force (#81); Infinity Gauntlet (#83); Bond's Precognition (#141); Yellowstone Brand (#146); Where Everyone Fits In (#144); Cheese Touch (#337); Stethoscope (#255); Duet, discard a number pair or draw 2 (#179); Attack of the T. Rex, can't match color draws 5 (#437); Wild Triforce (#157) | No | EASY-MEDIUM |
+| **Mass / self discard by filter** | Discard all/up-to-N cards matching a filter, from one or every hand | Owen's Raptor Squad (#80); Wild Voldemort (#175-176); Olaf's Summertime (#172); Wild Friendship, everyone discards 1 (#197, #246); Played With Too Much, others dump a color then redraw that many (#165, #316); Wild Discard All (#248); Happy Holiday / Trick or Treat (#152, #188) | No (No Mercy's Discard All is the same primitive, see A2) | EASY |
+| **Give cards away** | Move N chosen cards from your hand to chosen opponents (distribution UI) | Web Slinger, up to 3 of one color (#134, #163); Green Lantern Power Ring, all yellows (#174); Creeperific "Urrrhhh" (#262); Justice (#166); Sharpay's Helping Hand (#180); World Tour, chained hand pass (#135); Kryptonite (#434) | No | MEDIUM (distribution UI) |
+| **Hand swap / rotate / redeal** | swap(), cycle(), plus "pool N hands and redeal evenly" | Remember Me (#251) = Wild Swap Hands; Circle of Life (#82) = Wild Pass Hands; Muppet Mayhem, direction chosen (#150); Crash-Up (#84); Duke Caboom (#87); Bat-Bomb, pool all and redeal (#415); Cosmic Crush / Live Long and Prosper (#78, #292) = Refresh Hand | Mostly: swap/cycle/refreshHand exist; pool-and-redeal is new | EASY |
+| **Hand-size equalizer** | Set every hand toward a target size (largest hand, fixed N) | Power of Togetherness (#254); Ohana, everyone to 4 (#329); Super Absorbency (#126); Mirror Mirror (#331, LOW) | No | EASY |
+| **Take / trade specific cards** | View a hand, pick a card, optionally give one back; blind random pick | Sabotage / X-Ray Vision / Frankie's Hand (#142, #182, #397); Tiny Diamond's Mix Tape (#86); Wild Blind (#89); Screen Slayer (#85); Amulet, swap for any draw-pile card (#481) | Partly: Swap 1 is the blind version | EASY-MEDIUM (a visible-hand picker UI) |
+| **Pile search / pile take** | Search draw or discard pile for a card matching a filter, then play or keep it | Mr. Meeseeks, from discard (#128); Pic-a-nic, take top discard (#133); Wild Wayfinder, find a draw card in the draw pile and play it (#417); Shenron's Wish, flip top card for a conditional effect (#130) | No | EASY-MEDIUM |
+| **Multi-skip / turn steal** | Skip a chosen set or a computed number of players; out-of-turn play | Web Swing (#208); Hyperspeed, chained skip while players keep matching (#183); Defy Gravity, skips per green card held (#482); Hancock, target loses a turn (#271); Avatar State, out-of-turn play with all 4 colors (#336) | Partly: Skip + Bullseye; out-of-turn play needs the same plumbing as Jump-In | EASY (skips) / MEDIUM (out-of-turn) |
+| **Block / cancel an incoming effect** | A response window when a penalty targets you | Avengers Assemble (#83); Rockin' Blockin' alt mode, Best of Both Worlds (#310, #136); This is the Way (#81 note); Run! (#181); Beam Up WILD (#292 note) | No (Stack's "respond with a +2" is the closest existing hook) | MEDIUM |
+| **Standing effect until a trigger** | Per-player or global status that persists across turns until cleared | Save the Day, immunity until the next Wild (#147); Forces of Nature, must follow color (#88); Wild Black is My Happy Color (#479); Expo 2025 "WORLD" color lock (#428) | No | MEDIUM |
+| **Duel / simultaneous reveal** | Two or more players commit a card secretly, compare, resolve | Kickin' Battle (#90); Altimeter Alert (#77); WWE Locked Up (#230-232); Power of Friendship (#196, #387); Wild Narwhal, guess a hidden card's color (#161) | No | MEDIUM (AI choice logic) |
+| **Combo / doubler** | Play two cards together; the second's effect is doubled or copied | Fire Fist Ace (#271); UNO UNO no Mi (#272) | No (multi-card play is new) | MEDIUM |
+| **Card tags (icon subsets)** | A per-card attribute layer: a themed icon on a fixed subset of numbers, used by the predicates above | Gryffindor on 1-4 (#177); Harry on 2/6/9 (#175); Triforce on 3/6/9 (#157); Sheldon 3/9, Penny 0/5 (#138); Yellowstone Brand on 36 cards (#146); Love/Money on every card (#144); Wishing Icon (#170) | No | EASY data, but it's the enabler for several rows above, so it has to come first |
+| **Pre-game rule picker** | Choose 1 of N preset rules at setup | Seinfeld Episode (#153) | Settings menu already does this | EASY |
+| **Deck composition tweak** | Different copy counts | Iconic Series, 8 Wilds instead of 4 (#1-5) | Deck builder exists | EASY |
+| **Unenforceable / honor system** | Prompt text only, maybe a self-report button | Wild Don't Talk (#76); Elsa's Freeze (#172); Roy Kent Grunt (#145); Dumb Fu (#184); Sharing Squirrel (#297); Ice the Kicker (#298); BAM! THWACK! ZAMM! (#416); trivia cards Mickey Movie Madness and Pixar Pop Quiz (#250, #260); Shark Attack slap race (#148, could be AI-timed) | n/a | NOT FEASIBLE (unenforceable), except where a draw-penalty fallback exists |
+
+Things this grouping makes visible for planning:
+* **Six primitives cover most of the list**: targeted draw, draw-until, reveal-or-draw, filtered discard,
+  hand swap/redeal, and hand-size equalize. They're all EASY and share one dependency, a small
+  predicate/target-selector layer. Building that layer first turns dozens of themed cards into data.
+* **Several "new" cards are already implemented under other names**: Refresh Hand = Cosmic Crush =
+  Live Long and Prosper; Wild Swap Hands = Remember Me; Wild Pass Hands = Circle of Life; Bullseye
+  covers Web Swing's single-target case.
+* **Card tags are the hidden dependency.** A lot of draw-until and reveal-or-draw cards key off a themed
+  icon printed on certain numbers rather than color or number alone. Since this port uses generic art,
+  the tag would need to be a visible overlay on the affected cards, which is a rendering decision for
+  the planning step.
+* **Response windows and standing effects** (block/cancel, immunity, color locks) are the two
+  primitives most likely to collide with each other and with Stack and Jump-In, so they deserve the
+  most care in the conflict analysis.
 
 ---
 
@@ -875,7 +925,7 @@ on RESKIN entries in bulk.
 
 See Part B above for the full table.
 
-### Reskin verification pass (in progress)
+### Reskin verification pass (complete)
 
 The Methodology section's "reskins are a strong prior, not individually verified" caveat is being
 worked off in batches of 50, checking each RESKIN/UNKNOWN title for a missed bonus card or rule (per
