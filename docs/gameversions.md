@@ -312,6 +312,10 @@ purely cosmetic/organizational.
 Ordered from cheapest to most expensive, folding in the tags from Part A. This is meant to seed a
 follow-up planning conversation, not to be the final plan.
 
+**Superseded for build order:** `docs/implementation-plan.md` is the actual phased plan, grounded in
+the engine's current architecture, with the cross-version conflict rules and a compatibility table.
+The tiers below are kept as the original survey-era estimate.
+
 ### Tier 0 — Already done
 7-0, 2vs2, Stack (`src/uno.lua`).
 
