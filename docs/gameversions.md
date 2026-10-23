@@ -6,7 +6,7 @@ versus which ones are **cosmetic reskins** (same rules, licensed artwork). The g
 a "mix-and-match" settings menu for this LÖVE port could realistically offer, from easiest to hardest,
 and what's simply off the table for a pure digital card-rules engine.
 
-**Bottom line up front:** of ~500 entries, about 254 are tagged RESKIN (a licensed movie, TV show,
+**Bottom line up front:** of ~500 entries, about 250 are tagged RESKIN (a licensed movie, TV show,
 sports team, or brand on a 108-112 card UNO deck). A full verification pass over all of them (see the
 note at the end of Part D) found that most of those "reskins" still ship one or two bespoke themed bonus
 cards; only a small minority are genuinely plain. Structurally distinct mechanics still cluster into a
@@ -93,16 +93,16 @@ is a natural, cheap addition given the existing turn/legality model. **Tag: EASY
 | Stacking +2/+4/+6/+10, Mercy Rule, 7-Swap, 0-Pass, Color Roulette, Discard All, Skip Everyone | Uno Show 'Em No Mercy (#45, #378, #390, #406-407), digital Ubisoft port | The "maximalist" house-rule pack: draw penalties of every size stack onto the next player; a hand of 25+ cards eliminates you; wilds can force a full-table color change, dump your whole hand of one color, or skip the whole table. | **EASY–MEDIUM** (each piece is a small independent extension of the Stack rule already in the engine; the full combined ruleset is a bigger lift but decomposes cleanly into independent toggles) |
 | Reverse Pack: Reverse Draw 2, Reverse Skip, Wild Power Reverse, Wild "NO U" (reflect a penalty back) | Uno Add-On Packs! Reverse Pack (#421) | Combo cards (reverse+draw, reverse+skip) plus a card that redirects an incoming draw penalty back at whoever played it. | **EASY** |
 | Stack Pack: Stack 1/2/3, Wild Stack Number (random N via flipped card) | Uno Add-On Packs! Stack Pack (#422) | Officializes stacking as cards rather than a blanket house rule, plus a "roll the top card" random-N draw. | **EASY** |
-| Wild Jackpot: shared growing "Jackpot" draw pile, dumped on a player when triggered | Uno Wild Jackpot (#27), Arby's tie-ins (#342, #367) | A running pile of drawn cards accumulates in the middle; a Jackpot card dumps the whole pile on someone. | **MEDIUM** (needs a new shared-pile state) |
+| Accumulate-and-dump pile (drawn cards go into a shared container instead of your hand; it empties onto whoever triggers it) | Uno Blast (#110). **Correction:** previously credited to Wild Jackpot (#27), which has no such pile; see A5 for Jackpot's actual roller. The Arby's tie-ins (#342, #367) are pending re-check. | A player who can't play inserts their drawn card into the pile; at a random moment it fires and the inserting player takes everything. "Wild Blast" makes the next player keep inserting until it fires. | **MEDIUM** (needs a new shared-pile state plus a per-insert fire probability) |
 | Novelty fixed-N draws: Draw 73, Draw 100, "everyone else draws 4" | Pizza 73 promo (#488), No Mercy April Fools card (#487), unreleased idea (#494) | Just the existing draw-N action generalized to arbitrary N and to "all opponents" as target. | **EASY** |
-| Power Grab towers (collect U/N/O + a 4th to void Draw 1/2/Wild+4, or empty your hand) | Uno Power Grab (#104) | A meta-resource layer: collecting a set of 4 tokens grants powerful one-time effects. | **MEDIUM** |
+| Power Grab towers (four ownable towers U/N/O/!, each blocking one card type; all four = discard down to 1) | Uno Power Grab (#104) | A persistent per-player protection layer: U blocks Draw One, N blocks Draw Two, O blocks Wild Draw Four, ! blocks Skip. Towers are stolen by playing tower-icon cards. | **MEDIUM** |
 
 ### A3. Turn-order and targeting variants
 
 | Mechanic | Found in | Description | Tag |
 |---|---|---|---|
 | Bullseye targeting (choose who an action card hits, instead of always "next player") | Mini Uno Bullseye (#418) | Turns single-target action cards into player-choice-target cards. | **EASY** (the codebase's 7-0 already has a "choose a player" UI to reuse) |
-| Swap Pack: swap 1 card, refresh whole hand, force-trade two players, pass-all-hands | Uno Add-On Packs! Swap Pack (#420) | A cluster of hand-manipulation cards; "pass all hands" is exactly 7-0's "0" effect done via a card instead of a number. | **EASY** |
+| Swap Pack: Swap 1, Refresh Hand, Wild Force Trade, Wild Pass Hands | Uno Add-On Packs! Swap Pack (#420) | A cluster of hand-manipulation cards; "pass all hands" is exactly 7-0's "0" effect done via a card instead of a number. **Implemented**, but the final review found two mismatches with the real cards: the official wild is **Wild Force Trade**, where you pick *any two players* (yourself optional) to trade hands, while this port's "Wild Swap Hands" always includes the player; and official **Swap 1** takes a random card from the target and gives them a card *you choose*, while this port gives a random one. | **EASY** |
 | Team Attack (discard up to 3 cards from hand in one turn) | TMNT Team Attack (#124) | A themed wild that lets you dump multiple cards at once instead of one. | **EASY** |
 | Teams! (2v2 with card-passing between partners, and a partner absorbs half the other's hand if they go out first) | Uno Teams! (#405) | A deeper team mode than the existing 2vs2 special rule — partners can hand cards to each other, and the team keeps playing (with pooled cards) after one partner empties their hand. | **MEDIUM** (builds on the existing 2vs2 rule, but pooled/absorbed hands after a partner "finishes" is new state) |
 | Royal Revenge (King chooses wild colors and who wears the "Jester" penalty; role periodically changes) | Uno Royal Revenge (#159) | A rotating privileged-player role affecting who calls wild colors. | **MEDIUM** (new persistent per-game role state; the physical scepter/crown obviously doesn't port) |
@@ -131,14 +131,14 @@ small table." That part ports fine as RNG. The device itself obviously doesn't.
 | Tippo (balance-scale that can "tip" and force a draw) | Uno Tippo (#24) | Two discard piles on a physical tipping scale; overloading one side costs you. | **MEDIUM** (can model the "scale" as a simple counter with a tip threshold; no physical balance needed) |
 | Triple Play trays (3 simultaneous discard piles, "overload" penalty) | Uno Triple Play (#16, #112) | Structural: the single discard pile becomes three, with rules about which are legal targets. | **HARD** (touches the core single-discard-pile assumption throughout `src/uno.lua`) |
 | Wild Jackpot Roller / pre-written custom rules on erasable cards | Uno Wild Jackpot (#27), Uno Happy Birthday (#306), Uno House Rules! (#29, #368), NDJOLIJEAN (#346), customizable-wild ideas (#498-499, #503) | Players write a house rule on a blank card pre-game; when it's drawn/played, that rule applies. | **MEDIUM to implement the mechanism** (a free-text "custom card" with a player-entered label is easy); **the rule's actual effect is unenforceable by software** unless it's picked from a fixed menu of pre-coded effects, in which case this just becomes "let the player assemble their own action card from existing primitives" — a nice generic feature once several EASY mechanics above exist as building blocks. |
-| Uno Rush / online timed play (see opponents' hands, time-limited turns) | Uno Rush (#366) | A visible-hands, timer-pressured mode. | **MEDIUM** (mostly a UI/AI-difficulty question; showing opponents' hands is trivial, timing pressure needs a turn timer) |
+| Uno Rush / online timed play (see opponents' hands, time-limited turns); UNO Master's turn timer | Uno Rush (#366); UNO Master (#400, 1997 Spear's Games: play or draw within 8/6/4 s or draw 4) | A visible-hands, timer-pressured mode. | **MEDIUM** (mostly a UI/AI-difficulty question; showing opponents' hands is trivial, timing pressure needs a turn timer) |
 
 ### A6. Alternate deck compositions
 
 | Mechanic | Found in | Description | Tag |
 |---|---|---|---|
 | All Wild (every card in the deck is some Wild/action type; no color/number matching at all) | Uno All Wild (#28), Pocket All Wild (#284) | Fundamentally changes what "legal card" means. | **EASY–MEDIUM** (a deck-composition setting, plus making the legality check permissive for this mode) |
-| Reduced/"Pocket" 52-card deck (numbers 1-9 only, draw-1 instead of draw-2/4) | Uno Pocket lines (#51-52, #340, #399) | A smaller, faster deck. | **EASY** (a deck-size/content variant) |
+| Reduced/"Pocket" deck (numbers 1-9 only, draw-1 instead of draw-2/4; 52 cards per one rules site, 56 per Casio's 2024 promo page) | Uno Pocket lines (#51-52, #340, #399) | A smaller, faster deck. Deal 5, play to 250. "Pocket" is a promo brand label, so composition may vary by sponsor. | **EASY** (a deck-size/content variant) |
 | Junior/Choo Choo/Mein Erstes Uno (kids' simplified rules: match by icon, no action cards, or a curated subset by difficulty tier) | Mein Erstes Uno (#350), Uno Junior Move! (#362), Uno Choo Choo (#391) | Selectable difficulty tiers, from "match only" up to full rules. | **EASY** (this is just exposing the existing rule toggles as a friendlier tiered preset) |
 
 ### A7. Character / power-card systems
@@ -159,15 +159,15 @@ small table." That part ports fine as RNG. The device itself obviously doesn't.
 | Emoji face-holding, BTS dance, "Move!" jump/clap/dance, Mazda car-noises, Star Wars "toss cards like an exhaust port" | Uno Emoji (#359), Uno BTS (#11), Uno Junior Move! (#362), unreleased Mazda card (#495), Star Wars Technical Schematics flavor rule (#193) | Cards whose entire effect is "do a physical/social thing." | **NOT FEASIBLE (unenforceable)** — can be shown as flavor text for local play, has zero enforceable game-state effect. |
 | WWE "Locked Up" 1v1 duel (both players reveal/play a number card, higher wins, loser draws both) | Uno WWE (#230-231) | A self-contained mini-duel between two specific players. | **EASY** (a simple "both reveal highest number" comparison) |
 | Nascar "Drafting" (play up to 2 extra matching-color cards immediately after a wild) | Uno Nascar (#233) | A bonus-cards-in-one-turn effect. | **EASY** |
-| X Games renamed action cards (new names, several genuinely new numeric effects: Wild Draw 5/10, discard-down-to-5, reverse+discard-a-color) | Uno X Games (#234) | A themed set of otherwise-standard-shaped new action cards. | **EASY** |
+| X Games renamed action cards (Can-Can = Wild Draw 10, Nuclear Air = Wild Draw 5, Dirt-Dive = discard down to 5, Fakie = Wild + everyone trades hands, Drop a Hill = Wild + draw a new hand, Alley-Oop = Reverse + discard a color) | Uno X Games (#234, 1999) | A themed set of otherwise-standard-shaped new action cards. Confirmed via BoardGameGeek in the final review; colors and copy counts still unknown. | **EASY** |
 | Liar's Uno (play a card face-down, bluff what it is; others can challenge; wrong claims cost the liar a card, wrong challenges cost the challenger) | Liar's Uno Trust No One (#475) | A genuine bluffing/challenge subsystem layered on discard-matching. | **MEDIUM–HARD** — logic is self-contained, but a believable AI bluffing/calling strategy is real work (the existing AI already handles one bluff-adjacent decision: challenging a Wild+4). |
 
 ### A9. Scoring and win-condition variants
 
 | Mechanic | Found in | Description | Tag |
 |---|---|---|---|
-| Cricket-style running score to 500, lowest wins, themed cards (Four/Six/Wicket/Over) replace standard actions | Uno Cricket (India) (#229) | Replaces "empty your hand first" with an accumulating-score game across rounds. | **MEDIUM** (the existing per-game scoring already tracks hand values; this needs a different round-to-round scoring loop, not first-empty-hand-wins) |
-| H2O Splash "best of 3 hands" | Uno H2O Splash (#47) | Match structure of 3 short games instead of 1. | **EASY** (a match-length setting) |
+| Cricket-style running score to 500, lowest wins, themed cards (Four/Six/Wicket/Over) replace standard actions | Uno Cricket (India) (#229) | **Unverified:** the final review found no source for this product or its card list. Keep only as an original idea. | **MEDIUM** (the existing per-game scoring already tracks hand values; this needs a different round-to-round scoring loop, not first-empty-hand-wins) |
+| H2O Splash "first to win 3 hands" (corrected from "best of 3") | Uno H2O Splash (#47) | Match structure of short hands with no points; the first player to win 3 hands wins. | **EASY** (a match-length setting) |
 | Ono 99 / Boom-O family (accumulating total toward 99, or a shared countdown timer; elimination via tokens/lives) | Ono 99 (#38), Boom-O (#55) | A running shared number that cards push up or down, with an elimination threshold. | **MEDIUM**, but arguably **OUT OF SCOPE (different game)** — these don't use discard-pile matching at all, they're closer to a different card game wearing UNO's name. |
 | Golf (face-down 2x3 grid instead of a hand, minimize score) | Uno Golf (#379) | A different hand model entirely (a grid you flip into, not cards you hold and legally match). | **OUT OF SCOPE (different game)** |
 
@@ -228,7 +228,7 @@ Part D rows; only cards with a known effect (MED confidence or better) are liste
 | Primitive | What the engine needs | Example cards (Part D #) | Already in codebase? | Tag |
 |---|---|---|---|---|
 | **Forced draw to a chosen/derived target** | Draw-N with a target selector: next, chosen, all opponents, fewest-cards player | Power of Greyskull, all others draw 3 (#149/#330); Victory Lap (#32); Exterminate, fewest-cards player draws 4, challengeable (#140); Rockin' Blockin' (#310); Wild Draw 6 (#125, #127); Beetlejuice, give 3 drawn cards to a chosen opponent (#410) | Partly: draw-N + Bullseye's chosen target | EASY |
-| **Draw until a condition** | "Draw until predicate(card)" loop with a safety cap, predicate over color, number set, or card tag | Sorting Hat (#177, #388); Soft Kitty (#138); Just Keep Swimming, until blue (#171); N-Zone, until red (#210); King Pig, all others until chosen color (#156); Evil Minion (#301); Oogie Boogie, until drawn numbers total 11+ (#185); From the Sewers, until one of each color (#194); Bat Signal (#371) | Partly: Draw to Match is the same loop with predicate = "playable" | EASY once a predicate hook exists |
+| **Draw until a condition** | "Draw until predicate(card)" loop with a safety cap, predicate over color, number set, or card tag | Sorting Hat (#177); Thirst (#199); Champs Card (#215); Greninja (#35); Soft Kitty (#138); Just Keep Swimming, until blue (#171); N-Zone, until red (#210); King Pig, all others until chosen color (#156); Evil Minion (#301); Oogie Boogie, until drawn numbers total 11+ (#185); From the Sewers, until one of each color (#194); Bat Signal (#371) | Partly: Draw to Match is the same loop with predicate = "playable" | EASY once a predicate hook exists |
 | **Reveal-or-draw check** | Per-player check "holds a card matching X?" then penalty; needs a reveal animation/log | The Force (#81); Infinity Gauntlet (#83); Bond's Precognition (#141); Yellowstone Brand (#146); Where Everyone Fits In (#144); Cheese Touch (#337); Stethoscope (#255); Duet, discard a number pair or draw 2 (#179); Attack of the T. Rex, can't match color draws 5 (#437); Wild Triforce (#157) | No | EASY-MEDIUM |
 | **Mass / self discard by filter** | Discard all/up-to-N cards matching a filter, from one or every hand | Owen's Raptor Squad (#80); Wild Voldemort (#175-176); Olaf's Summertime (#172); Wild Friendship, everyone discards 1 (#197, #246); Played With Too Much, others dump a color then redraw that many (#165, #316); Wild Discard All (#248); Happy Holiday / Trick or Treat (#152, #188) | No (No Mercy's Discard All is the same primitive, see A2) | EASY |
 | **Give cards away** | Move N chosen cards from your hand to chosen opponents (distribution UI) | Web Slinger, up to 3 of one color (#134, #163); Green Lantern Power Ring, all yellows (#174); Creeperific "Urrrhhh" (#262); Justice (#166); Sharpay's Helping Hand (#180); World Tour, chained hand pass (#135); Kryptonite (#434) | No | MEDIUM (distribution UI) |
@@ -332,9 +332,10 @@ off, which changes deck composition (not just legality) so it only takes effect 
 
 Still open in this tier: Jump-In (from Deluxe House Rules) · Reverse Pack (reverse+draw, reverse+skip,
 reflect-penalty) · Stack Pack (stack 3, random-N via flipped card) · novelty fixed-N draws
-(73/100/all-opponents-4) · Team Attack multi-discard · WWE "Locked Up" duel · Nascar Drafting bonus plays ·
-X Games renamed action set · All Wild deck mode · Pocket reduced-deck mode · Junior/tiered-difficulty
-presets · Fandom NFL-style "one themed bonus wild" toggle · H2O Splash best-of-3 match structure ·
+(73/100/all-opponents-4) · Team Attack multi-discard · WWE "Locked Up" duel (resolution unverified) ·
+Nascar Drafting bonus plays (unverified) · X Games renamed action set · All Wild deck mode · Pocket reduced-deck mode ·
+Junior/tiered-difficulty presets · Fandom NFL-style "one themed bonus wild" toggle (Touchdown text
+unverified) · H2O Splash first-to-3-hands match structure · the A14 effect primitives ·
 colorblind-safe card icons and screen-reader labels (the real, useful half of the accessibility editions).
 
 Note on new card art: this codebase draws every card face from a pre-rendered PNG (`resource/front_*.png`,
@@ -354,9 +355,9 @@ don't require new rendering or AI work beyond what 7-0/Stack already needed.
 ### Tier 2 — Medium: new state, new UI, or a new player choice
 Attack/Extreme-style randomized draw count · Spin wheel (small outcome table + short animation) ·
 Roboto/Tiki Twist-style random rule/target picker · Show 'Em No Mercy's individual pieces (Mercy Rule,
-Color Roulette, Discard All, Skip Everyone — each on its own toggle) · Wild Jackpot's growing shared
+Color Roulette, Discard All, Skip Everyone — each on its own toggle) · UNO Blast's accumulate-and-dump
 pile · Power Grab towers · Royal Revenge King/Jester role · Tippo's tipping-scale counter · Danger/Enemy
-standing-effect cards · Cricket-style running-score match mode · a generic "assemble your own action
+standing-effect cards · a running-score match mode · a generic "assemble your own action
 card" builder (covers the Wild Jackpot Roller / Happy Birthday / customizable-wild family in one
 feature instead of five).
 
@@ -416,9 +417,9 @@ on RESKIN entries in bulk.
 | 3 | Uno 50th Anniversary Icon Series 1990 | RESKIN | Same Iconic Series as #1: standard rules, 8 Wild cards instead of 4 (112 cards), 1990s retro art. HIGH. |
 | 4 | Uno 50th Anniversary Icon Series 2000 | RESKIN | Same Iconic Series as #1: standard rules, 8 Wild cards instead of 4 (112 cards), 2000s retro art. HIGH. |
 | 5 | Uno 50th Anniversary Icon Series 2010 | RESKIN | Same Iconic Series as #1: standard rules, 8 Wild cards instead of 4 (112 cards), 2010s retro art. HIGH. |
-| 6 | Uno 50th Anniversary Premium Set | MECHANIC | "50/50" card: coin-flip decides who draws 4 extra. See A2. |
-| 7 | Nonpartisan Uno | MECHANIC (novelty) | Orange/purple instead of red/blue; "Veto" out-of-turn interrupt card. See A8. |
-| 8 | Base Uno (1980) | RESKIN | Historical baseline release; reference point, not a variant. Wild Draw Four likely postdates 1980 (added ~1983), so this snapshot may have shipped without it. MED. |
+| 6 | Uno 50th Anniversary Premium Set | MECHANIC | Wild 50/50 (4 copies) + a gold coin: choose two players, assign heads/tails, flip; the loser draws 4. Wild, player names color, 50 pts. HIGH (coin decides who draws 4), MED (two-player procedure). Open: may the card's player name themselves? See A2. |
+| 7 | Nonpartisan Uno | MECHANIC (novelty) | Orange/purple replace red/blue. "Veto" card: if anyone talks politics, any player may play it on them to skip their next turn. Triggered by real-world talk, no defined card-play timing, so it belongs with the honor-system cards (A8). HIGH (effect), LOW (timing). |
+| 8 | Base Uno (1980) | RESKIN | Historical baseline release; reference point, not a variant. When Wild Draw Four was introduced is unverified: the only dated claim (1983, with the challenge rule) comes from a single Baidu entry (LOW), while Mattel's 1970s retro reissue and 1970s rule text point to WD4 already being in the deck in the 1970s (MED). |
 | 9 | Uno Attack | MECHANIC | Card-launcher random draw; Hit 2, Wild Hit 4. See A5. |
 | 10 | Uno Left Hand | RESKIN | Resolved: real Mattel product (HPP32/GKD73, 2020, International Left-Handers Day). Cards print their value mirrored/on the reverse side so it's visible when fanned in a LEFT hand (disadvantage for right-handers) - otherwise standard rules. HIGH. |
 | 11 | Uno BTS | MECHANIC (minor) | "Dancing Wild" — dance or draw 3. See A8. |
@@ -431,33 +432,33 @@ on RESKIN entries in bulk.
 | 18 | Uno Blitzo | DIFFERENT-GAME | Electronic reaction/button-pad game, no card play. See A10. |
 | 19 | Dos (First Edition) | DIFFERENT-GAME | Two piles, sum-matching instead of equality. See A10. |
 | 20 | Uno Quatro | DIFFERENT-GAME | Connect-Four fused with UNO tiles. See A10. |
-| 21 | Uno Mariokart | MECHANIC (minor) | Item-Box wild cards (5 effects). |
-| 22 | Uno The Office | MECHANIC (minor) | "Kevin's Famous Chili" — all drop cards, last draws 2. |
+| 21 | Uno Mariokart | MECHANIC (minor) | Mattel GWM70, 112 cards incl. 8 Wild Item Box. Every card carries a color-tied item icon that does nothing in normal play; a Wild Item Box flips the top draw-pile card and applies its item: Mushroom (red) = take another turn; Banana Peel (yellow) = previous player draws 2; Green Shell (green) = chosen opponent draws 1; Lightning (blue) = all opponents draw 1, then you go again; Bob-omb (wild) = you draw 2 and pick the color. HIGH (mechanism), MED-HIGH (per-item effects). Open: where the flipped card goes. |
+| 22 | Uno The Office | MECHANIC (minor) | "Kevin's Famous Chili" Wild: everyone drops their hand on the table, the last to do so draws 2; player names color. A reaction race digitally (last to tap draws 2). HIGH. |
 | 23 | Uno Flash | MECHANIC | Random-turn-order light-up unit + SLAP card. See A5. |
-| 24 | Uno Tippo | MECHANIC | Tipping-scale two-pile mechanic. See A5. |
+| 24 | Uno Tippo | MECHANIC | Tipping-scale two-tray mechanic. Tilt card: from the next player on, everyone adds a draw-pile card to the Tilt tray until the scale tips; whoever placed the last card draws 2 (correction: they do not take the spilled cards). Stop cards (#1-5 per color) lock a tray to Stop-only plays. MED-HIGH (Tilt), LOW-MED (Stop wording). See A5. |
 | 25 | Uno Flex! | MECHANIC | Two-sided "Power Card" gates an alternate stronger card effect. |
-| 26 | Uno Super Mario | MECHANIC (minor) | "Super Star" counters + customizable wilds. |
-| 27 | Uno Wild Jackpot | MECHANIC | Wild Roller device dispenses pre-written custom rules. See A5. |
+| 26 | Uno Super Mario | MECHANIC (minor) | HJC89, 112 cards: 2 Super Star Wilds (play in response to a Draw Two/Wild Draw Four aimed at you and the card's player draws it instead; name the color) + 2 erasable customizable Wilds. HIGH. Open: Super Star vs another Super Star, or vs a stacked total. |
+| 27 | Uno Wild Jackpot | MECHANIC | Correction: no shared growing pile (that is UNO Blast, #110). DNG26: 16 Jackpot + 2 Wild Jackpot cards; playing one pulls a 6-symbol "Wild Roller" lever. Found symbols: choose any player (even yourself) to perform a dispensed player-written rule card, player on your right/left performs one, everyone performs one, discard up to one card of each color, Draw 4. 8 erasable rule cards live in the dispenser, not the deck. MED (mechanism), LOW (full symbol list). See A5. |
 | 28 | Uno All Wild | MECHANIC | Every card is Wild/action type. See A6. |
 | 29 | Uno House Rules! | MECHANIC | Player-authored dynamic rules per number. See A1/A5. |
-| 30 | Uno Party! | MECHANIC | 6-16 player mechanics: Point Taken, Drawn Together, Pile Up, Speed Play. See Part C roadmap (ARCHITECTURAL). |
+| 30 | Uno Party! | MECHANIC | Mattel JJV58/HMY49; 6-14 or 6-16 players and 168 or 224 cards depending on SKU (sources conflict). Point Taken (everyone points at someone; draw 1 per finger pointed at you), Drawn Together (link two other players: when one draws, so does the other), Pile Up (a mini-pile circles the table; first who can't match takes it), Speed Play (= Jump-In). No team play found; the earlier team claim is unverified. HIGH (rules), ARCHITECTURAL (player count). |
 | 31 | Dos Second Edition | DIFFERENT-GAME | Revised two-pile addition mechanic. See A10. |
-| 32 | Uno Sonic the Hedgehog | MECHANIC (minor) | "Victory Lap" — all others draw 1. |
-| 33 | Uno Minecraft | MECHANIC (minor) | "Creeper" card — forced reveal + draw 3. |
-| 34 | Uno Pokémon | MECHANIC (minor) | "Trainer" card — full hand swap. |
-| 35 | Uno Pokémon (Asia) | MECHANIC (minor) | Regional special cards (Snorlax/Greninja), effects unconfirmed. |
-| 36 | Uno Harry Potter and the Sorcerer's Stone | MECHANIC (minor) | "Voldemort"/"Harry" multi-discard; "Gryffindor" forced-draw-until. |
+| 32 | Uno Sonic the Hedgehog | MECHANIC (minor) | "Wild Victory Lap": all other players draw 1; Wild. HIGH. Not the same as UNO Cars' different "Victory Lap" card (#168). |
+| 33 | Uno Minecraft | MECHANIC (minor) | FPD61 "Creeper": acts as a Wild when played; when DRAWN from the pile, show it and the drawer draws 3 more, then keeps it (a second Creeper among those 3 doesn't chain). Some retailer copy says the other players draw 3 instead. MED. |
+| 34 | Uno Pokémon | MECHANIC (minor) | Unverified: no source found for a "Trainer" full-hand-swap card in 3 searches. The only confirmed Mattel Pokémon special cards are the Japanese Snorlax/Greninja pair (#35). LOW. |
+| 35 | Uno Pokémon (Asia) | MECHANIC (minor) | Mattel Japan GNH17 (Feb 2020): Snorlax Wild, next player draws 3 then discards all their cards of the declared color; Greninja Wild, next player draws until the declared color appears, then the Greninja player declares the color again. MED-HIGH (official JP page via GAME Watch). Check the Snorlax translation before implementing; dumping a color helps the victim. |
+| 36 | Uno Harry Potter and the Sorcerer's Stone | MECHANIC (minor) | Correction (Mattel #42797, ~2000): Howler Wild (chosen player recites every card in their hand aloud, then you name the color; playable even when you have a match), Invisibility Cloak Wild (cancel any action played on you, then name a color), and Draw Twos are Draw Threes. The Voldemort card belongs to 2005/2010 (#175-176) and Sorting Hat to 2018 (#177). Very likely the same product as #388. HIGH. |
 | 37 | Uno Showdown | MECHANIC | Physical reflex paddle duel + 500-pt scoring. See A5. |
 | 38 | Ono 99 | DIFFERENT-GAME | Running-total-to-99 elimination game. See A9. |
 | 39 | Uno Splash | RESKIN | Waterproof plastic cards, standard rules - confirmed, distinct from the mechanically-different Uno H2O Splash (#40 family). HIGH. |
-| 40 | Uno H2O | MECHANIC (minor) | Wild "Downpour" 1/2 — force draws. |
+| 40 | Uno H2O | MECHANIC (minor) | Wild Downpour Draw 1 / Draw 2: all OTHER players draw 1 or 2, then the player names the color. HIGH. |
 | 41 | Uno Dare Adults Only | MECHANIC | Escalating dare tiers via die roll. See A8. |
-| 42 | Uno Monster High | MECHANIC (minor) | Two bespoke Wild cards (color give-away, multi-discard+share). |
+| 42 | Uno Monster High | MECHANIC (minor) | Correction: the only confirmed bespoke card is Creeperific "Urrrhhh" (see #262); the second "multi-discard+share" Wild is unsupported. Likely the same product as #262 (2011 release vs 2013 reprint). HIGH (Creeperific), LOW (second card). |
 | 43 | Uno Dice Game: Roll and Write! | DIFFERENT-GAME | Dice + scoresheet chain game. See A10. |
 | 44 | Uno Stacko | DIFFERENT-GAME | Jenga-style block tower. See A10. |
 | 45 | Uno Show 'Em No Mercy | MECHANIC | Full "No Mercy" ruleset. See A2. |
 | 46 | Uno Flip (2009) | MECHANIC | Likely mislabel/duplicate of #13 (Flip debuted 2019). |
-| 47 | Uno H2O Splash | MECHANIC | Shake-to-reveal "Whirlpool" device; best-of-3 match. See A5/A9. |
+| 47 | Uno H2O Splash | MECHANIC | Whirlpool device triggered by special cards or any 0 or 2: Draw H2O (draw until a blue, 2, 0 or Wild), Wave Right/Left (show a card to that neighbor), Wipeout (reverse). Correction: the match is first to win 3 hands, not best of 3. MED. See A5/A9. |
 | 48 | Blokus Shuffle: Uno Edition | DIFFERENT-GAME | Blokus tile-placement with an UNO card layer. See A10. |
 | 49 | Uno Milk Chocolate Edition | RESKIN | Cards printed on chocolate wrappers; no rule change found - novelty confectionery, not a functioning ruleset variant. MED. |
 | 50 | Uno UpUp DownDown | RESKIN | WWE collab. Correction: "Wild Challenge" is a 3rd, additional Wild-type card (forces opponent to draw extra cards) alongside the untouched standard Wild and Wild Draw Four - not a retheme of either. MED. |
@@ -471,7 +472,7 @@ on RESKIN entries in bulk.
 | 58 | Uno Ultimate DC | MECHANIC | Same system, DC characters. |
 | 59 | Uno Ultimate Marvel Ms. Marvel Expansion Pack | MECHANIC | Adds one character to the Ultimate Marvel system. |
 | 60 | Uno Ultimate Marvel Spider-Man Expansion Pack | MECHANIC | Adds one character to the Ultimate Marvel system. |
-| 61 | Uno Ultimate Marvel Loki Expansion Pack | MECHANIC | Adds one character to the Ultimate Marvel system. |
+| 61 | Uno Ultimate Marvel Loki Expansion Pack | MECHANIC | Note: Loki is an ENEMY card in the core Ultimate Marvel Danger Deck (comes with Thor). A playable Loki pack is unconfirmed; this title may be mislabeled. LOW. |
 | 62 | Uno Ultimate Marvel Ant-Man Expansion Pack | MECHANIC | Adds one character to the Ultimate Marvel system. |
 | 63 | Uno Ultimate Marvel Shang-Chi Expansion Pack | MECHANIC | Adds one character to the Ultimate Marvel system. |
 | 64 | Uno Ultimate Marvel Dr. Strange Expansion Pack | MECHANIC | Adds one character to the Ultimate Marvel system. |
@@ -511,7 +512,7 @@ on RESKIN entries in bulk.
 | 93 | Uno Dominos | DIFFERENT-GAME | UNO effects layered on domino tile-matching. See A10. |
 | 94 | Uno Hearts | DIFFERENT-GAME | Trick-taking Hearts with UNO wilds mixed in. See A10. |
 | 95 | Uno Wild Twists Playing Cards | DIFFERENT-GAME | Poker deck + wilds, own "Wild Race" game. See A10. |
-| 96 | Uno Cobs Game Changers Cards | MECHANIC | Promo insert cards shuffled into a standard deck (All Draw Two, Wild Shuffle 'Em Up, See The Future, Wild Draw Eight, Wild Face Up). |
+| 96 | Uno Cobs Game Changers Cards | MECHANIC | Australian Cobs Popcorn promo (Mar 2018): 13 single insert cards, not 5. Known: All Draw Two (every player draws 2), Wild Draw Eight (next draws 8, loses turn), Wild Face Up (everyone plays face up for the rest of the game), Wild Shuffle 'Em Up (wording suspect), See The Future (effect unknown), Deflection (bounce a card back on its player, any time), Popcorn (real-world snack perk). 6 cards unknown. HIGH (promo), LOW-MED (most effects). |
 | 97 | Phase 10 | DIFFERENT-GAME | Complete-10-phases rummy-style game. See A10. |
 | 98 | Uno Bingo | DIFFERENT-GAME | Tile/dice bingo game. See A10. |
 | 99 | Uno Wild Tiles | DIFFERENT-GAME | Arrow-directed tile-laying game. See A10. |
@@ -519,13 +520,13 @@ on RESKIN entries in bulk.
 | 101 | Uno Dice Game (Can) | RESKIN | Resolved: same global SKU as the US "Uno Dice Game" (Mattel W5807), same UPC - likely a duplicate/misfiled catalog entry, not a distinct Canadian variant. MED. |
 | 102 | Luck Plus | DIFFERENT-GAME | Cards + dice, light math game "from the makers of UNO." See A10. |
 | 103 | Uno Roboto | MECHANIC | Electronic dealer triggers random house-rule ALL-PLAY races. See A5. |
-| 104 | Uno Power Grab | MECHANIC | "Power Tower" collection voids penalty cards. See A2. |
+| 104 | Uno Power Grab | MECHANIC | Correction: four towers, U/N/O/! (Y2316). Each one protects its holder from one card type: U = Draw One, N = Draw Two, O = Wild Draw Four, ! = Skip. Playing a number card with a tower icon (8 per icon) takes that tower from anywhere; Grab-2-Towers (4) and Wild Grab-A-Tower (4) also steal. Holding all 4 = Instant UNO: discard all but one card. A blocked card still counts for matching. HIGH. See A2. |
 | 105 | Uno Showdown Supercharged | MECHANIC | Slap-paddle reflex duel. See A5. |
 | 106 | Uno Tiki Twist | MECHANIC | Spinning idol randomizer/targeter. See A5. |
 | 107 | Uno Spin To Go! | MECHANIC | Portable Uno Spin wheel. See A5. |
 | 108 | Uno Reflex | MECHANIC | Light-up reaction-race unit. See A5. |
 | 109 | Uno Attack Jurassic World | MECHANIC | Attack-family launcher, dinosaur theme. See A5. |
-| 110 | Uno Blast | MECHANIC | Attack-family variant with a slot-choice risk mechanic. |
+| 110 | Uno Blast | MECHANIC | Card Blaster: a player who can't play draws 1 and inserts it into the blaster instead of their hand; it fires at random and whoever was inserting takes everything in it. Wild Blast = next player keeps inserting until it fires. This is the real accumulate-and-dump pile (previously misattributed to Wild Jackpot). HIGH. See A5. |
 | 111 | Uno Eye Eye Spongebob! | MECHANIC | Eyes-spin randomizer/targeter. See A5. |
 | 112 | Uno Triple Play Stealth | MECHANIC | Triple Play with hidden overload warnings. See A5. |
 | 113 | Uno (Xbox 360) | DIGITAL-ONLY | Dev. Carbonated Games/Microsoft (not Gameloft). Standard/Partner/House Rules modes, ranked play, downloadable decks, literal webcam video chat. See Part E1. |
@@ -619,8 +620,8 @@ on RESKIN entries in bulk.
 | 196 | Uno Disney Princess (2020) | RESKIN | Correction: unique "Power of Friendship" card - everyone places a card face-down trying to match the player's secret card's color, matchers discard theirs on reveal. MED. |
 | 197 | Uno Disney Mickey Mouse and Friends (2021) | RESKIN | Correction: unique "Wild Friendship" card - every player discards one card. MED, single source. |
 | 198 | Uno Flip! Marvel | MECHANIC | Uno Flip mechanic, Marvel theme. See A4. |
-| 199 | Uno Coca-Cola (2004) | MECHANIC | Exclusive "Thirst" card/rule (exact effect undocumented). |
-| 200 | Uno Jelly Belly | MECHANIC | Jelly-bean resource-accumulation mechanic tied to draw cards. |
+| 199 | Uno Coca-Cola (2004) | MECHANIC | "Thirst" card: choose any other player, who draws until a red number card or a Wild appears; that card goes straight onto the discard pile, then the Thirst player names the next color. MED (single source). |
+| 200 | Uno Jelly Belly | MECHANIC | Jelly Belly gift box (~2012): bean-shaped cards + a bag of jelly beans, rules explain using beans in play. The "resource mechanic tied to draw cards" claim is unverified. MED (exists), LOW (mechanic). |
 | 201 | Uno Burger King Desafio: Dinossauros (Brazil) | MECHANIC | "Carta Desafio" dare-or-draw-5 card. See A8. |
 | 202 | Uno Burger King Desafio: Música (Brazil) | MECHANIC | Same Desafio mechanic, music theme. |
 | 203 | Uno Burger King Desafio: Monstros (Brazil) | MECHANIC | Same Desafio mechanic, monster theme. |
@@ -635,7 +636,7 @@ on RESKIN entries in bulk.
 | 212 | Uno Marvel Heroes (2010) | RESKIN | Correction (Fundex, not Mattel): a "Feats of Fate" card is named in a dedicated rulebook TOC; trade a card to the first player holding a Draw Two/Four, or play any card if none do. MED name, LOW on effect wording. |
 | 213 | Uno Superman (2006) | RESKIN | Correction: likely a genuinely separate Sababa Toys release from "Superman Returns" (#91) - a "Bizarro vs. Superman"/exclusive Battle Card is named by retailers, effect unconfirmed. LOW-MED distinct release, LOW on card effect. |
 | 214 | Uno X-Men (2003) | RESKIN | Correction: a well-documented "Wild Cerebro" card (name a character, opponent reveals it or draws 5) exists in X-Men UNO generally, but its UPC/copyright footer points to a 2024-2025 reissue, not this 2003 Sababa tin specifically - don't attribute it here without a tin-specific source. MED-HIGH card exists somewhere, LOW it belongs to #214. |
-| 215 | Uno New York Giants (2006) | MECHANIC | Era "Champs Card" forced-draw-until rule. |
+| 215 | Uno New York Giants (2006) | MECHANIC | Era "Champs Card" (found for UNO NFL AFC/NFC Edition 2006): chosen player draws until they draw a 4 or have drawn 7 cards; Champs player names the color. MED (card), LOW-MED (that this exact deck has it). |
 | 216 | Uno NBA All Stars Western Conference | RESKIN | Resolved: real 2006 Mattel release, player-photo theme on standard card types, no unique added mechanic found (unlike the same line's Lakers Legends "SHOWTIME!" card). MED-HIGH. |
 | 217 | Uno MLB Stars of the American League | MECHANIC | "Top 2" card forces the two lowest-hand players to draw. |
 | 218 | Uno Fandom NFL Super Bowl LVIII Kansas City Chiefs | MECHANIC | Fandom NFL "Touchdown" rule + exclusive foil card. See A7. |
@@ -647,14 +648,14 @@ on RESKIN entries in bulk.
 | 224 | Uno Fandom NFL Kansas City Chiefs | MECHANIC | Same Fandom NFL mechanic, team art only. |
 | 225 | Uno Arsenal Highbury Legends | MECHANIC | Red Card/Yellow Card penalty cards. |
 | 226 | Uno New York Mets David Wright | MECHANIC | "Hot Corner" card/rule, no standard equivalent. |
-| 227 | Uno NFL New England Patriots Special Edition (2005) | MECHANIC | Era "Champs Card" mechanic (see #215). |
+| 227 | Uno NFL New England Patriots Special Edition (2005) | MECHANIC | Era "Champs Card" (see #215). LOW-MED that this deck carries it. |
 | 228 | Uno NBA Kobe Bryant Special Edition (2007) | MECHANIC | "Three-Pointer" forced-draw-until card. |
-| 229 | Uno Cricket (India) (2021) | DIFFERENT-GAME | Running-score win condition, cricket-themed cards. See A9. |
+| 229 | Uno Cricket (India) (2021) | DIFFERENT-GAME | Unverified: two targeted searches found no Cricket UNO and no Four/Six/Wicket/Over card list. Existence and mechanics unconfirmed. LOW. See A9. |
 | 230 | Uno WWE Legends Special Edition (2006) | MECHANIC | "1-2-3" card + "Locked Up" 1v1 duel. See A8. |
 | 231 | Uno WWE (2017) | MECHANIC | "Locked Up" number-duel card. See A8. |
 | 232 | Uno WWE (2010) | RESKIN | Resolved: 2010 Cena/Mysterio "Wrestling Edition." "Locked Up" card confirmed - pick an opponent, both reveal/compare a card, lower value takes both into hand. HIGH. |
 | 233 | Uno Nascar (2005) | MECHANIC | "Drafting" bonus-plays wild. See A8. |
-| 234 | Uno X Games | MECHANIC | Renamed action-card set with several new effects. See A8. |
+| 234 | Uno X Games | MECHANIC | BoardGameGeek (#12228, 1999) and two mirrors list the renamed cards: Can-Can (Wild, draw 10), Nuclear Air (Wild, draw 5), Dirt-Dive (discard all but 5), Fakie (Wild, all players trade hands), Drop a Hill (Wild, draw a new hand), Alley-Oop (Reverse + discard all of one color), and Tailwhip/Lipslide trick cards replacing Reverse/Skip. HIGH (though the three sources may share one origin). Colors and copy counts not found. See A8. |
 | 235 | Uno Undercover | DIGITAL-ONLY | Dev. Golden Goose/RealArcade, PC only (no DS version - that's a separate plain Gameloft port). Standard deck + 9 named "power-up cards," some played as 2-card combos. See Part E4. |
 | 236 | Uno CD-ROM | DIGITAL-ONLY | Mattel Media/Interactive, ~1999-2002. Adds Spy Card (hides your hand-size from opponents) + Mutant/Shark Cards (names known, effects undocumented). See Part E4. |
 | 237 | Uno Game Boy Color | DIGITAL-ONLY | Dev. HotGen (not Genki), 1999. Adds a Challenge mode that inverts scoring: reaching a point ceiling eliminates you instead of winning. See Part E4. |
@@ -699,7 +700,7 @@ on RESKIN entries in bulk.
 | 271 | Uno One Piece (New World) (2011) | RESKIN | CONFIRMED MERGE with #273 "Summit War" (Product B of 4 distinct One Piece UNO releases, see #139/#272/#412): an Anime News Network article (2011-06-09) describes exactly ONE Bandai x Mattel reissue, July 7 2011, ¥1,260 - "New World" and "Summit War" are fan-assigned story-arc labels, not official product names; no evidence of 2 distinct 2011 releases. 2 bonus cards confirmed: "Fire Fist Ace" (doubles another action card's effect when played together) and "Hancock"/"Mero Mero Mellow" (turns a targeted player to stone, losing a turn), plus a "I'm gonna be the Pirate King!" call-out replacing "Uno!". HIGH. |
 | 272 | Uno One Piece (2016) | RESKIN | Resolved (Product C of 4 distinct One Piece UNO releases, see #139/#271/#412): Ensky's March 2016 "45th Anniversary" rule-change wave, replacing that wave's 2 new standard wilds with 4 theme-original cards - "Shanks" (name a color, an opponent reveals matching cards, cancelable only by a Luffy "1") and "UNO UNO no Mi" (copies another action card's effect when played with it), confirmed via a BGG-mirror listing naming exactly these 2 cards. Genuinely distinct cards from Product B (#271/#273) confirm this is a separate release. MED-HIGH. |
 | 273 | Uno One Piece (Summit War) (2011) | RESKIN | CONFIRMED MERGE with #271 "New World" (2011) - same July 2011 Bandai x Mattel release under a different fan-assigned arc name, see #271 for the full shared bonus-card findings and source. HIGH. |
-| 274 | Uno One Piece Log Spin | MECHANIC (unconfirmed) | Probable Uno Spin-family variant themed on the Log Pose. |
+| 274 | Uno One Piece Log Spin | MECHANIC (unconfirmed) | A Bandai One Piece "UNO SPIN / log spin" listing exists; no rules found. Treat as UNO Spin with One Piece art. MED (exists), LOW (any rule differences). |
 | 275 | Uno Hello Kitty (2003) | RESKIN | Unverified (likely a Sababa Toys collector tin) - no bonus card confirmed for this specific year; a general undated rules page describes only standard cards. LOW. |
 | 276 | Uno Hello Kitty (2006) | RESKIN | Unverified after a real search - no bonus card found for this specific year; searches kept surfacing the 2003/2012 editions instead. LOW. |
 | 277 | Uno Hello Kitty (2012) | RESKIN | Correction (Mattel/Cardinal tin): a named "Exclusive 'Hello Kitty Bow' Rule" card is advertised by multiple sellers, exact effect not found anywhere. MED name, LOW effect. |
@@ -716,7 +717,7 @@ on RESKIN entries in bulk.
 | 288 | Uno Chicago White Sox World Series (2005) | RESKIN | Confirmed as a real commemorative tin; no unique mechanic found, consistent with other single-season sports tins reading as genuinely plain. LOW. |
 | 289 | Uno New York | RESKIN | No standalone "New York" product found - may be conflated with a Yankees (2005/2006) or Mets (2007) tin, neither of which shows a unique mechanic either. LOW. |
 | 290 | Uno Batman The Dark Knight | RESKIN | Correction: a real 2008 Mattel film tie-in confirmed via trade press, distinct from "Batman Begins" (#166, "Justice" card) and the later "Bat Signal" Batman Comics editions. Exact mechanic for this 2008 release unconfirmed. LOW-MED. |
-| 291 | Uno Nike Zoom Freak 3 | RESKIN | Promotional sneaker tie-in, standard UNO rules. |
+| 291 | Uno Nike Zoom Freak 3 | RESKIN | Correction: not standard rules. The 2021 UNO x Nike x Giannis 50th-anniversary collection included a Giannis UNO deck with a new "Force a Turnover" rule (steal an extra discard; also playable in the UNO! mobile app). The Zoom Freak 3 shoe itself is apparel. HIGH (rule exists), LOW (exact text). |
 | 292 | Uno Star Trek Special Edition (1999) | RESKIN | Correction (Mattel, 1999): 4 exclusive "Star Fleet Command" cards incl. "Live Long and Prosper" (discard current hand, draw an entirely new one, call a color) and "Beam Me Up, Scotty"; call-out is "Space, the final UNO frontier!" Distinct from a separate Fundex "Collector's Edition" ("Beam Up WILD" negates a +2/+4 played against you). MED. |
 | 293 | Uno Teenage Mutant Ninja Turtles (2013) | RESKIN | Unresolved: likely has a unique mechanic (Mattel CJM71 manual mentions "a custom rule card") but name/effect for this specific year unconfirmed - don't attribute the later "Team Attack" (2017) or "From the Sewers" (2023 Mutant Mayhem) cards here. LOW-MED. |
 | 294 | Uno Pittsburgh Steelers (2009) | RESKIN | Standalone 2009 product unconfirmed; "Ice the Kicker" belongs to the later league-wide multi-team UNO NFL line (see #298), not attributable to a single-team 2009 tin. LOW. |
@@ -733,7 +734,7 @@ on RESKIN entries in bulk.
 | 305 | Vacation Uno | RESKIN | Travel-themed packaging, standard UNO rules. |
 | 306 | Uno Happy Birthday | MECHANIC | Blank customizable wild cards. See A5. |
 | 307 | Uno Macy's Thanksgiving Day Parade | RESKIN | Follow-up: still no evidence of any kind after a second search pass (only unrelated Macy's balloon-contest/NFT items and the unrelated Mattel "Nonpartisan Uno" turned up). Strengthened to "genuinely seems not to exist." MOD-HIGH. |
-| 308 | Uno 30 Year Anniversary | MECHANIC | "Wild Anniversary" bonus-effect card. |
+| 308 | Uno 30 Year Anniversary | MECHANIC | Mattel 42885 (2001): 4 "Anniversary" cards, playable at any time on any color or number (official sheet). One source says the effect is "give all but one of your cards to another player". HIGH (count, play-anywhere), LOW-MED (effect). |
 | 309 | Uno Flip Attack | MECHANIC | Flip + Attack combined. See A4. |
 | 310 | Uno Polly Pocket (2006) | RESKIN | Confirmed: "Rockin' Blockin'" wild card - played normally, each opponent draws 1; or discard it from hand to cancel a Wild Draw Four played against you. MED. |
 | 311 | Uno Sesame Street 35th Anniversary | RESKIN | Follow-up: likely a doc-error conflation of two real-but-separate products - confirmed real Sesame Street "My First Uno" editions exist (1991/1992/1994/2002 Elmo King-Size), none branded "35th Anniversary"; the real "Sesame Street 35th Anniversary Game" (2004, Rose Art) is a different, non-UNO trivia board game. MOD-HIGH. |
@@ -752,7 +753,7 @@ on RESKIN entries in bulk.
 | 324 | Uno Hotwheels (2014) | RESKIN | Confirmed as likely the SAME SKU as #476 "Uno Hotwheels (Italy) (2021)" below - merge: item code BGG53 (Entertainment Earth); retailer explicitly states the deck "adds a special rule and 4 corresponding action cards" (112 cards total), but name/effect not found. LOW-MED. |
 | 325 | Uno Doraemon (2016) | RESKIN | Existence loosely confirmed (fandom-wiki reference to a Japan-only release); bonus card unconfirmed. LOW. |
 | 326 | Uno Sock Monkey | RESKIN | Follow-up: still no evidence found in any search angle (direct, Fundex, BGG). Strengthened to "genuinely seems not to exist." MOD-HIGH. |
-| 327 | King Size Uno (With Free Turn) | MECHANIC | "Free Turn" bonus-turn card (exact wording unconfirmed). |
+| 327 | King Size Uno (With Free Turn) | MECHANIC | Unverified: no King Size UNO with a Free Turn card found. LOW. |
 | 328 | Uno Moomin (2024) | RESKIN | Existence unconfirmed directly; bonus card unconfirmed, though plausibly part of the 2024 "UNO Fandom" wave pattern (see #330/#336) given the matching year - not verified as actually belonging to that line. LOW. |
 | 329 | Uno Lilo and Stitch (2024) | RESKIN | Confirmed (Mattel JCC10): "Ohana" hand-equalizing rule/card - any player with >4 cards discards down to 4, any player with <4 cards draws up to 4 ("Ohana means family" - everyone ends with an equal "family"). MED. |
 | 330 | Uno Fandom Masters of the Universe | RESKIN | Confirmed as part of Mattel's March 2024 "UNO Fandom" premium collectible-deck line (MattelCreations.com exclusive; every deck ships "a special rule specific to that deck theme and one collectible foil card" per trade press). This deck (GVY91): "Power of Greyskull" - hold overhead, recite "By the power of Greyskull, I have the power!!", all other players draw 3; plus a He-Man-style "UNO!" shout-out variant. A separate, later 2026 movie-tie-in edition (JNP53) has a DIFFERENT "Sword of Power" rule - don't conflate. HIGH line, MED-HIGH card. |
@@ -767,12 +768,12 @@ on RESKIN entries in bulk.
 
 | # | Title | Category | Mechanic Notes |
 |---|-------|----------|-----------------|
-| 337 | Uno Diary of a Wimpy Kid (2010) | RESKIN | "Cheese Touch" Wild — reveal yellows, holders draw 2. |
-| 338 | Uno Diary of a Wimpy Kid (2012) | RESKIN | Same Cheese Touch mechanic as #337. |
+| 337 | Uno Diary of a Wimpy Kid (2010) | RESKIN | Conflict: the Fundex manual (MED-HIGH) describes 4 yellow "Cheese Touch" cards, playable only on yellow, where the next player draws 2, plus 2 more if they have no yellow to play; then it acts as a normal yellow card, 50 pts. A fan site (LOW-MED) instead describes a Wild where everyone reveals yellows and holders draw 2. Prefer the Fundex version. |
+| 338 | Uno Diary of a Wimpy Kid (2012) | RESKIN | Possibly a later printing of #337; only the Fundex edition was found, so whether 2010 and 2012 are distinct products (or carry different Cheese Touch rules) is unresolved. LOW. |
 | 339 | Uno Attack Mega Hit | MECHANIC | "Mega Hit" stacking rule on the Attack launcher. See A2/A5. |
-| 340 | Uno Pocket Geox | RESKIN | Promotional pocket-tin edition, standard UNO rules. |
+| 340 | Uno Pocket Geox | MECHANIC (minor) | Correction: not standard rules. A real Geox-branded Mattel UNO Pocket in a metal tin (MED), i.e. the reduced half-size Pocket format (see A6). A Casio 2024 promo page gives the Pocket deck as 56 cards, not the 52 stated in A6. Composition unconfirmed. MED. |
 | 341 | Uno Disney Channel | RESKIN | Likely = the 2007 Mattel "Hannah Montana" UNO (a confirmed Disney Channel tie-in); BGG notes "two special cards that change the game play" but doesn't name or describe them. LOW-MED. |
-| 342 | Uno Arby's Wild Jackpot | MECHANIC | Wild Jackpot's shared-pile mechanic, promo tie-in. See A2. |
+| 342 | Uno Arby's Wild Jackpot | MECHANIC | Promo tie-in to Wild Jackpot (#27). Correction: Wild Jackpot has no shared pile; its mechanic is the Wild Roller and player-written rule cards (see A5). Whether this promo deck ships any of that is unverified. LOW. |
 | 343 | Uno Max Steel (Red Box) | RESKIN | Follow-up: likely a doc error, MODERATE confidence - confirmed a real Mattel 80th-Anniversary "Ruby Red" multi-IP box (Hot Wheels, Barbie, Rock 'em Sock 'em Robots, Scrabble, Magic 8 Ball) exists, but Max Steel is NOT among its listed graphics - likely source of the confusion. |
 | 344 | Uno American Girl (2020) | RESKIN | CONFIRMED REAL (follow-up): multiple consistent eBay listings - Brand Mattel, "American Girl Uno," Year 2020, Theme Dolls, Character Family American Girl. Bonus-card content still not found. HIGH. |
 | 345 | Uno Pinkalicious | RESKIN | CONFIRMED REAL (follow-up): Board Game Oracle listing - "Uno: Pinkalicious," 2010, Publisher Fundex (Mattel-licensed), 2-10 players, ages 7+. Bonus-card content still not found. HIGH. |
@@ -791,18 +792,18 @@ on RESKIN entries in bulk.
 | 358 | Uno NFL Greatest Stars Reggie Bush | RESKIN | Follow-up: still no evidence - searched both real UNO NFL lines (standard + "UNO Elite NFL") and Reggie Bush memorabilia directly, only ordinary non-UNO trading cards (Score/Topps/Upper Deck) found. LOW. |
 | 359 | Uno Emoji | MECHANIC | Face-holding action card + blank house-rule wild. See A8. |
 | 360 | Uno 2000 Italian Ferrari | RESKIN | Follow-up: still unconfirmed - found a real multilingual (German/French/Italian) standard Mattel deck, a "2000's Y2K" 50th-Anniversary deck, and the genuine, much more recent UNO Formula 1 edition (its own "Overtake" rule, don't attribute it here) - none Ferrari-specific. Likely conflation with one of these. LOW-MED. |
-| 361 | Uno Platica Polinesia | MECHANIC | "¡Mira!" wild forces draws unless holding a token card. |
+| 361 | Uno Platica Polinesia | MECHANIC | Unverified: no source mentions this product. Existence in question. LOW. |
 | 362 | Uno Junior Move! | MECHANIC | Tiered difficulty + "Move!" physical-action cards. See A6/A8. |
 | 363 | Uno Boost | DIGITAL-ONLY | Resolved: a Facebook browser game (~2010-2011), 2-player vs AI. "Boost" mechanic lets you substitute powerful cards into your hand from a sideboard, paid for with earned/purchased virtual currency; wins grant XP unlocking harder AI. HIGH real/digital, MED on exact publisher. |
 | 364 | Uno Famicom / Super Uno | DIGITAL-ONLY | Dev. Tomy, 1993, Japan-only. Up to 6 players, official +2/+4 stacking predating Mattel's own house rules, and a Board Game mode (5 boards, items, UNO-hands-as-battles). See Part E4. |
 | 365 | Uno Stacko (1994) | DIFFERENT-GAME | Original Jenga-style block tower + die. See A10. |
 | 366 | Uno Rush | DIGITAL-ONLY | Dev. Carbonated Games, 2009. Auto-plays a pre-sorted hand under time pressure, all hands visible, + a Shuffle card. See Part E1. |
-| 367 | Uno Arby's Get Wild 4 Uno Plus Glow-In-The-Dark Stickers | RESKIN | Promo decks + "make your own wild" stickers, standard rules. |
+| 367 | Uno Arby's Get Wild 4 Uno Plus Glow-In-The-Dark Stickers | RESKIN | Unverified: two searches found no Arby's UNO promo at all. The title ("Get Wild 4" with make-your-own-wild stickers) suggests standard rules plus blank wilds rather than any Wild Jackpot mechanic. LOW. |
 | 368 | Uno House Rules | MECHANIC | Standalone player-authored dynamic rule-set. See A1/A5. |
 | 369 | Uno Deluxe House Rules | MECHANIC | Jump-In, Seven-O, Progressive baked into the ruleset. See A1. |
 | 370 | Uno Fun Pack (Germany) | RESKIN | Resolved: standard 108 cards + a spare blank card + 3 German-language "Fun-Regeln" house-rule cards bundled in - a minor packaging/rules-card variant, not a themed reskin. MED-HIGH. |
 | 371 | Uno The Batman (2006) | RESKIN | Unresolved: multiple Batman UNO editions exist with "Bat Signal" (draw until a Batman/Robin/Batgirl/Nightwing card) or "Justice" (2005 Batman Begins) cards, but no source confirms a 2006-specific edition by name. MED mechanic exists somewhere, LOW-MED on this year. |
-| 372 | Uno Ito Family's Dining Table | MECHANIC | Bonus 14-card set of 12 alternate house-rule variants. |
+| 372 | Uno Ito Family's Dining Table | MECHANIC | Unverified: no UNO tie-in found for the TV show (correct name 伊東家の食卓, Itō-ke no Shokutaku). The 12 variants couldn't be listed. LOW. |
 | 373 | Uno Sudoku | DIFFERENT-GAME | UNO-branded Sudoku puzzle. See A10. |
 | 374 | Uno Mobile (Mattel163) | DIGITAL-ONLY | 7 named house-rule toggles + Ranked/2v2 modes (wagering excluded, see roadmap); "Survival" mode could not be confirmed to exist. See Part E3. |
 | 375 | Uno 2 Go / Uno Wonder | DIGITAL-ONLY | Same game, renamed on 2025 global launch. 9 named new action cards + 14-route/3000+-level Story Mode. See Part E3. |
@@ -818,7 +819,7 @@ on RESKIN entries in bulk.
 | 385 | Uno SuperLite 2000 Vol. 16 Game | DIGITAL-ONLY | Japan-only budget PS2 reissue (Success), anime art/VO added; no rule difference found. See Part E4. |
 | 386 | Uno Party Mania! | MECHANIC | Ubisoft DLC: Point Taken, Wild Drawn Together, Wild Pile Up. |
 | 387 | Uno Disney Princess (2002) | RESKIN | Correction: "Power of Friendship" wild card (secret face-down color-guessing game) confirmed, but for a modern/2020s SKU - not verified as existing under a genuine 2002 date. MED mechanic, LOW on this date. |
-| 388 | Uno Harry Potter (2003) | RESKIN | Confirmed (Mattel #42797): "Sorting Hat" rule card - the chosen player draws until they reveal a Gryffindor card. Verbatim-matching across 2+ retailer sources. HIGH. |
+| 388 | Uno Harry Potter (2003) | RESKIN | Correction: Mattel #42797 has no Sorting Hat card. Its cards are the Howler and Invisibility Cloak Wilds plus Draw Threes (see #36, very likely the same product). Sorting Hat belongs to the 2018 FNC42 deck (#177). HIGH. |
 | 389 | Uno National Parks | RESKIN | Confirmed (Sababa Toys, proceeds to the National Park Foundation): a named "exclusive bear alert card" exists, exact effect not found. MED. |
 | 390 | Uno Show 'Em No Mercy (Ubisoft) | DIGITAL-ONLY | Digital adaptation of the full No Mercy ruleset. See A2. |
 | 391 | Uno Choo Choo | MECHANIC | Icon-matching kids' variant + Wild "Conductor." See A6. |
@@ -830,14 +831,14 @@ on RESKIN entries in bulk.
 | 397 | Uno Fandom Monster High | RESKIN | Confirmed (Mattel Creations, March 2024 Fandom line): likely special rule "Frankie's Hand" (view and swap a card with another player's hand) per trade press. Confirmed distinct from #426 "Fandom Monster High Fearbook," a separate product. MED. |
 | 398 | Uno Magic Tree House | RESKIN | Follow-up: upgraded to "likely real," MED-HIGH confidence - found a specific eBay listing, "Uno Magic Tree House Card Game EUC RARE," a concrete collector listing rather than a generic hit. Publisher/year still unconfirmed. |
 | 399 | Uno Pocket Sunset Boulevard | UNKNOWN | Still unresolved after a second dedicated search. New supporting evidence: "Uno Pocket" is further confirmed as a real, brand-promiscuous recurring giveaway family - 2 more instances found (a 2024 Casio gift-with-purchase, a 2022 Pizza 73 tie-in distinct from the full-size Pizza 73 "UNO Combo" promo already in the doc). No connection to "Sunset Boulevard" found in any form. Stays UNKNOWN per standing permission. |
-| 400 | Uno Master | MECHANIC | Likely shorthand for Masters of the Universe's "Power of Greyskull" card. |
+| 400 | Uno Master | MECHANIC | Correction: not Masters of the Universe (that is #149/#330). This is the 1997 Spear's Games "UNO Master" electronic turn timer (also called Uno Time / Uno Slam): standard UNO, but you must play or draw and hit the button within 8/6/4 s (easy/medium/hard) or draw 4. HIGH. Fits the turn-timer row in A5. |
 | 401 | Uno Xbox 360 Live | DIGITAL-ONLY | Not a separate SKU - these are features of #113's same 2006 release (literal webcam video chat + 4 enumerated theme decks). See Part E1. |
 | 402 | Uno McDonald's 2007 | RESKIN | Follow-up: still unconfirmed for this date/market. Found real but mismatched McDonald's UNO promos in other years/markets (UK DreamWorks promo, 2026 Japan My Hero Academia/Spy x Family promo) plus a real but different 2007 McDonald's Shrek the Third trivia card game (not UNO) - possible year/product conflation. LOW-MED. |
 | 403 | Uno ColorADD | ACCESSIBILITY | Colorblind ColorADD symbol markings. See A11. |
 | 404 | Uno Arcade Edition (Apple Arcade) | DIGITAL-ONLY | Dev. Mattel163, June 2025. Single Player/Quick Match/Custom Games; new cards incl. Wild Swap Hands, Double Discard All. See Part E3. |
 | 405 | Uno Teams! | MECHANIC | Deeper 2v2 team play with card-passing/pooled hands. See A3. |
-| 406 | Uno Show 'Em No Mercy Deadpool | MECHANIC | New "Wild Reverse Draw Ten" card for the No Mercy ruleset. |
-| 407 | Uno Show 'Em No Mercy Deadpool Reverse Draw 10 Promo Card | MECHANIC | Reverse + draw-10 combined effect. |
+| 406 | Uno Show 'Em No Mercy Deadpool | MECHANIC | Edition confirmed (Target exclusive per fan wiki). Adds a Wild Reverse Draw Ten to the No Mercy deck, plus three more new wilds per retail listings: Gimme!, Maximum Effort, and Rock-Paper-Scissors-Shoot!. HIGH (edition, Maximum Effort), MED (the rest), effects not found. By analogy to No Mercy's Wild Reverse Draw 4, Reverse Draw Ten most likely reverses, the new next player draws 10, and it stacks (LOW). |
+| 407 | Uno Show 'Em No Mercy Deadpool Reverse Draw 10 Promo Card | MECHANIC | Likely the SDCC 2024 exclusive foil promo card from the Deadpool No Mercy line (see #406). LOW-MED that it is specifically the Reverse Draw 10. |
 | 408 | Uno Elite NFL Core Edition (2024) | MECHANIC | "Elite Icon" drafted-player-power system. See A7. |
 | 409 | Uno Elite NFL Draft Expansion Pack (2024) | MECHANIC | More Player Cards for the Elite Icon system. |
 | 410 | Uno Beetlejuice Beetlejuice | RESKIN | Confirmed (2024 Mattel/WB film tie-in): "Beetlejuice Beetlejuice Beetlejuice" card - draw 3, give them to a chosen opponent while saying "Beetlejuice" three times (sources differ slightly on exact penalty wording). MED. |
@@ -863,7 +864,7 @@ on RESKIN entries in bulk.
 | 425 | Uno Fandom She-Ra Princess of Power | RESKIN | Confirmed (2024 Fandom line): "Unite Etheria" rule on an alt-art foil Wild card (draw a card, discard two - exact full wording unconfirmed, single source). Distinct from the unrelated Masters-of-the-Universe-movie "Sword of Power" deck (JNP53) - don't conflate. LOW-MED. |
 | 426 | Uno Fandom Monster High Fearbook | RESKIN | Confirmed (Mattel JFP08, 2025): "Fearbook" rule on an alt-art foil Wild card - other players must show a matching pair of cards forming a "complete Fearbook" or draw until they can. Confirmed distinct from #397's "Frankie's Hand" - a separate Monster High Fandom product, not a duplicate. MED. |
 | 427 | Uno The Quintessential Quintuplets (Japan) | RESKIN | Follow-up: upgraded to "likely doesn't exist," MED-HIGH confidence - confirmed the real "五等分の花嫁カードゲーム" is an UNRELATED Bushiroad original TCG (launched Oct 2024), not an UNO product. Probable brand/franchise conflation. |
-| 428 | Uno Expo 2025 (Japan) | MECHANIC | "WORLD" wild: restrict play to one color until broken by a Wild/Wild+4. |
+| 428 | Uno Expo 2025 (Japan) | MECHANIC | 4 "WORLD" cards (Ensky, Myaku-Myaku art): the player declares red or blue; until a Wild or Wild Draw Four is discarded, only red/blue cards, Wilds or WORLD cards may be played. MED. |
 | 429 | Uno Blue Lock (Japan) | RESKIN | Follow-up: still no evidence found in English or Japanese searches. Leaning "doesn't exist." LOW. |
 | 430 | Uno Fandom Star Wars Troopers | RESKIN | Deck confirmed real (Walmart exclusive, ~$5); specific rule/card name not found despite targeted searches - likely one of Mattel item codes JCW36-39 (unconfirmed which). LOW-MED. |
 | 431 | Uno Fandom Star Wars Posters | RESKIN | Deck confirmed real (Walmart exclusive); specific rule/card name not found - same JCW36-39 code-range candidate as #430/#432. LOW-MED. |
@@ -919,7 +920,7 @@ on RESKIN entries in bulk.
 | 481 | Uno Fandom Chucky | RESKIN | Confirmed (Fandom line, likely a newer wave per a 2026 copyright notice on one listing): special rule "Amulet" - swap a card in your hand for any card in the deck. MED. |
 | 482 | Uno Wicked | RESKIN | Confirmed (2025 Mattel film tie-in): special rule "Defy Gravity" - skip other players based on how many green cards you hold (exact skip-count-per-card unconfirmed). MED. |
 | 483 | Uno The Simpsons (2025) | RESKIN | Confirmed as the current 2025 Mattel "TV Show Edition" (item JHB16, UPC 194735326846): "Woo-hoo! D'OH!" rule - triggered outcome is either safe ("Woo-hoo!") or forced to draw cards ("D'OH!"); also "Ay Caramba!" replaces the UNO call-out. Follow-up REVERSES the earlier duplicate flag: a long, genuine Simpsons UNO reprint history (2001/2003/2005/2007, see #259/#435) means this is its own distinct real product, not a triple-counted entry with #259/#435. HIGH existence/name, MED exact mechanic. |
-| 484 | Uno America's Newest Card Game Craze! (1973) | RESKIN | Historical baseline print; predates Wild Draw Four (introduced 1992). |
+| 484 | Uno America's Newest Card Game Craze! (1973) | RESKIN | Historical baseline print. Correction: "introduced 1992" was wrong; 1992 is when Mattel acquired the game, not when Wild Draw Four appeared. The original 1971/1973 deck's exact action-card mix is undocumented (see #8). |
 
 ### #485–503 (never released)
 
@@ -1026,6 +1027,19 @@ user request, separate from Part E's digital-only pass). Progress:
   - **The 2 remaining UNKNOWN titles** (#377, #399) stay UNKNOWN per the user's standing permission,
     now with stronger confirmation that their parent product families (UNO Showdown; UNO Pocket) are
     real, supporting a "vanished/undocumented variant" theory over a doc error.
+* **Final review (MECHANIC rows and Part A): done.** Six more research passes gathered
+  implementation-grade specs for every Part A family (now in `docs/mechanics/`, summarized with a
+  conflict catalog in Part F) and re-checked the MECHANIC rows that the reskin pass never covered. Rows
+  found WRONG and corrected: #400 (UNO Master is the 1997 electronic turn timer, not Masters of the
+  Universe), #36/#388 (the 2000 Harry Potter deck has Howler/Invisibility Cloak, not Sorting Hat; likely
+  one product), #42 (second Monster High wild unsupported), #96 (Cobs is 13 cards), #27/#110 (the
+  accumulate-and-dump pile is Blast's, not Wild Jackpot's), #104 (four towers, each blocking one card
+  type), #47 (first to 3 hands), #24 (tipper draws 2), #484 (1992 is Mattel's acquisition, not WD4's
+  debut), #291 (Giannis deck has a "Force a Turnover" rule), #340 (a Pocket deck, retagged), #337
+  (Cheese Touch effect conflicts with the Fundex manual). Vague rows filled in with exact effects: #6,
+  #7, #21, #22, #26, #33, #35, #40, #199, #215, #234, #308, #406, #428. Downgraded to unverified: #34,
+  #200, #229, #327, #361, #372, #367. Also found that the already-implemented Swap Pack differs from the
+  real cards (see A3).
 
 ---
 
@@ -1463,6 +1477,143 @@ scope): a falling-block tile-matching puzzle game (cards fall into one of 8 colu
 color/number/symbol to clear, comparable to Dr. Mario/Puyo Puyo). Does not use UNO's discard-matching
 mechanic at all — correctly excluded from this project's scope, consistent with this doc's existing
 A10 classification.
+
+---
+
+## Part F — Implementation specs and cross-mechanic conflicts
+
+A final review pass gathered implementation-grade detail for every mechanic family in Part A: exact
+card lists, copy counts, effect wording, edge cases and official rulings. The full specs, with per-claim
+confidence tags and the Mattel instruction-sheet codes to check, live in `docs/mechanics/`:
+
+| File | Covers |
+|---|---|
+| `01-stacking-penalties-house-rules.md` | Show 'Em No Mercy (+ Expansion), all five Add-On Packs, official house-rule definitions (Jump-In, Seven-O, Progressive, Draw to Match, Force Play, WD4 challenge, the official stacking ban), UNO Attack card sets and launcher rules |
+| `02-flip-and-alternate-decks.md` | UNO Flip (both sides, flip procedure, scoring) and its derivatives, All Wild, Flex, Teams, Triple Play, Tippo, UNO 52, Pocket/Junior/Choo Choo, H2O Splash |
+| `03-randomizer-devices-and-roles.md` | UNO Spin 2005/2025/Adults, Roboto, Tiki Twist, Eye Eye SpongeBob, Wild Jackpot, Power Grab, Royal Revenge, Colors Rule, Remix, Flash, Reflex, Blast, Showdown |
+| `04-power-systems-and-party-rules.md` | UNO Ultimate Marvel/DC (core rules, known powers, Enemies), Elite NFL, Fandom NFL, Liar's UNO, UNO Party!, WWE Locked Up |
+| `05-mechanic-row-corrections.md` | Per-row evidence behind the MECHANIC-row corrections now in Part D |
+| `06-followup-gap-fill.md` | Wild Draw Four history, X Games and Deadpool No Mercy card lists, Flip's starting-card rule, and the last never-verified RESKIN rows |
+
+### F1. Facts from the specs that change how things get built
+
+* **Flip** has no 0s on either side (numbers are 1-9), so 7-0's "0" never fires on a Flip deck. Flipping
+  inverts the discard and draw piles as whole stacks, so the new top card is the back of the old
+  *bottom* card. The exposed top card's action is not applied, and an exposed Wild's color is called
+  by whoever played the Flip. Wild Draw Color's challenge penalty is "draw until the color" (guilty) or
+  "until the color, plus 2" (innocent), so challenge code can't be hard-wired to 4/6.
+* **No Mercy** stacking is "any Draw card of equal or higher value", with no color needed. Wild
+  Reverse Draw 4 stacks and sends the total back. In 2-player games the rules literally say whoever
+  plays it draws 4 unless they stack it back. A hand of 25+ cards eliminates you, and you can also win
+  by being the last player left. 7-0 is built in.
+* **Stack Pack** stacking is color-gated (Stack 1/2 must match the Draw 2's color or the WD4's chosen
+  color). **Progressive UNO**, Mattel's own variant, is same-type only. The official base rule, per
+  Mattel's 2019 and 2022 posts, is no stacking at all.
+* **Reverse Pack's Wild NO U** and **Super Star** (#26) are played *in response* to a penalty, outside
+  normal turn order. That requires a response window the engine doesn't have yet.
+* **Speed Pack** turns are chains of N cards, each matching the previous card, where only the last
+  card's action fires. Missing the count means drawing N and resetting the speed level to 1.
+* **All Wild** is 112 cards, every play is always legal, and its Wild Draw Four can't be challenged.
+* **Flex** cards' flexed color only governs *your* play; the next player still matches the printed
+  color. That breaks the assumption that "current color = color of the last card played".
+* **UNO Attack**: pressing the launcher ends your turn even if a playable card comes out, which is the
+  opposite of base UNO's play-the-drawn-card option.
+* **UNO Ultimate** has no shared draw pile. Each player draws from their own Character Deck, and an
+  empty deck eliminates rather than reshuffles.
+* **The implemented Swap Pack doesn't match the real cards** (see A3): official Wild Force Trade picks
+  any two players, and official Swap 1 gives a card you choose.
+
+### F2. Conflict catalog: decisions the engine has to make once
+
+Each item is a design decision that several mechanics force at the same time. Settling each one once,
+as a shared engine rule, avoids per-pair special cases.
+
+1. **Stacking policy has to be an enum, not a boolean.** There are five incompatible official models:
+   none (base), same type only (Progressive), equal or higher value (No Mercy), color-gated (Stack Pack),
+   and "Hit cards only after an Attack-Attack, play resumes after the *first* hitter" (Attack Mega Hit).
+   With No Mercy and Stack Pack both on, a Stack 1 can never follow a +2 under the value rule.
+   *Recommended:* a card's own text governs its own stacking; the global policy covers everything else.
+2. **Response windows.** Penalties can be reflected (NO U, Super Star, Deflection, the Fundex Beam Up
+   WILD), cancelled (Invisibility Cloak, Avengers Assemble, Rockin' Blockin', Run!), or passively
+   blocked (Power Grab towers, Colors Rule Yellow, Remix Shield). *Recommended:* one "pending effect"
+   phase in which the target may respond, and defined outcomes for reflect, cancel and absorb. For
+   passive blocks, protection applies if it matches the *last* card of a stack, and a block ends the
+   stack with no draw.
+3. **Out-of-turn play.** Jump-In (plus its alias Speed Play from UNO Party!), Avatar State, Veto,
+   Colors Rule Red ("any time"), Pic-a-nic, Deflection, and real-time races (Spin's "UNO Spin", Reflex,
+   Roboto duels, Kevin's Chili, Shark Attack) all act outside the turn order. *Recommended:* a single
+   interrupt system with a priority order (device race, then response window, then Jump-In), with
+   Jump-In suppressed while mass discards resolve. Jump-In against a pending stack has three variant
+   behaviors (cancel, wait until drawn, add to the stack); expose it as a sub-option. Powers that say
+   "on your turn" shouldn't work on a Jump-In play.
+4. **Hand movement.** 7-0 passes in the direction of play, Billie Eilish's Wild Pass Color always
+   passes left, Spin 2005's Trade Hands is seat-left, and Wild Force Trade swaps any two seats. Owned
+   things (Power Grab towers, Colors Rule powers, Flex Power Cards) stay with the *player*, not the
+   hand. *Recommended:* one swap primitive taking two arbitrary seats plus a direction parameter. Don't
+   let swaps target a 0-card player in Teams. With No Mercy on, the built-in 7-0 must not double-apply
+   with the 7-0 toggle.
+5. **Draw sources, draw-until loops and elimination.** Many cards draw until a predicate is met (Wild
+   Draw Color, Color Roulette, Spin's Draw Red/Blue, Sorting Hat, Greninja). Ultimate draws from personal
+   decks, and Blast's container is outside both piles. *Recommended:* a `drawSourceFor(player)` hook; a
+   draw-until primitive with reshuffle and a hard cap; no reshuffling of Blast's container; and
+   elimination (No Mercy's 25 cards, Ultimate's empty deck) checked once after an effect fully resolves,
+   not mid-draw. Drawn Together's mirrored draws can eliminate a bystander, so cap them or make that an
+   option.
+6. **Who names the Wild color.** Normally the player who played it, but Royal Revenge's King names every
+   Wild's color, a Remix named Wild lets the named player pick, Color Roulette may have the *victim*
+   pick (sources conflict), and Flex separates "color you played as" from "color to match".
+   *Recommended:* card-specific rule beats a global role, which beats the default. The WD4 legality
+   check uses the color in force before the Wild, after any pre-play power such as Captain Marvel's.
+7. **Turn pointer jumps.** Skip Everyone, Tiki Twist's Go To, Remix's Skip-To, extra-turn effects,
+   Reflex's "continue after the winner", and Flash's random order all move the pointer. *Recommended:*
+   resolve triggered effects through a FIFO queue and move the pointer only once the queue is empty.
+   Flash's random order makes direction meaningless, so Reverse and direction-based toggles should be
+   disabled with it.
+8. **Multi-card plays.** Speed Pack chains, Spin 2025's "2x", Colors Rule Blue, NASCAR Drafting,
+   Team Attack, NDJOLIJEAN's same-number multi-discard, and Fire Fist Ace combos all play more than one
+   card a turn. *Recommended:* one multi-play state with a cap, rather than letting them add together.
+   Two +2s played in one 2x turn count as one stack contribution.
+9. **Deck shapes that make other toggles inert or incoherent.** No 0s in Flip, Pocket or Attack decks
+   (7-0's half is dead). No colors in All Wild (WD4 challenge, color-based cards and Flex coloring are
+   meaningless, and Jump-In becomes near-constant). Animal matching in Junior and Choo Choo adds a third
+   match attribute. Multiple discard piles in Triple Play and Tippo conflict with Flip. *Recommended:*
+   the settings screen greys out toggles that a chosen deck makes inert, and doesn't offer combinations
+   like Flip with Flex or Flip with multi-pile at all.
+10. **Challenge resolution must be parameterized.** WD4 (4/6), Flip's Wild Draw Two (2/4), Wild Draw
+    Color (until color / until color plus 2), and Doctor Who's Exterminate all use the same shape with
+    different penalties. Choosing to stack instead of drawing should waive the challenge.
+11. **Going out without a normal play.** Discard All, Spin's Almost UNO and Discard Color, Power Grab's
+    Instant UNO, Colors Rule's Red dump and Wild Jackpot's discard symbol can empty a hand outside
+    normal play. *Recommended:* that counts as going out, but only after the effect fully resolves;
+    discarded action cards don't trigger. Put discarded cards on the bottom of the discard pile (Spin
+    2025's wording) to sidestep which one lands on top.
+12. **Two-player degenerate cases.** Reverse acts as Skip; No Mercy's 2-player Wild Reverse Draw 4
+    makes its player draw; Skip Two and Skip Everyone become "play again"; Point Taken and Drawn Together
+    barely work at 2-4 seats. Each needs an explicit 2-player rule, which this engine already has the
+    pattern for (2-player Reverse-as-Skip).
+13. **Honor-system cards.** Dares, Truths, Veto, Wild Don't Talk, Ice the Kicker and similar cards
+    can share one prompt framework with an optional self-report button. Wherever a card offers a
+    draw-penalty fallback, implement that fallback as the real effect.
+
+### F3. Gaps that would block a specific family
+
+None of these block the cheap tiers. They matter only when that family's turn comes up, and most
+would be settled by reading the official instruction sheet (codes are listed in each spec file).
+
+* **No Mercy:** only 2 of 11 copy counts confirmed, where an eliminated player's cards go, point values,
+  and who picks the Color Roulette color.
+* **Flip:** which Light face backs which Dark face (no source documents it, so a fixed seeded pairing is
+  the fallback). The starting-card rule isn't official either; two third-party sources say a Flip turned
+  up first starts the game on the Dark side (MED), so default to that with a redraw option.
+* **Add-On Packs:** per-type copy counts, the Speed Pack's colored cards, and Wild NO U's exact target
+  wording.
+* **Ultimate:** most expansion characters' powers, who a Danger flip targets, the Defeat Cost symbols,
+  Item cards, and the exact elimination trigger.
+* **Wild Jackpot / Royal Revenge / Tiki Twist / Eye Eye / Roboto:** the full outcome tables, Jester card
+  effects, and trigger frequencies.
+* **Liar's UNO:** who may challenge and what happens to a caught card.
+* **Unverified entirely:** Cricket (#229), WWE 1-2-3, WWE Locked Up's resolution, NASCAR Drafting (#233),
+  Fandom NFL's Touchdown text, and the effects of the Deadpool No Mercy wilds (#406).
 
 ---
 
