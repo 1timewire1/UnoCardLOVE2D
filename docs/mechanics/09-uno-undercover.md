@@ -89,6 +89,8 @@ Where they disagree, the code is what the game does.
   - **Doc is partly right:** the duration is correct, but the card *bounces* the penalty rather than just blocking it.
 - **Shooting Star** (red).
   - Code: play up to **4 cards of one color** at once. The first card picked sets the color (`ShootingStarPopup`).
+  - The chosen cards are moved straight onto the discard pile, bypassing the normal play logic, so **none of their actions fire** (a Skip, Draw Two or Wild Draw Four placed this way does nothing). The only lasting effect is that the active color becomes the color of the last card placed.
+  - There is no matching check (the first card may be any color) and no stopping early (you keep placing until 4 cards or none of that color are left). See section 7.
   - **Not in our docs.**
 - **Toe Hold** (blue, paired).
   - Code: the paired card sets N turns (a non-number counts as 1). You pick one opponent, and the game locks 3 random cards in their hand for N of their turns. It calls `AIPlayer.startToeHold` 3 times, and duplicate picks are possible, hence "up to three".
@@ -277,7 +279,7 @@ Each item is mapped to `docs/implementation-plan.md`. They are ordered by how mu
    - **Highland Two-Step:** two opponents swap hands.
 
    Undercover leaves the two swap cards out of 2-player games. Keep that, or define what they do with 2 players.
-5. **Shooting Star:** play up to 4 cards of one color as one action. C8 (multi-card plays) already covers this; it is one more card with a cap of 4.
+5. **Shooting Star:** play up to 4 cards of one color as one action, with none of their actions firing. C8 (multi-card plays) already covers the chain; see section 7 for the rules this project chose.
 6. **AI handicap ("easing").** A single percentage that drives several behaviours:
    - the AI holds its last card;
    - the AI avoids playing Skip, Draw Two or Wild Draw Four into the human;
@@ -291,3 +293,16 @@ Each item is mapped to `docs/implementation-plan.md`. They are ordered by how mu
    - Either would work as an optional "bonus card pool" setting, rather than tying special cards to a campaign.
 
 Not new: the cut Pass/Amplified penalty modes match Phase 3's planned stacking options (sameType; and progressive stacking, where the penalties add up).
+
+## 7. Rulings on the plan's open questions (U1–U5)
+
+Read from the code, not from play. Where Undercover has no ruling, the project's own decision is marked **our rule**.
+
+| # | Question | What Undercover does | Our rule |
+|---|---|---|---|
+| U1 | Command Card points | A Command Card never gets a point value, so it scores **0**. The help screen lists 20–70 (Redecorate 70, Two-Step 60, ...). Its values for normal cards (20 actions, 50 wilds) do match the code, so the 0 is most likely an oversight, though that can't be proven. It only matters in the 300-point Standard mode, which the campaign uses once. | Use the help-screen points. |
+| U2 | A special card moved into a CPU's hand | Can't happen. Two-Step's picker only lists CPU players, so it always swaps two CPU hands. Tsunami moves cards to a CPU and can take from your hand, but it skips Command Cards. No other card moves cards between players. The CPU's play check doesn't exclude Command Cards, so if one ever got there its pop-up would probably appear on the human's screen. | Yes, the CPU owns it and can play it; "human-only" only controls dealing. A design decision, not taken from Undercover. |
+| U3 | Skip Draw-Two with 2 players | The opponent draws 2 and loses their turn, then you play again. With 3+ players it hits two different people; with 2 it hits the opponent once. Reverse Draw-Two runs the same 2-player code and gives the same result. | Same as Undercover. |
+| U4 | Shooting Star's actions | **None fire.** The cards go straight to the discard pile; the active color becomes the last card's color. No matching check on the first card, and no stopping early. | Actions don't fire, as in Undercover. **Our rule:** the first card must be a legal play on the discard pile (the rest follow its color), and you may stop after any number from 1 to 4. |
+| U5 | Pairing your last card | Allowed. The round ends only once the card's effect finishes, so the effect applies and then you win. The pairing pop-up even shows the UNO button when you're down to 2 cards. If the **special card itself** is your last card, the round ends immediately and its effect never runs. | Same as Undercover for pairing. For a special card played as your last card, the plan's turn pipeline resolves its effect before you go out (see the plan's C21). |
+

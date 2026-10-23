@@ -241,8 +241,8 @@ Comeback, Billie Eilish), each as its own toggle.
 from later phases, plus the UNO Undercover Command Cards that need nothing later: the three combo
 cards, Redecorate, Double Cross, Clone, Highland Two-Step, Switcheroo, Tsunami and the cut Plunder.
 Sleep, Toe Hold and Lucky Croc Tooth wait for Phase 8 (timed statuses; the Tooth also needs Phase 7's
-reflect), and Shooting Star for Phase 12. Cards that need responses, standing effects or duels wait for their phase; spec 07
-already groups them by primitive, so the backlog is mechanical.
+reflect), and Shooting Star for Phase 12. Cards that need responses, standing effects or duels wait
+for their phase; spec 07 already groups them by primitive, so the backlog is mechanical.
 
 ### Phase 3: Stacking policies and parameterized challenges (M)
 
@@ -383,8 +383,8 @@ box's "2-4 teams" needs more seats (Part 7, D6).
 
 * A **multi-play state** with a cap and a single "contribution" rule (C8): Speed Pack chains (only the
   last card fires), Power Sword, Team Attack, NDJOLIJEAN multi-discard, Fire Fist Ace, UNO
-  Undercover's Shooting Star (up to 4 cards of one color; spec 09 doesn't say which of their actions
-  fire, so it follows C8: only the last one).
+  Undercover's Shooting Star (1 to 4 cards of one color; the first must be a legal play, you may stop
+  early, none of their actions fire, and the color becomes the last card's; spec 09 section 7).
 * **Triple Play** (three piles, overload draw 1-4, Wilds set no color, the timer) and **Tippo**
   (two trays, Stop cards, the tilt penalty). Both need `match` to become per-pile.
 
@@ -632,7 +632,7 @@ reaching the cap a knockout.
 | 7, Wild Swap Hands, Swap 1, Bullseye, any "chosen player" | Auto-target the opponent |
 | Wild Force Trade (any two seats) | Swaps you and the opponent |
 | Reverse Skip (Undercover) | You go again (as coded) |
-| Skip Draw-Two (Undercover) | "The player after the skipped one" is you, so the opponent is skipped and draws 2 instead (spec 09 doesn't cover it; our rule) |
+| Skip Draw-Two, Reverse Draw-Two (Undercover) | The opponent draws 2 and loses their turn, then you play again (as coded) |
 | Highland Two-Step, Switcheroo, Tsunami (Undercover) | Need two opponents. Left out of the deck in 2-player games, as Undercover does for the first two |
 | No Mercy Wild Reverse Draw 4 | Its player draws 4 unless the opponent stacks it back (sheet HWV18) |
 | 50/50 coin (#6) | You must be one of the two players (sheet HBF05) |
@@ -674,7 +674,11 @@ that refuse to move, would make every hand-movement effect special-case them.
 
 **C21. Paying a paired card with your last card.** If the paired sizing card is the last card in your
 hand, you go out once the effect resolves (4.2 step 6), as with any other card that empties your hand.
-Spec 09 doesn't say what Undercover does here; this is our rule.
+Undercover does the same. It differs in one case: when the special card *itself* is your last card,
+Undercover ends the round at once and the effect never runs, whereas the turn pipeline resolves it
+first. For most special cards that changes nothing (a paired card has nothing left to pair with), but
+a Draw-Two combo as your last card makes the next player draw before scoring. That follows the
+classic official rule for a last Draw Two, so the pipeline keeps it.
 
 ---
 
@@ -695,13 +699,20 @@ Spec 09 doesn't say what Undercover does here; this is our rule.
 
 ---
 
-### Open questions from the UNO Undercover decompile (spec 09)
+### Undercover rulings (spec 09 section 7)
 
-Each has a working default already written into the plan; confirm or change before the phase that
-needs it.
+Settled from the decompiled code, with this project's own choices where Undercover is silent or too
+loose.
 
-| # | Question | Default in the plan |
+| # | Question | Outcome |
 |---|---|---|
+| U1 | Command Card points | Help-screen points (20-70). The shipped game scores them 0, most likely an oversight. |
+| U2 | A special card moved into a CPU's hand | The CPU owns it and can play it; "human-only" only controls dealing (C20). Our decision; in Undercover it can't happen. |
+| U3 | Skip Draw-Two (and Reverse Draw-Two) with 2 players | The opponent draws 2 and loses their turn, then you play again (as coded; C13). |
+| U4 | Shooting Star | None of the placed cards' actions fire, and the color becomes the last card's (as coded). Our changes: the first card must be a legal play, and you may stop after 1-4 cards. |
+| U5 | Pairing your last card | Allowed; you go out once the effect resolves (as coded; C21). |
+
+---|---|---|
 | U1 | Command Card points: the help screen prints 20-70, but the shipped game scores them 0 | Use the help-screen points; 0 looks like a missing `setValue` call, not a design choice |
 | U2 | Can special cards moved to a CPU (by a hand swap, pass or Tsunami) be played by it? | Yes; "human-only" only controls dealing (C20) |
 | U3 | Skip Draw-Two with 2 players | The opponent is skipped and draws 2 (C13) |

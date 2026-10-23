@@ -1433,7 +1433,7 @@ summary, which had the card count, the name and four card effects wrong.
 | Redecorate | Wild | Choose a color; every non-wild card **in your own hand** becomes that color. |
 | Clone | Blue | Choose a card in your hand; a **duplicate** of it is added to your hand. |
 | Lucky Croc Tooth | Yellow, paired | For N turns, any Draw Two / WD4 aimed at you **bounces back** to its player. |
-| Shooting Star | Red | Play up to **4 cards of one color** at once. |
+| Shooting Star | Red | Play up to **4 cards of one color** at once, straight onto the discard pile: none of their actions fire, and the color becomes the last card's. |
 | Toe Hold | Blue, paired | Choose an opponent; up to 3 random cards in their hand are locked for N of their turns. |
 | Double Cross | Wild | Choose a color; recolor 1-2 chosen cards **in your own hand**. |
 | Highland Two-Step | Green | Two chosen opponents swap hands. |
