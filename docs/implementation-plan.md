@@ -1,7 +1,7 @@
 # Implementation plan: mechanics from the UNO survey
 
 This is the build plan that follows the research in `docs/gameversions.md` and the specs in
-`docs/mechanics/01`-`12`. It answers two questions:
+`docs/mechanics/01`-`13`. It answers two questions:
 
 1. **In what order should the ~500 surveyed versions' mechanics be built?** (Parts 2-3)
 2. **Where do mechanics from different versions collide, and how does the engine settle each
@@ -121,6 +121,9 @@ CardDef = {
 }
 ```
 
+The UNO CD-ROM's engine (2000, spec 13) worked the same way: each card was a row of tables (deck
+counts, play action, penalty action, points), and its three new cards were added as rows, not code.
+
 Numeric ids are assigned when a deck is built, so the legality table and the card table keep working
 unchanged. `Card.new()` takes a def instead of `(color, content)`. `Player:getHandScore()` and the
 game-over scoring read `def.score` (through the deck's scoring table). `contentAnalysis` becomes
@@ -204,10 +207,14 @@ shows identical win distributions to before the refactor on the same seeds.
   reproduce. Phase 7 extends it for the cards that react to a call. Calibration from the shipped
   digital games (spec 10): CPUs call UNO 0% of the time in Uno^3, 40% in Uno (2020) and 50% in
   Undercover; the window to catch a missed call is 0.5-1.5 s; the penalty is 2 cards everywhere
-  except Uno (2020), which draws 1.
+  except Uno (2020), which draws 1. A sub-option from the UNO CD-ROM (spec 13): a **wrong** UNO
+  challenge costs the challenger 2 cards. It's on by default whenever UNO calls are on, so pressing
+  the catch button at random isn't free.
 * **Match play.** Per-deck scoring tables; "first to N points" (500 default; 250 for Express-sized
   decks; 1000 for No Mercy; 300 for UNO Undercover's Standard mode) and "first to 3 hands" (H2O).
-  The score-limit menu offers Ubisoft's list: one round, 200, 300, 500, 750 or 1,000 (spec 11).
+  The score-limit menu offers Ubisoft's list: one round, 200, 300, 500, 750 or 1,000 (spec 11), and
+  an optional round limit (1-50 in the UNO CD-ROM, spec 13). In 2vs2, the team whose player goes out
+  scores both opponents' hands (CD-ROM's Team UNO).
   Variants that knock players out (Challenge UNO, elimination by score) come with Phase 6. Include the
   official rule that a Draw Two or WD4 played as the last card still makes the next player draw
   before hands are scored (Uno^3 does this too, spec 10).
@@ -231,10 +238,14 @@ shows identical win distributions to before the refactor on the same seeds.
   replay. Phase 7's reaction prompt (D10) reuses the same countdown.
 * **Two-player rule table.** Formalize the existing Reverse-as-Skip into a per-effect 2-player
   override (Part 6, C13), so later phases fill in a row instead of adding special cases.
-* **Easy-difficulty handicap (from UNO Undercover's "easing", spec 09).** Two behavior knobs per
-  difficulty: the chance a CPU holds back its last card, and the chance it avoids hitting the human
-  with Skip, Draw Two or WD4. They sit beside D7's forget and catch chances. Undercover's deck-side
-  handicap (extra Wilds, Wilds withheld from the AI) is left out: it's hidden from the player.
+* **Difficulty as one error rate** (from the UNO CD-ROM's AI, spec 13). Each difficulty sets a single
+  error threshold (the CD-ROM used 0-255: stupid 255, poor 144, average 80, smart 40, infallible 0),
+  which drives how often a CPU misses a real violation (an illegal WD4, a missed UNO), challenges
+  falsely, plays a WD4 illegally (only when the WD4 rule is *challengeable*, Phase 3), and forgets to
+  call UNO (D7). UNO Undercover's "easing" adds two Easy-only knobs (spec 09): the chance a CPU holds
+  back its last card, and the chance it avoids hitting the human with Skip, Draw Two or WD4.
+  Undercover's deck-side handicap (extra Wilds, Wilds withheld from the AI) is left out: it's hidden
+  from the player.
 
 *Content wave:* official Swap Pack; classic match play to 500; score attack; calling UNO; the
 official draw for first player; an optional turn timer.
@@ -262,6 +273,8 @@ Build the A14 primitives on the queue and pickers, each with an AI evaluator:
 | Card mutation and creation (C18) | def swap on a hand card, logged | Redecorate (recolor your hand), Double Cross (recolor 1-2 cards), Clone (duplicate a card) |
 | Take from others' hands to a target | `pickSeat` + random picks, logged | Tsunami (N random cards from the other players to the target; skips special cards and 1-card hands) |
 | Seat swap (C19) | reorders the Phase 0g seat list | Switcheroo; Highland Two-Step is the existing `swap(a, b)` between two opponents |
+| Roulette target (spec 13) | walk the seat list from the next player, picking each with probability 1/N, logged | UNO CD-ROM's Shark (the victim draws 4 and loses their turn; it can come round to its player; empty hands are skipped) |
+| Flip and resolve (spec 13, C22) | move the draw pile's top card onto the discard pile | Mutant (resolves the flipped card's action as if you'd played it); Uno Mariokart's Wild Item Box (#21) shares the flip but ignores the card's action and applies an item |
 
 Then add a **Bonus Wild** setting: pick one themed card (or "random each game") and shuffle 4 copies
 into the classic deck, matching the official 108+4 = 112 layout of most licensed decks (spec 07, 08).
@@ -286,8 +299,10 @@ cards, Redecorate, Double Cross, Clone, Highland Two-Step, Switcheroo, Tsunami a
 Sleep, Toe Hold and Lucky Croc Tooth wait for Phase 8 (timed statuses; the Tooth also needs Phase 7's
 reflect), and Shooting Star for Phase 12. From Ubisoft's DLC (spec 11): Comin' Through, Get Down,
 Cross-Fade, Dragon, A Little Help (C18), Just Dance Machine (a random action, logged), Typhon's Trick,
-Fenyx's Power and Point Taken. Cards that need responses, standing effects or duels wait for their
-phase; spec 07 already groups them by primitive, so the backlog is mechanical.
+Fenyx's Power and Point Taken. From the UNO CD-ROM (spec 13): Shark and Mutant, each as its own
+toggle; its full "New Special Cards" set (one of each per color, a 120-card deck) becomes complete when
+the Spy lands in Phase 13. Cards that need responses, standing effects or duels wait for their phase;
+spec 07 already groups them by primitive, so the backlog is mechanical.
 
 ### Phase 3: Stacking policies and parameterized challenges (M)
 
@@ -469,7 +484,11 @@ duels (Kickin' Battle, Locked Up, Power of Friendship, the Transformers Flip wil
 (Remember Me). The AI work is the cost here, not the rules. Also the visibility modifiers and cards
 from Ubisoft (spec 11): Fog of War (opponents' card counts hidden too), Flipped! (you see everyone's
 cards but your own), Rayman's Escape (peek at every opponent's hand, then hide your own card count),
-and Valhalla's Battle (a secret color guess; ships with Phase 16).
+and Valhalla's Battle (a secret color guess; ships with Phase 16). The UNO CD-ROM's **Spy** card
+(spec 13) uses the same "hand count hidden" flag as Escape and Fog of War: while it's in your hand,
+nobody else sees your card count, CPUs can't use it, and CPUs can't catch a missed UNO from you. It
+scores 75. This needs an AI information layer that answers "what can this seat know?" instead of
+reading other hands directly, which the Liar's UNO and duel work needs anyway.
 
 ### Phase 14: Power frameworks (L)
 
@@ -814,6 +833,14 @@ Undercover ends the round at once and the effect never runs, whereas the turn pi
 first. For most special cards that changes nothing (a paired card has nothing left to pair with), but
 a Draw-Two combo as your last card makes the next player draw before scoring. That follows the
 classic official rule for a last Draw Two, so the pipeline keeps it.
+
+**C22. Shark and Mutant** (UNO CD-ROM, spec 13). Shark's 4 cards are a draw penalty, so response cards
+(Phase 7) can block, reflect or redirect it, but it never joins a stack: its target is random rather
+than "the next player". Mutant's flipped card resolves as if the Mutant's player had played it, so a
+flipped Draw Two can start a stack and a flipped Mutant flips again. When the flipped card would be a
+Wild Draw Four, the CD-ROM substituted a temporary random "decoy" card; ours instead takes the first
+non-WD4 card from the top of the pile (leaving any WD4 it passes in place), reshuffling first if the
+pile is empty, so no temporary cards have to exist (our rule).
 
 ---
 

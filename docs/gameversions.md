@@ -673,8 +673,8 @@ on RESKIN entries in bulk.
 | 233 | Uno Nascar (2005) | MECHANIC | "Drafting" bonus-plays wild. See A8. |
 | 234 | Uno X Games | MECHANIC | BoardGameGeek (#12228, 1999) and two mirrors list the renamed cards: Can-Can (Wild, draw 10), Nuclear Air (Wild, draw 5), Dirt-Dive (discard all but 5), Fakie (Wild, all players trade hands), Drop a Hill (Wild, draw a new hand), Alley-Oop (Reverse + discard all of one color), and Tailwhip/Lipslide trick cards replacing Reverse/Skip. HIGH (though the three sources may share one origin). Colors and copy counts not found. See A8. |
 | 235 | Uno Undercover | DIGITAL-ONLY | Dev. Golden Goose/RealArcade, 2008, Windows (plus a Mac build; no DS version - that's a separate plain Gameloft port). Standard 108-card deck + up to 7 of the player's 13 unlocked **Command Cards** (15 defined, 2 cut), one copy each, human-only. Several take a second "pairing" card that sets a turn count. Verified by decompiling the game, see Part E4 and `docs/mechanics/09-uno-undercover.md`. HIGH. |
-| 236 | Uno CD-ROM | DIGITAL-ONLY | Mattel Media/Interactive, ~1999-2002. Adds Spy Card (hides your hand-size from opponents) + Mutant/Shark Cards (names known, effects undocumented). See Part E4. |
-| 237 | Uno Game Boy Color | DIGITAL-ONLY | Dev. HotGen (not Genki), 1999. Adds a Challenge mode that inverts scoring: reaching a point ceiling eliminates you instead of winning. See Part E4. |
+| 236 | Uno CD-ROM | DIGITAL-ONLY | Dev. HotGen Studios, pub. Mattel Interactive, 2000. Optional "New Special Cards" (one of each per color, 120-card deck): Spy (hides your hand count; 75 pts), Shark (a 1-in-N bite walks the turn order; the victim draws 4), Mutant (plays the top card of the draw pile as if you'd played it). Modes Original, Challenge UNO, Team UNO; a wrong UNO challenge costs the challenger 2. HIGH (decompiled). See Part E4. |
+| 237 | Uno Game Boy Color | DIGITAL-ONLY | Dev. HotGen (not Genki), 1999, the same studio as the CD-ROM (#236). Adds a Challenge mode that inverts scoring: reaching a point ceiling eliminates you instead of winning (the official Challenge UNO variant, spec 01). See Part E4. |
 | 238 | Uno + Skip-Bo 2 Game Pack (Game Boy Advance) | RESKIN | Confirmed correct (Destination Software, 2006): two unmodified, separate single-player-vs-AI games on one cartridge, no shared/crossover mechanic found. MED-HIGH. |
 | 239 | Uno Free Fall (Game Boy Advance) | DIFFERENT-GAME | Falling-block tile-matching puzzle game. See A10. |
 | 240 | Uno Free Fall (Java Mobile Game) | DIFFERENT-GAME | Same falling-block puzzle mechanic as #239. Confirmed by decompiling the Player X build (spec 12). |
@@ -1113,6 +1113,9 @@ user request, separate from Part E's digital-only pass). Progress:
 * **Mobile J2ME/Symbian decompile: done.** Gameloft's UNO, UNO HD, UNO Spin and UNO & Friends and two
   Player X titles (`docs/mechanics/12`): all custom settings and tournament ladders recorded, a doubling
   stacking model found, and Uno Challenge added as N27.
+* **UNO CD-ROM decompile: done.** The disc's own engine (`docs/mechanics/13`) resolved the Mutant and
+  Shark cards, corrected the developer (HotGen Studios) and date (2000), and found the false-UNO-challenge
+  penalty.
 
 ---
 
@@ -1541,16 +1544,32 @@ decompiled in `docs/mechanics/10-flashpoint-web-games.md`. Neither adds new card
 presentation and match structure: drawing a card to decide who starts, a per-turn timer with an
 auto-draw, three different UNO-call catch windows, and Uno^3's timed score-attack mode.
 
-**#236 — UNO CD-ROM.** Dev/pub Mattel Media/Mattel Interactive; dating is inconsistent across sources
-(GameFAQs "2000," an Internet Archive listing "2002") — likely one base release ~1999-2000 with a later
-reissue ~2002, so this doc's "1990s PC port" framing is probably slightly late. **Correction: not
-"AI/settings value only"** — adds named special cards:
-* **Spy Card** (HIGH, has its own dedicated wiki page) — while held in your hand, other players *cannot
-  see how many cards you have*: suppresses the normal visible-hand-size info this and most UNO
-  implementations show. A genuine informational-asymmetry mechanic not present in this codebase (which
-  always shows AI hand-size counts).
-* **Mutant Card** and **Shark Card** — confirmed to exist by name (listed consistently alongside Spy
-  Card) but their exact effects could not be found anywhere indexed. Reporting names only, not guessing.
+**#236 — UNO CD-ROM.** **Verified by decompiling the disc** (`UNO.ISO`, v1.0, files dated May-September
+2000; the rules engine is a Java library inside a Visual J++ DLL). Full write-up:
+`docs/mechanics/13-uno-cd-rom.md`. HIGH unless marked.
+* **Credits:** developed by **HotGen Studios** (London), the studio behind the Game Boy Color UNO (#237),
+  and published by Mattel Interactive, © 2000. A 2002 date would be a reissue. The rules engine is a
+  licensed library, package `com.ogalala.uno`.
+* **New Special Cards** (an optional Rules switch): three **colored** cards, one of each per color, so
+  12 new cards and a **120-card deck**.
+
+| Card | Effect | Points |
+|---|---|---|
+| **Spy** | While it's in your hand, the other players can't see how many cards you hold. Playing it does nothing. CPUs also can't challenge a missed UNO from a hidden hand. | 75 |
+| **Shark** | Starting with the next player, each player in turn is bitten with probability 1/N (N = players), otherwise passed over; empty hands are skipped, and it can come round to whoever played it. The victim draws 4 and loses their turn. | 50 |
+| **Mutant** | Plays as a card of its color, then takes the real top card of the draw pile onto the discard pile and resolves that card's action as if it had been played. A Wild Draw Four (or an empty pile) is replaced by a random non-WD4 "decoy" card, removed at the next reshuffle. | 20 |
+
+* **Modes:** Original (to the score limit), Challenge UNO (points left in hand accumulate; out at the
+  limit; the last two go head-to-head) and Team UNO (2v2; when either partner goes out, the team scores
+  both opponents' hands). Round limit 1-50, score limit 100-3,000 (500 default), Instant UNO (one round,
+  4 players), three skill levels and cosmetic themes.
+* **Rules:** no stacking; going out on a Draw Two, WD4 or Shark still makes the next player draw before
+  scoring; WD4 challenge 4/6 (only the victim may challenge); a correct UNO challenge costs the offender
+  2, and a **wrong UNO challenge costs the challenger 2**; calling UNO with more than two cards leaves
+  you open to a challenge (manual). With 2 players, Skip and Reverse let you play again.
+* **AI:** skill is a single error threshold on a 0-255 scale (stupid 255 to infallible 0) that sets how
+  often the CPU misses a real violation, challenges falsely, and plays a Wild Draw Four illegally. It
+  plays its highest-value legal card and names the color it holds most of.
 
 **#237 — UNO (Game Boy Color).** Released Dec 16, 1999, dev **HotGen** (this doc's earlier "Genki,
 ~2001" attribution appears to be wrong; no source connects Genki to this title). Standard cards, standard
@@ -1646,6 +1665,7 @@ confidence tags and sheet codes, live in `docs/mechanics/`:
 | `10-flashpoint-web-games.md` | Four web games archived in BlueMaxima Flashpoint: the UNO Showdown quiz (#377), Uno^3 (N25), Uno 2020 (N26) and the UNO Undercover web demo |
 | `11-ubisoft-uno.md` | Ubisoft's UNO (#115) and its DLC themes from the decompiled Steam build: house-rule flags, every theme's cards, Fenyx's gods, Call of Yara's economy, Valhalla's board, Party! Mania, No Mercy, Wild Weeks |
 | `12-mobile-java-symbian.md` | Gameloft's mobile UNO, UNO HD, UNO Spin and UNO & Friends, plus Player X's Uno Free Fall and Oasys's Uno Challenge, from the decompiled J2ME and Symbian builds |
+| `13-uno-cd-rom.md` | UNO CD-ROM (#236) from the decompiled disc: the Spy, Shark and Mutant cards, modes, challenge rules and the error-threshold AI |
 
 ### F1. Facts from the specs that change how things get built
 
