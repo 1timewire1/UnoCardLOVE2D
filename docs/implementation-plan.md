@@ -90,6 +90,7 @@ Phase 14 Power frameworks (Ultimate, Elite NFL, Fandom NFL)              ── 
 Phase 15 Prompt-and-fallback cards (honor system, reaction races)        ── needs 2
 Phase 16 Ubisoft theme systems (Call of Yara economy, Valhalla board)    ── needs 2, 7, 13
 Phase 17 Tournament ladder (escalating rules and player counts)          ── needs 1, 3, 6, 7
+Phase 18 Hot Seat (several people on one device)                         ── needs 0g, 1, 7
 ```
 
 Phases 2, 3 and 4 can run in parallel once Phase 0 lands. Phases 5 and 6 are independent of each
@@ -511,6 +512,28 @@ with basic rules up to 4 players with Cumulate, 7-0 and Jump-In all on. UNO Spin
 cups for Team, Elimination and Challenge UNO. It needs the rules it schedules (Phases 3, 6 and 7);
 rewards stay cosmetic.
 
+### Phase 18: Hot Seat (M, near the end)
+
+Several people play on one device, passing it between turns, as in UNO & Friends (up to 4 players, at
+least 2 human; spec 12). It suits a shared screen such as a Switch in tabletop mode.
+
+* **Seat setup:** each seat is Player, CPU or Off (Gameloft's 1P-4P setup). The engine side is already
+  covered by Phase 0g's seat list; what's new is more than one seat taking human input.
+* **Handover screen:** between two human turns, the table hides every hand and shows "Pass to Player 2,
+  press to continue", so nobody sees another player's cards. Turns that move cards between human hands
+  (7-0, swaps) show the result only to the hand's new owner.
+* **Out-of-turn windows** (Jump-In, response cards, D10) are the hard part: prompting only the human who
+  holds a legal response would tell everyone at the table that they hold one. In Hot Seat the window
+  therefore asks every human seat in turn through the handover screen, whether or not they can respond
+  (D10's "always prompt" privacy behavior), and a setting turns out-of-turn rules off for faster play.
+* **UNO calls:** the shared UNO button works as it does for one human; catching a missed call is open to
+  any human seat.
+* **Controller input:** a shared device usually means a gamepad or touch rather than a mouse. The
+  settings and table screens currently use mouse hit areas (`rulePages()` options carry `hitX0`/`hitX1`),
+  so this phase includes focus-based navigation that a controller can drive.
+* **Scoring:** match play works as usual. UNO & Friends' Hot Seat was unscored, which stays available
+  as the one-round option.
+
 ### Not planned
 
 * **Different games under the UNO brand** (Skip-Bo, Phase 10, Dos, Stacko, ...): separate projects.
@@ -522,8 +545,6 @@ rewards stay cosmetic.
 * **Wagering / payout multipliers** (UNO Mobile): excluded on principle.
 * **Non-UNO mini-games** (UNO & Friends' Recall, Path and Stacking solitaire; Free Fall): different
   games using UNO card art.
-* **Hot Seat** (several humans on one device, as in UNO & Friends): needs a hand-hiding handover screen
-  between turns and more than one human seat. Revisit with the more-seats UI phase (D6).
 
 ---
 
