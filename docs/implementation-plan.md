@@ -1,7 +1,7 @@
 # Implementation plan: mechanics from the UNO survey
 
 This is the build plan that follows the research in `docs/gameversions.md` and the specs in
-`docs/mechanics/01`-`11`. It answers two questions:
+`docs/mechanics/01`-`12`. It answers two questions:
 
 1. **In what order should the ~500 surveyed versions' mechanics be built?** (Parts 2-3)
 2. **Where do mechanics from different versions collide, and how does the engine settle each
@@ -89,6 +89,7 @@ Phase 13 Hidden information (Liar's UNO, duels, memory quizzes)          ── 
 Phase 14 Power frameworks (Ultimate, Elite NFL, Fandom NFL)              ── needs 6, 7, 8, 10
 Phase 15 Prompt-and-fallback cards (honor system, reaction races)        ── needs 2
 Phase 16 Ubisoft theme systems (Call of Yara economy, Valhalla board)    ── needs 2, 7, 13
+Phase 17 Tournament ladder (escalating rules and player counts)          ── needs 1, 3, 6, 7
 ```
 
 Phases 2, 3 and 4 can run in parallel once Phase 0 lands. Phases 5 and 6 are independent of each
@@ -186,7 +187,15 @@ shows identical win distributions to before the refactor on the same seeds.
 * **Hand cap setting (D5).** `MAX_HOLD_CARDS` becomes a setting with a "no cap" choice; draws that
   hit the cap stay in the draw pile instead of vanishing (C12). The on-screen hand fan compresses so
   hands above 26 cards still fit. The "reaching the cap knocks you out" toggle comes in Phase 6, once
-  seats can be knocked out.
+  seats can be knocked out. A companion toggle from UNO & Friends (spec 12): with 20 or more cards
+  (adjustable) and a playable card, you can't draw.
+* **Draw rules, named consistently.** The digital games use the same words for different things, so
+  the settings say what they do. Gameloft's three draw types map onto settings we already have: Draw
+  One is today's "keep", Draw and Play is "ask", and Draw Until Play is Draw to Match. Ubisoft's "Force
+  Play" (a playable drawn card is played automatically) is today's "play". Gameloft's "Force Play" is
+  a different rule, added as its own toggle: if your only playable cards are Wilds, you must play one
+  rather than draw. Drawing while you hold a playable card stays allowed, as in the official rules and
+  UNO & Friends.
 * **UNO call, simple version (D7), on by default.** An UNO button for you that's live while you're
   about to play down to one card and until the next player acts; CPUs call with a per-difficulty
   forget chance and try to catch a missed call with a per-difficulty catch chance; a caught player
@@ -289,10 +298,17 @@ phase; spec 07 already groups them by primitive, so the backlog is mechanical.
   ("Pass Penalties": a card of the same type passes the pending effect on to the next player without
   adding to it, so a Skip on a Skip passes the skip) and `amplifySame` ("Amplified Penalties": a card of
   the same type passes both effects on, so the penalties add up). Ubisoft's own Stacking toggle is
-  `sameType` ("play the same type of card to add to the penalty", spec 11).
+  `sameType` ("play the same type of card to add to the penalty", spec 11). Gameloft's mobile games
+  add `doubleSame` ("Cumulate", spec 12): a matching Draw Two or WD4 passes on **double** the pending
+  penalty (2, 4, 8, ... or 4, 8, 16, ...) instead of adding to it.
 * **Challenge object** `{canChallenge, legalityCheck, onGuilty, onInnocent, wildsCountAsMatch}` used
   by WD4 (4/6), Flip's Wild Draw Two (2/4) and Wild Draw Color (until color / plus 2), Express's Wild
   Draw Two (4/4), Progressive's scaled penalty, and Flex's regular-side WD4.
+* **WD4 rule as a three-way setting**, replacing today's on/off challenge toggle: *challengeable* (the
+  official rule), *enforced* (an illegal WD4 can't be played at all, so there's nothing to challenge:
+  Gameloft UNO Spin's Challenge Off, spec 12) or *free* (playable any time, no challenge: Ubisoft's No
+  Bluffing, and today's "challenge off"). Spin's Off setting also drops UNO-call challenges; here that
+  stays with the separate UNO-call toggle (D7).
 * Stack Pack (color-gated cards, Wild Stack 3, Wild Stack Number with its flipped-card count).
 
 *Content wave:* Progressive UNO (official variant), Stack Pack.
@@ -339,6 +355,9 @@ size bounds, color set, and the rules it forces. Presets in order:
 * **Elimination by score** (UNO Undercover's cut game type, spec 09): after each round the highest
   scorer is knocked out, until two players remain. A sub-option of match play, beside Challenge UNO's
   "out at 500 points held" (both need knockouts, so both land here rather than in Phase 1).
+  Two more from Gameloft's mobile games (spec 12): **Elimination by strikes** (a strike each time you
+  have no playable card; out at 3, 4 or 5) and **Drop-Out** (3 rounds; after each, the lowest-ranked
+  player is out, with losers ranked by the value of the cards they hold).
 * **No Mercy** (HWV18): the `equalOrHigher` stack policy, draw-until-playable then must play, Mercy
   Rule at 25+ cards checked after *every* hand change, Discard All, Skip Everyone, Wild Reverse Draw 4
   (and its 2-player rule), Color Roulette (the victim names the color), built-in 7-0, scoring
@@ -429,7 +448,9 @@ owned objects and it is the main user of the `match` split.
 Official **UNO Teams** (HXT58/JDM40): partners across, opening pass, half-hand handover when a partner
 goes out, tagging back in, Wild Team Play and Wild Team Draw Four, passing-symbol cards. Rework today's
 2vs2 into a Teams preset with the classic deck. With four seats this is exactly two teams of two; the
-box's "2-4 teams" needs more seats (Part 7, D6).
+box's "2-4 teams" needs more seats (Part 7, D6). The simpler partner modes in Gameloft's UNO Spin and
+UNO & Friends (2v2, both partners win when either goes out) are today's 2vs2 and stay as the
+lightweight option.
 
 ### Phase 12: Multi-play and multi-pile (L)
 
@@ -456,7 +477,12 @@ play → power → defeat → Danger order), Elite NFL lineups (3 of 8, single u
 rules from spec 08. Ship the framework with a handful of characters first; the add-on characters'
 power text is still incomplete (F3). Fenyx's Quest's gods (spec 11) fit here too: each god is sealed
 until you've played 5 cards, then gives a passive power for the match, which needs a per-player
-progress counter alongside the power slot.
+progress counter alongside the power slot. UNO & Friends' career powers (spec 12) use the same
+counter as a charge meter: every card played charges it, and the power fires on its own when full.
+Freeze (about half the opponents' cards locked for 2 turns, the Toe Hold lock from Phase 8), Flurry
+(all opponents draw 2), Transform (one special card per opponent becomes a number card, C18),
+Safeguard (2 turns of protection from draw cards) and Sabotage (the opponent with the fewest cards
+draws 4).
 
 ### Phase 15: Prompt-and-fallback cards (S)
 
@@ -477,6 +503,14 @@ Two Ubisoft DLC themes add whole subsystems on top of UNO, now fully specified (
 Both need a side panel on the table UI and new AI goals (spending, routing), which is why they sit
 last.
 
+### Phase 17: Tournament ladder (S-M, optional)
+
+A sequence of matches where player count and rules escalate together, built from Phase 1's presets.
+Gameloft's UNO ladder is a ready-made template (spec 12): 15 rounds, best of 5 each, from 2 players
+with basic rules up to 4 players with Cumulate, 7-0 and Jump-In all on. UNO Spin's 12 cups add bonus
+cups for Team, Elimination and Challenge UNO. It needs the rules it schedules (Phases 3, 6 and 7);
+rewards stay cosmetic.
+
 ### Not planned
 
 * **Different games under the UNO brand** (Skip-Bo, Phase 10, Dos, Stacko, ...): separate projects.
@@ -486,6 +520,10 @@ last.
 * **Real-time reaction hardware** (Flash, Reflex, Showdown, Blitzo) beyond Phase 15's simulated races.
 * **UNO 52's poker hands**: a different scoring game bolted onto UNO, revisit last.
 * **Wagering / payout multipliers** (UNO Mobile): excluded on principle.
+* **Non-UNO mini-games** (UNO & Friends' Recall, Path and Stacking solitaire; Free Fall): different
+  games using UNO card art.
+* **Hot Seat** (several humans on one device, as in UNO & Friends): needs a hand-hiding handover screen
+  between turns and more than one human seat. Revisit with the more-seats UI phase (D6).
 
 ---
 

@@ -546,7 +546,7 @@ on RESKIN entries in bulk.
 | 111 | Uno Eye Eye Spongebob! | MECHANIC | P9391: 20 Eyeball number cards (1-5); playing one spins both eyes. Left eye: green = a player of your choice, black = nobody, red = the spinner. Right eye: Draw 4, Discard 1, or draw until Yellow/Blue/Wild. HIGH (sheet). See A5. |
 | 112 | Uno Triple Play Stealth | MECHANIC | HCC23: Triple Play with the overload warning lights hidden (they stay blue); Wild Give Away is replaced by Wild All Tap. HIGH (sheet). See A5. |
 | 113 | Uno (Xbox 360) | DIGITAL-ONLY | Dev. Carbonated Games/Microsoft (not Gameloft). Standard/Partner/House Rules modes, ranked play, downloadable decks, literal webcam video chat. See Part E1. |
-| 114 | Uno (Gameloft) | DIGITAL-ONLY | 15-round unlock-progression career mode; same product line as #241/#243. See Part E3. |
+| 114 | Uno (Gameloft) | DIGITAL-ONLY | Same game as #241 (and UNO HD). 8 custom settings incl. Cumulate (doubling) penalties and Challenge UNO; a 15-round tournament whose player count and rules escalate. HIGH (decompiled). See Part E3. |
 | 115 | Uno (Ubisoft) | DIGITAL-ONLY | Base for many DLC packs. Six combinable house rules (Stacking, 7-0, Jump-In, Force Play, No Bluffing, Draw to Match), plus Skip n' Flip, score limits, daily rule presets; 2v2 online. HIGH (decompiled). See A12, Part E2. |
 | 116 | Uno 35th Anniversary (Xbox 360) | DIGITAL-ONLY | Free DLC deck; "35" card forces next player to play a 3 or 5 or draw-and-miss-turn. See Part E1. |
 | 117 | Uno Super Street Fighter 2 Turbo HD Remix | DIGITAL-ONLY | XBLA DLC deck with a bespoke "Hadouken" card (open-ended draw penalty). See Part E1. |
@@ -677,10 +677,10 @@ on RESKIN entries in bulk.
 | 237 | Uno Game Boy Color | DIGITAL-ONLY | Dev. HotGen (not Genki), 1999. Adds a Challenge mode that inverts scoring: reaching a point ceiling eliminates you instead of winning. See Part E4. |
 | 238 | Uno + Skip-Bo 2 Game Pack (Game Boy Advance) | RESKIN | Confirmed correct (Destination Software, 2006): two unmodified, separate single-player-vs-AI games on one cartridge, no shared/crossover mechanic found. MED-HIGH. |
 | 239 | Uno Free Fall (Game Boy Advance) | DIFFERENT-GAME | Falling-block tile-matching puzzle game. See A10. |
-| 240 | Uno Free Fall (Java Mobile Game) | DIFFERENT-GAME | Same falling-block puzzle mechanic as #239. |
-| 241 | Uno (Java Mobile Game) (2009) | DIGITAL-ONLY | Gameloft; same product line as #114. Quick Play/Tournament (5 escalating rounds)/Custom Game (9 toggleable rules, only 2 named). See Part E3. |
-| 242 | Uno Spin (Java Mobile Game) | MECHANIC | Digital Uno Spin wheel mechanic. See A5. |
-| 243 | Uno & Friends (Java Mobile Game) (2012) | DIGITAL-ONLY | Gameloft, distinct from the 2013 online version (#376). "Uno World Tour" (6 venues x 5 stages, some stages are non-UNO minigames) + Hot Seat. See Part E3. |
+| 240 | Uno Free Fall (Java Mobile Game) | DIFFERENT-GAME | Same falling-block puzzle mechanic as #239. Confirmed by decompiling the Player X build (spec 12). |
+| 241 | Uno (Java Mobile Game) (2009) | DIGITAL-ONLY | Gameloft; same game as #114. Custom Game has 8 settings: Game Mode (Standard/Duel/Challenge UNO), Penalties (Standard/Cumulate), Draw Type, Force Play, 7-0, Jump-In (an action card cancels), Difficulty, Final Score. Tournament: 15 rounds, best of 5 each. HIGH (decompiled). See Part E3. |
+| 242 | Uno Spin (Java Mobile Game) | MECHANIC | Gameloft. The physical J3719 deck (20 Spin cards replacing one copy each of 1-5) and its 9-outcome wheel; the next player spins. Adds Team, Elimination (strikes) and Challenge UNO modes, a Draw Until Play draw type, and a Challenge toggle whose Off setting forbids illegal WD4s. HIGH (decompiled, 16 builds). See A5, Part E3. |
+| 243 | Uno & Friends (Java Mobile Game) (2012) | DIGITAL-ONLY | Gameloft, distinct from the 2013 online version (#376). World Tour (6 venues x 5 stages, bosses, 5-card career deals), Drop-Out elimination, 5 career-only charge-up powers, a 20-card draw block, non-UNO mini-games, Hot Seat. HIGH (decompiled). See Part E3. |
 | 244 | Uno DirecTV Game Lounge | DIGITAL-ONLY | Dev. Denki, interactive-TV port; no unique rule found beyond delivery method. See Part E4. |
 | 245 | Uno Paw Patrol (2015) | RESKIN | Unverified: GeekyHobbies has a dedicated rules-explainer page for this title (a weak positive signal, per the pattern that such pages exist specifically for decks with non-default content), but the specific card wasn't retrievable. LOW-MED. |
 | 246 | Uno Mickey Mouse and Friends (2017) | RESKIN | Correction: unique "Wild Friendship" card - every player discards one card ("because Mickey loves to share"); may be the same card reused across 2017-2021 reprints (see #197). MED-HIGH. |
@@ -942,11 +942,11 @@ on RESKIN entries in bulk.
 
 See Part B above for the full table.
 
-### Additions not in the source list (N1–N26)
+### Additions not in the source list (N1–N27)
 
 Products that weren't in the original source list: N1-N24 turned up on Mattel's support site (or in
-Mattel's store copy) during the sheet-verification pass, and N25-N26 are web games found in BlueMaxima
-Flashpoint. They're numbered N1+ so the source
+Mattel's store copy) during the sheet-verification pass, N25-N26 are web games found in BlueMaxima
+Flashpoint, and N27 came from a decompiled mobile bundle. They're numbered N1+ so the source
 list's numbering stays intact. Exact card text is in the `docs/mechanics/` file named in each row.
 
 | # | Title | Tag | Description |
@@ -977,6 +977,7 @@ list's numbering stays intact. Exact card text is in the `docs/mechanics/` file 
 | N24 | UNO Barbie (T8236, 2012) | RESKIN | Fashion Trend: call a color; players show a card of it in turn, and the first who can't draws 2. HIGH (sheet). Distinct from #316 and #165. Spec 07. |
 | N25 | Uno^3 (King.com web game, 2009) | DIGITAL-ONLY | Flash score-attack game, you vs. 2 bots, found in BlueMaxima Flashpoint. Classic 108-card rules; highest drawn card starts; the start card's action applies; going out on a Draw card still makes the next player draw before scoring. Score-attack layer: 160-second match clock (or 6 rounds), round winner scores every hand, bonus points per penalty card you inflict, time bonus at the end. Bots never call UNO; the WD4 restriction is enforced for bots only. HIGH (code). Spec 10. |
 | N26 | Uno (2020) "WOC - UNO" (Mattel HTML5 demo) | DIGITAL-ONLY | Trial demo hosted by Mattel, found in BlueMaxima Flashpoint. 3 seats, 5-card hands, a simplified 108-card deck (two 0s per color, no Wild Draw Four), 8-second turn timer that auto-draws on timeout, single round. UNO call: 1.5 s grace before a penalty; CPUs call 40% of the time and can be challenged. HIGH (code). Spec 10. |
+| N27 | Uno Challenge (Oasys Mobile, 2006) | DIGITAL-ONLY | J2ME port bundled in Player X's "UNO 2 in 1" with Uno Free Fall. Standard rules (7 cards, missed UNO costs 2 if challenged, WD4 restricted, face value/20/50 scoring), pass-and-play, and a defunct online leaderboard. No mechanics of its own. HIGH (code). Spec 12. |
 
 ### Reskin verification pass (complete)
 
@@ -1109,6 +1110,9 @@ user request, separate from Part E's digital-only pass). Progress:
 * **Ubisoft UNO decompile: done.** The Steam build's own rules text (`docs/mechanics/11`) replaced the
   search-based Part E2: all six house rules confirmed, Skip n' Flip found, three Just Dance names
   corrected, and Fenyx's Quest, Call of Yara and Valhalla fully described.
+* **Mobile J2ME/Symbian decompile: done.** Gameloft's UNO, UNO HD, UNO Spin and UNO & Friends and two
+  Player X titles (`docs/mechanics/12`): all custom settings and tournament ladders recorded, a doubling
+  stacking model found, and Uno Challenge added as N27.
 
 ---
 
@@ -1318,7 +1322,7 @@ disruptions** (including "Ban <color> Cards" and "<color> Cards Only"); and a **
 50th-anniversary theme (two chosen players are "UNO" and "50", a coin is tossed, the loser draws 4),
 matching the physical card in #6.
 
-### E3. Mobile / handheld family (#114, #241, #243, #374, #375, #376, #404)
+### E3. Mobile / handheld family (#114, #241, #242, #243, #374, #375, #376, #404, N27)
 
 **Two collapsing notes:** #114 and #241 are the **same Gameloft product** at different points in its
 life (2008 J2ME/BREW/Symbian build → 2009+ iPhone/iPod/Android/"UNO HD" build), not two separate games.
@@ -1327,19 +1331,49 @@ launch — same cruise theme, same 9 cards, same Story Mode, one release not two
 genuinely distinct Gameloft releases — a 2012 offline feature-phone build and a 2013 online rebuild —
 confirmed via separate MobyGames listings.)
 
-**#114/#241 — UNO (Gameloft mobile).** Standard 108-card deck; customization is at the rules level.
-**Career mode**: exactly 15 rounds, sequential, up to 5 attempts per round; what changes round-to-round
-is procedural difficulty (opponent count, active house-rule set, win condition), not new decks/named
-opponents — progression rewards are cosmetic/meta only (icons, backgrounds, avatars). MED-HIGH.
-**Tournament mode**: exactly 5 rounds, same escalating-rules engine as Career, just shorter. MED-HIGH.
-**Custom Game mode**: 9 toggleable rules total; only **7-0** and **Jump-in** confirmed by name (same
-definitions as elsewhere); the other 7 weren't individually named in any accessible source. HIGH that
-it's 9 rules including these two, LOW on the rest.
+**Verified by decompiling the games** (six J2ME builds, one Symbian build and 15 more UNO Spin builds;
+`docs/mechanics/12-mobile-java-symbian.md`). This replaces the earlier search-based entries for #114,
+#241, #242 and #243.
 
-**#243 — Uno & Friends (2012, Gameloft, feature-phone/offline).** Career mode = **"Uno World Tour"**: 6
-venues x 5 stages = 30 stages; 1-3 stars per stage gate the next venue; some stages are mini-games
-sharing only card *imagery* with UNO (e.g. memory-matching), not real UNO rules. **Hot Seat**:
-pass-and-play for up to 4 on one device. MED-HIGH.
+**#114/#241 — UNO (Gameloft mobile)** and **UNO HD**. Standard 108-card deck. HIGH:
+* **Custom Game, 8 settings:** Game Mode (Standard vs. 3; Duel; Challenge UNO, where leftover hand
+  values accumulate and reaching the limit knocks you out; UNO HD drops it), Penalties (Standard, or
+  **Cumulate**: answer a Draw Two with a Draw Two or a WD4 with a WD4 and the next player gets **double**
+  the penalty, which keeps doubling while players match), Draw Type (Draw and Play, or Draw One), Force
+  Play (if your only playable cards are Wilds, you must play one), 7-0, Jump-In (an identical Draw Two
+  or WD4 **cancels** the first card's effect, matching the official rule), Difficulty, and Final Score
+  (250/500/1,000/2,000/3,000).
+* WD4 challenge 4/6; a missed UNO costs 2 if caught before the next player plays; in Duel a Reverse acts
+  as a Skip and you play again after a Skip or Reverse.
+* **Tournament:** 15 rounds, each best of 5, to 5,000 points overall. Player count and rules escalate
+  together: rounds 1-2 two players, 3-7 three players (adding Cumulate, then 7-0, then Jump-In one at a
+  time), 8-15 four players (each rule alone, then in pairs, then all three). Rewards are cosmetic.
+
+**#242 — UNO Spin (Gameloft mobile).** HIGH. The physical J3719 deck (108 cards, 20 Spin cards replacing
+one copy each of 1-5) and its 9-outcome wheel; the **next** player spins. Spin cards score their face
+value. Three versions exist: a lite one (9 cups, fewer settings) and full and touch ones with:
+* Game Modes Standard, Duel, **Team** (2v2; you both score when either wins), **Elimination** (a strike
+  each time you have no playable card; out at 3, 4 or 5 strikes) and Challenge UNO.
+* Draw Type adds **Draw Until Play**.
+* **Challenge** On (illegal WD4s and missed UNO calls can be challenged) or Off (an illegal WD4 can't be
+  played at all, and there are no UNO challenges).
+* A 12-cup tournament with three bonus cups (Team to 500, Elimination with 5 strikes, Challenge UNO out
+  at 500) and a credits shop.
+
+**#243 — Uno & Friends (2012, Gameloft, feature-phone/offline).** HIGH:
+* **World Tour:** 6 venues (Brazil, USA, France, Hong Kong, Russia, Germany) x 5 stages, 1-3 stars each
+  (90 total), one boss per venue fought in a duel. Career games deal **5** cards.
+* **Stage types:** Standard, Duel, UNO Partner (2v2), **Drop-Out** (3 rounds, the lowest-ranked player
+  is eliminated after each), Jump-In, and three non-UNO mini-games (UNO Recall memory, UNO Path, UNO
+  Stacking solitaire).
+* **Powers** (career only): bought after beating a venue's boss, equipped for 5 games, charged by every
+  card played and fired automatically when full. Freeze (about half your opponents' cards frozen for 2
+  turns), Flurry (all opponents draw 2), Transform (each opponent's special card, up to one, becomes a
+  number card), Safeguard (protection from draw cards for 2 turns), Sabotage (the opponent with the
+  fewest cards draws 4).
+* **Rules:** drawing is optional even when you can play, but with **20 or more cards** and a playable
+  card you **can't** draw; losers are ranked by the value of the cards they hold.
+* **Hot Seat** for up to 4 players on one device (at least 2 human), unscored.
 
 **#376 — Uno & Friends (2013, online, Gameloft+Mattel).** Single-player content was later entirely
 replaced by online multiplayer-only (up to 4 worldwide). Two currencies: **Tokens** (match/tournament
@@ -1611,6 +1645,7 @@ confidence tags and sheet codes, live in `docs/mechanics/`:
 | `09-uno-undercover.md` | UNO Undercover (#235) from the decompiled game: all 15 Command Cards as coded, the paired-card mechanic, the cut content behind #497, base rules and the AI handicap |
 | `10-flashpoint-web-games.md` | Four web games archived in BlueMaxima Flashpoint: the UNO Showdown quiz (#377), Uno^3 (N25), Uno 2020 (N26) and the UNO Undercover web demo |
 | `11-ubisoft-uno.md` | Ubisoft's UNO (#115) and its DLC themes from the decompiled Steam build: house-rule flags, every theme's cards, Fenyx's gods, Call of Yara's economy, Valhalla's board, Party! Mania, No Mercy, Wild Weeks |
+| `12-mobile-java-symbian.md` | Gameloft's mobile UNO, UNO HD, UNO Spin and UNO & Friends, plus Player X's Uno Free Fall and Oasys's Uno Challenge, from the decompiled J2ME and Symbian builds |
 
 ### F1. Facts from the specs that change how things get built
 
