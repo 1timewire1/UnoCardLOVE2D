@@ -1,7 +1,7 @@
 # Implementation plan: mechanics from the UNO survey
 
 This is the build plan that follows the research in `docs/gameversions.md` and the specs in
-`docs/mechanics/01`-`09`. It answers two questions:
+`docs/mechanics/01`-`10`. It answers two questions:
 
 1. **In what order should the ~500 surveyed versions' mechanics be built?** (Parts 2-3)
 2. **Where do mechanics from different versions collide, and how does the engine settle each
@@ -190,20 +190,37 @@ shows identical win distributions to before the refactor on the same seeds.
   about to play down to one card and until the next player acts; CPUs call with a per-difficulty
   forget chance and try to catch a missed call with a per-difficulty catch chance; a caught player
   draws 2. Calls, misses and catches are logged in the replay (`UN` opcode) so seeded games still
-  reproduce. Phase 7 extends it for the cards that react to a call.
+  reproduce. Phase 7 extends it for the cards that react to a call. Calibration from the shipped
+  digital games (spec 10): CPUs call UNO 0% of the time in Uno^3, 40% in Uno (2020) and 50% in
+  Undercover; the window to catch a missed call is 0.5-1.5 s; the penalty is 2 cards everywhere
+  except Uno (2020), which draws 1.
 * **Match play.** Per-deck scoring tables; "first to N points" (500 default; 250 for Express-sized
-  decks; 1000 for No Mercy; 300 for UNO Undercover's Standard mode), "first to 3 hands" (H2O), and Challenge UNO (eliminate at 500 points
-  held). Include the official rule that a Draw Two or WD4 played as the last card still makes the
-  next player draw before hands are scored.
+  decks; 1000 for No Mercy; 300 for UNO Undercover's Standard mode) and "first to 3 hands" (H2O).
+  Variants that knock players out (Challenge UNO, elimination by score) come with Phase 6. Include the
+  official rule that a Draw Two or WD4 played as the last card still makes the next player draw
+  before hands are scored (Uno^3 does this too, spec 10).
+* **Score attack** (Uno^3, spec 10), a match-play option for a personal best: a match clock (160 s
+  in Uno^3, or 6 rounds, whichever ends first), the round winner scores the value of every hand, you
+  get 1 point per penalty card you make a CPU draw, and a time bonus of `round(200 × time left / total
+  time)` at the end. Only your score counts.
+* **Who goes first.** A setting: the last winner (today's behavior), random, you always (Undercover),
+  or the official draw-for-first-player, where everyone draws a card and the highest number starts,
+  re-drawing ties (Uno^3, spec 10). The start card's action keeps applying as it does today
+  (`STAT_NEW_GAME` already resolves an opening Draw Two, Skip or Reverse); deck presets that ignore
+  starting actions (All Wild, Flex, Teams) switch that off in Phase 4.
+* **Turn timer**, optional and off by default: N seconds for your turn (8 s in Uno 2020; 6 or 4 s
+  in Uno Flash, #23), with a countdown that shakes near the end. On timeout the game draws for you:
+  1 card (Uno 2020) or 2 (Uno Flash), as a setting. CPUs aren't timed. Timeouts are logged in the
+  replay. Phase 7's reaction prompt (D10) reuses the same countdown.
 * **Two-player rule table.** Formalize the existing Reverse-as-Skip into a per-effect 2-player
   override (Part 6, C13), so later phases fill in a row instead of adding special cases.
-
 * **Easy-difficulty handicap (from UNO Undercover's "easing", spec 09).** Two behavior knobs per
   difficulty: the chance a CPU holds back its last card, and the chance it avoids hitting the human
   with Skip, Draw Two or WD4. They sit beside D7's forget and catch chances. Undercover's deck-side
   handicap (extra Wilds, Wilds withheld from the AI) is left out: it's hidden from the player.
 
-*Content wave:* official Swap Pack; classic match play to 500; calling UNO.
+*Content wave:* official Swap Pack; classic match play to 500; score attack; calling UNO; the
+official draw for first player; an optional turn timer.
 
 ### Phase 2: Effect primitives and themed bonus cards (M)
 
@@ -302,7 +319,7 @@ size bounds, color set, and the rules it forces. Presets in order:
 * **Cap knockout toggle (D5):** reaching the hand cap knocks you out, in any deck mode.
 * **Elimination by score** (UNO Undercover's cut game type, spec 09): after each round the highest
   scorer is knocked out, until two players remain. A sub-option of match play, beside Challenge UNO's
-  "out at 500 points held".
+  "out at 500 points held" (both need knockouts, so both land here rather than in Phase 1).
 * **No Mercy** (HWV18): the `equalOrHigher` stack policy, draw-until-playable then must play, Mercy
   Rule at 25+ cards checked after *every* hand change, Discard All, Skip Everyone, Wild Reverse Draw 4
   (and its 2-player rule), Color Roulette (the victim names the color), built-in 7-0, scoring

@@ -40,8 +40,8 @@ GeekyHobbies, the UNO Fandom wiki, Mattel's own rules PDFs, and similar sources.
   sheets (service.mattel.com) for every mechanic family, the Fandom line and ~95 licensed bonus cards.
   Rows marked "(sheet CODE)" quote that sheet. Elsewhere, HIGH means 2+ independent sources agreed,
   not that an official PDF was read. BoardGameGeek and the UNO fandom wiki stayed inaccessible.
-* **Two entries are still tagged UNKNOWN** (#377, #399) where even the product's identity couldn't be
-  pinned down. They're called out in Part D and should be treated as "we don't actually know," not
+* **One entry is still tagged UNKNOWN** (#399) where even the product's identity couldn't be
+  pinned down. (#377 was resolved later from the archived game itself: a rules quiz with no mechanics.) They're called out in Part D and should be treated as "we don't actually know," not
   "confirmed cosmetic."
 * Where a family (Fandom NFL, Ultimate Marvel, Elite NFL, Burger King Desafio, Add-On Packs) repeats
   across dozens of numbered entries, Part A describes the mechanic **once**; Part D just points back
@@ -824,7 +824,7 @@ on RESKIN entries in bulk.
 | 374 | Uno Mobile (Mattel163) | DIGITAL-ONLY | 7 named house-rule toggles + Ranked/2v2 modes (wagering excluded, see roadmap); "Survival" mode could not be confirmed to exist. See Part E3. |
 | 375 | Uno 2 Go / Uno Wonder | DIGITAL-ONLY | Same game, renamed on 2025 global launch. 9 named new action cards + 14-route/3000+-level Story Mode. See Part E3. |
 | 376 | Uno & Friends (Online) | DIGITAL-ONLY | Gameloft 2013, distinct from the 2012 version (#243). Tournaments, 2v2, ~31 companions with real activatable powers, leaderboards. See Part E3. |
-| 377 | Eres Un Experto Jugando A UNO Showdown? (Flash Game) | UNKNOWN | Still unresolved after a second dedicated search. New supporting evidence: the parent product "UNO Showdown" (GKC04) / "Showdown Supercharged" (GMX56) is solidly real with confirmed Spanish-market distribution (a Spanish-language GMX56-SP.pdf instruction sheet found) - supports this being a since-vanished promotional Flash tie-in (Flash-era content is largely de-indexed post-2020) rather than a doc error. Stays UNKNOWN per standing permission. |
+| 377 | Eres Un Experto Jugando A UNO Showdown? (Flash Game) | DIFFERENT-GAME | **Resolved** from the archived game (BlueMaxima Flashpoint; `docs/mechanics/10-flashpoint-web-games.md`). A Spanish-language, 3-question UNO rules quiz (what to shout on your last card, what Wild Draw Four does, what Reverse does), branded UNO Showdown and built in HTML5 (Construct 3), not Flash. No Showdown mechanics and no playable UNO, so it adds nothing to the rules survey. HIGH (code). |
 | 378 | Uno Show 'Em No Mercy Expansion Pack | MECHANIC | JJB29: five card types (10's Play Again, Wild Discard All, Wild Reverse Draw 8, Wild Final Attack, Wild Sudden Death) plus 6 two-sided Mercy/No Mercy coins, one use per game. Mercy = your hand goes under the discard pile and you draw 7; No Mercy = double one Draw card's value, which counts for stacking. HIGH (sheet). See A2. |
 | 379 | Uno Golf | DIFFERENT-GAME | Face-down grid-based scoring variant. See A9. |
 | 380 | Uno Truth Adults Only | MECHANIC | Truth/Wild Truth cards + die + question list. See A8. |
@@ -942,10 +942,11 @@ on RESKIN entries in bulk.
 
 See Part B above for the full table.
 
-### Additions found during sheet verification (N1–N24)
+### Additions not in the source list (N1–N26)
 
-Official products that turned up on Mattel's support site (or in Mattel's store copy) during the
-sheet-verification pass but weren't in the original source list. They're numbered N1+ so the source
+Products that weren't in the original source list: N1-N24 turned up on Mattel's support site (or in
+Mattel's store copy) during the sheet-verification pass, and N25-N26 are web games found in BlueMaxima
+Flashpoint. They're numbered N1+ so the source
 list's numbering stays intact. Exact card text is in the `docs/mechanics/` file named in each row.
 
 | # | Title | Tag | Description |
@@ -974,6 +975,8 @@ list's numbering stays intact. Exact card text is in the `docs/mechanics/` file 
 | N22 | UNO Planes: Fire & Rescue (CGN24, 2014) | RESKIN | Water Drop: empty all your blue cards onto the discard pile, then choose the color. HIGH (sheet). Spec 07. |
 | N23 | UNO Batman Comics (JBG35, 2024) | RESKIN | Wild Bat Signal: the next player draws until they get a Batman, Robin, Batgirl or Nightwing card (numbers 1-4). HIGH (sheet). The card previously attached to #371's notes. Spec 07. |
 | N24 | UNO Barbie (T8236, 2012) | RESKIN | Fashion Trend: call a color; players show a card of it in turn, and the first who can't draws 2. HIGH (sheet). Distinct from #316 and #165. Spec 07. |
+| N25 | Uno^3 (King.com web game, 2009) | DIGITAL-ONLY | Flash score-attack game, you vs. 2 bots, found in BlueMaxima Flashpoint. Classic 108-card rules; highest drawn card starts; the start card's action applies; going out on a Draw card still makes the next player draw before scoring. Score-attack layer: 160-second match clock (or 6 rounds), round winner scores every hand, bonus points per penalty card you inflict, time bonus at the end. Bots never call UNO; the WD4 restriction is enforced for bots only. HIGH (code). Spec 10. |
+| N26 | Uno (2020) "WOC - UNO" (Mattel HTML5 demo) | DIGITAL-ONLY | Trial demo hosted by Mattel, found in BlueMaxima Flashpoint. 3 seats, 5-card hands, a simplified 108-card deck (two 0s per color, no Wild Draw Four), 8-second turn timer that auto-draws on timeout, single round. UNO call: 1.5 s grace before a penalty; CPUs call 40% of the time and can be challenged. HIGH (code). Spec 10. |
 
 ### Reskin verification pass (complete)
 
@@ -1100,6 +1103,9 @@ user request, separate from Part E's digital-only pass). Progress:
 * **UNO Undercover decompile: done.** A decompile of the shipped game (`docs/mechanics/09-uno-undercover.md`)
   replaced the secondary-source summary of #235: 13 obtainable Command Cards (not 9 "power-up cards"),
   four effects corrected, four cards added, and #497's cut cards identified (Plunder, Personal Shield).
+* **Flashpoint web games: done.** Four archived web games were decompiled (`docs/mechanics/10`):
+  #377 resolved as a rules quiz with no mechanics, Uno^3 and Uno (2020) added as N25-N26, and the
+  Undercover web demo confirmed Plunder was cut before the demo shipped.
 
 ---
 
@@ -1408,7 +1414,7 @@ new/exclusive cards:
 Modes: Single Player (vs. AI), Quick Match (online), Custom Games (exposes the new cards). Custom Games
 also confirmed to offer a **turn/match time limit**: 3 minutes, 5 minutes, or Unlimited.
 
-### E4. Legacy / miscellaneous digital (#235, #236, #237, #244, #364, #384, #385)
+### E4. Legacy / miscellaneous digital (#235, #236, #237, #244, #364, #384, #385, N25, N26)
 
 **#235 — UNO Undercover.** **Verified by decompiling the shipped game** (Alawar/Real PC release,
 `App.swf` via JPEXS FFDec plus the game's XML data); the full write-up, with class names and per-claim
@@ -1460,6 +1466,16 @@ summary, which had the card count, the name and four card effects wrong.
 * **Cut content (#497):** Plunder, Personal Shield, two-color combo-card art, a 3-card Deck
   Customization screen, Pass and Amplified penalty modes, an Elimination game type (highest scorer out
   each round until 2 remain), Wild Vouchers, and a hidden cheat console. See spec 09 section 3.
+
+**UNO Undercover web demo** (GameFools build, archived in BlueMaxima Flashpoint; spec 10 section 4):
+the same rules engine and Command Card data as retail, missions 1-2 only with earlier script drafts,
+and no saving. Plunder's popup is already commented out there, so that card was cut before the demo
+shipped.
+
+**N25 — Uno^3 (King.com, 2009)** and **N26 — Uno (2020), Mattel's HTML5 demo**: two small web games,
+decompiled in `docs/mechanics/10-flashpoint-web-games.md`. Neither adds new cards. What they offer is
+presentation and match structure: drawing a card to decide who starts, a per-turn timer with an
+auto-draw, three different UNO-call catch windows, and Uno^3's timed score-attack mode.
 
 **#236 — UNO CD-ROM.** Dev/pub Mattel Media/Mattel Interactive; dating is inconsistent across sources
 (GameFAQs "2000," an Internet Archive listing "2002") — likely one base release ~1999-2000 with a later
@@ -1563,6 +1579,7 @@ confidence tags and sheet codes, live in `docs/mechanics/`:
 | `07-themed-bonus-cards.md` | ~95 licensed-deck bonus cards with official wording, grouped by A14 primitive |
 | `08-fandom-line.md` | Every UNO Fandom deck, including each Fandom NFL team's own rule card |
 | `09-uno-undercover.md` | UNO Undercover (#235) from the decompiled game: all 15 Command Cards as coded, the paired-card mechanic, the cut content behind #497, base rules and the AI handicap |
+| `10-flashpoint-web-games.md` | Four web games archived in BlueMaxima Flashpoint: the UNO Showdown quiz (#377), Uno^3 (N25), Uno 2020 (N26) and the UNO Undercover web demo |
 
 ### F1. Facts from the specs that change how things get built
 
