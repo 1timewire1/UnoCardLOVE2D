@@ -304,7 +304,7 @@ The sheet lists these under "HOUSE RULES: You may want to try some of the follow
 |---|---|---|
 | **Draw to Match** (Ubisoft) | "Drawing is continued until a card can be played instead of just one draw." | MED (MobyGames) |
 | **Force Play** (Ubisoft) | "A drawn card that can be played is played automatically." The official sheets make playing the drawn card optional. | MED |
-| **No Bluffing** (Ubisoft) | Named but undefined. Likely disables illegal WD4 plays or challenges. | UNVERIFIED |
+| **No Bluffing** (Ubisoft) | Its code flag is `FREE_WILD_DRAW4`: Wild Draw Four can be played at any time, so there is nothing to challenge. No menu text defines it (spec 11). | MED (code flag name) |
 | **2v2** (Ubisoft) | Partners sit opposite and see each other's hand; team wins when **one** partner empties their hand. Matches the official Partners rule ("When either partner goes out, the hand is over"). UNO Wonder "Teams" (2026) instead needs both partners out. | Win condition MED-HIGH (official Partners rule agrees); hand visibility MED |
 
 ### Edge cases & rulings
@@ -408,4 +408,4 @@ Scoring by sheet: T8219 has Reverse/Skip/Hit 2 20, Discard All 30, Wild/Attack-A
 4. Speed Pack: which numbers the 12 colored cards carry. Comeback: which letter each card carries.
 5. Wild Attack-Attack: who presses and where play resumes differs across T8219 / GXY81 / GNL02.
 6. Smaller sheet silences: who plays next after a WD4 challenge; Trick Wild's effect on the next player; Wild Stack Number flipping a 0; turn order after Defense Pack blocks.
-7. Ubisoft's definitions of No Bluffing (and 2v2 hand visibility).
+7. Ubisoft's 2v2 hand visibility. (No Bluffing is now resolved from the code flag, see spec 11.)

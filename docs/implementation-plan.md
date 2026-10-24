@@ -1,7 +1,7 @@
 # Implementation plan: mechanics from the UNO survey
 
 This is the build plan that follows the research in `docs/gameversions.md` and the specs in
-`docs/mechanics/01`-`10`. It answers two questions:
+`docs/mechanics/01`-`11`. It answers two questions:
 
 1. **In what order should the ~500 surveyed versions' mechanics be built?** (Parts 2-3)
 2. **Where do mechanics from different versions collide, and how does the engine settle each
@@ -88,6 +88,7 @@ Phase 12 Multi-play and multi-pile (Speed Pack, Triple Play, Tippo)      ── 
 Phase 13 Hidden information (Liar's UNO, duels, memory quizzes)          ── needs 7
 Phase 14 Power frameworks (Ultimate, Elite NFL, Fandom NFL)              ── needs 6, 7, 8, 10
 Phase 15 Prompt-and-fallback cards (honor system, reaction races)        ── needs 2
+Phase 16 Ubisoft theme systems (Call of Yara economy, Valhalla board)    ── needs 2, 7, 13
 ```
 
 Phases 2, 3 and 4 can run in parallel once Phase 0 lands. Phases 5 and 6 are independent of each
@@ -196,6 +197,7 @@ shows identical win distributions to before the refactor on the same seeds.
   except Uno (2020), which draws 1.
 * **Match play.** Per-deck scoring tables; "first to N points" (500 default; 250 for Express-sized
   decks; 1000 for No Mercy; 300 for UNO Undercover's Standard mode) and "first to 3 hands" (H2O).
+  The score-limit menu offers Ubisoft's list: one round, 200, 300, 500, 750 or 1,000 (spec 11).
   Variants that knock players out (Challenge UNO, elimination by score) come with Phase 6. Include the
   official rule that a Draw Two or WD4 played as the last card still makes the next player draw
   before hands are scored (Uno^3 does this too, spec 10).
@@ -203,6 +205,11 @@ shows identical win distributions to before the refactor on the same seeds.
   in Uno^3, or 6 rounds, whichever ends first), the round winner scores the value of every hand, you
   get 1 point per penalty card you make a CPU draw, and a time bonus of `round(200 × time left / total
   time)` at the end. Only your score counts.
+* **Rule presets and Shuffle** (Ubisoft's "Today's Rules" and "Shuffle", spec 11). Named bundles of
+  toggles ("Classic", "Chaotic", "Official", ...) picked in one click, and a "shuffle my rules every
+  round" option that turns on a random subset of the toggles you've allowed. Both run through Phase
+  0c's conflict resolver (D3), so a random set never contains a conflicting pair. Ubisoft's 14
+  presets are server data, so ours are our own.
 * **Who goes first.** A setting: the last winner (today's behavior), random, you always (Undercover),
   or the official draw-for-first-player, where everyone draws a card and the highest number starts,
   re-drawing ties (Uno^3, spec 10). The start card's action keeps applying as it does today
@@ -254,12 +261,23 @@ Next to it, a **bonus card pool** setting in UNO Undercover's style: choose a se
 Also add the cheap Add-On Packs whose cards are pure primitives (Reverse Pack minus Wild NO U,
 Comeback, Billie Eilish), each as its own toggle.
 
+**Table modifiers** (Ubisoft's Wild Weeks and Twitch disruptions, spec 11): single settings built on
+the primitives above. Tiny Hands and Big Hands (deal 3 or 12; the deal-size range widens from 5-20 to
+3-20); Attack! (every draw from the pile adds a random 1-12 extra cards, logged; pairs badly with "no
+hand cap", so the description warns); Whirlpool (each turn a random card from your hand passes to the
+next player); Shuffle Hands (pool and redeal every N turns, since this game is turn-based rather than
+Ubisoft's every 60 s); Glitched (cards randomly transform, C18); and color bans ("Ban red cards",
+"Red cards only" as a legality filter; Draw to Match stops at its cap if nothing playable can turn up).
+The visibility modifiers (Fog of War, Flipped!) wait for Phase 13.
+
 *Content wave:* the ~60 sheet-verified bonus cards from spec 07 and the Fandom line that need nothing
 from later phases, plus the UNO Undercover Command Cards that need nothing later: the three combo
 cards, Redecorate, Double Cross, Clone, Highland Two-Step, Switcheroo, Tsunami and the cut Plunder.
 Sleep, Toe Hold and Lucky Croc Tooth wait for Phase 8 (timed statuses; the Tooth also needs Phase 7's
-reflect), and Shooting Star for Phase 12. Cards that need responses, standing effects or duels wait
-for their phase; spec 07 already groups them by primitive, so the backlog is mechanical.
+reflect), and Shooting Star for Phase 12. From Ubisoft's DLC (spec 11): Comin' Through, Get Down,
+Cross-Fade, Dragon, A Little Help (C18), Just Dance Machine (a random action, logged), Typhon's Trick,
+Fenyx's Power and Point Taken. Cards that need responses, standing effects or duels wait for their
+phase; spec 07 already groups them by primitive, so the backlog is mechanical.
 
 ### Phase 3: Stacking policies and parameterized challenges (M)
 
@@ -270,7 +288,8 @@ for their phase; spec 07 already groups them by primitive, so the backlog is mec
   (spec 09) add two optional policies that cover *every* effect card, not just draw cards: `passSame`
   ("Pass Penalties": a card of the same type passes the pending effect on to the next player without
   adding to it, so a Skip on a Skip passes the skip) and `amplifySame` ("Amplified Penalties": a card of
-  the same type passes both effects on, so the penalties add up).
+  the same type passes both effects on, so the penalties add up). Ubisoft's own Stacking toggle is
+  `sameType` ("play the same type of card to add to the penalty", spec 11).
 * **Challenge object** `{canChallenge, legalityCheck, onGuilty, onInnocent, wildsCountAsMatch}` used
   by WD4 (4/6), Flip's Wild Draw Two (2/4) and Wild Draw Color (until color / plus 2), Express's Wild
   Draw Two (4/4), Progressive's scaled penalty, and Flex's regular-side WD4.
@@ -326,6 +345,9 @@ size bounds, color set, and the rules it forces. Presets in order:
   20/50/250 per knockout/1000. Per-type copy counts aren't printed (F3); use the fan-wiki breakdown
   (168 total) as the provisional manifest and flag it in the deck description.
 * No Mercy Expansion and the No Mercy Coin (doubles the played draw card's value; once per game).
+* In a scored match, a Mercy knockout lasts the rest of that round only; the player is back for the
+  next round. That's Ubisoft's in-game wording (spec 11) and fits the physical deck's 250 points per
+  knockout.
 
 *Content wave:* Show 'Em No Mercy, shrinking-table house rule, Challenge UNO elimination variant.
 
@@ -336,11 +358,16 @@ size bounds, color set, and the rules it forces. Presets in order:
   Jump-In for everyone. The AI answers through per-window callbacks; the human gets a short timed
   prompt (configurable, off in replays, where answers are logged).
 * **Jump-In** (official, sheet 41940): identical face, cancels and replaces the top card, play resumes
-  from the jumper; "adds to the stack" as a sub-option.
+  from the jumper; "adds to the stack" as a sub-option, and a "numbers only" sub-option (UNO Party!'s
+  and Ubisoft Party! Mania's Speed Play, spec 11).
+* **Skip n' Flip** (Ubisoft, spec 11), a toggle that gives existing cards a response: a Skip played on
+  a pending draw penalty redirects it to the next player, and a Reverse reflects it back to whoever
+  played it. No new art. It runs through the same response window as the cards below.
 * **Response cards** with three outcomes: block (ends the pending effect, and the whole stack, with no
   draw), reflect (sends it back to whoever played the last card of the stack), redirect (to a chosen
   seat). Defense Pack, Wild NO U, Super Star, Agent P, Avengers Assemble, BFF Power, Flitterific, This
-  is the Way, Invisibility, Wild Petty Play.
+  is the Way, Invisibility, Wild Petty Play, Ubisoft's Wild Blue Yonder (passes the penalty on to the
+  next player) and Punching Things (reflects it at double).
 * **Out-of-turn plays** that aren't reactions: Avatar State.
 * **UNO call, extended.** Phase 1's call becomes an event other cards can react to: Hail Mary,
   Dawg Pound, Flip Attack's missed-UNO rule (2 presses), and Teams' partner calling for you.
@@ -364,7 +391,15 @@ size bounds, color set, and the rules it forces. Presets in order:
 * **On-draw hook** that fires in every draw path, including penalty draws and draw-until loops:
   Creeper, Crash-Up.
 * **Links between players:** Frenemies' Nemesis, Love Island's Coupled Up and Eggs In One Basket,
-  Drawn Together.
+  Drawn Together. Ubisoft's version pins the link rules (spec 11): only one Drawn Together link
+  exists at a time, and a new Drawn Together or a Point Taken breaks it.
+* **More standing effects from Ubisoft's DLC** (spec 11): Explosive Results (the next draw by anyone,
+  for any reason, gets 3 extra cards: a one-shot global trigger on the on-draw hook); Typhon's Curse
+  (while you *hold* it, you draw a card each time you play: an effect attached to a card in hand,
+  which travels with the card); Hot Number (only number cards may be played without penalty; anyone
+  playing an action or Wild draws 1 afterwards; the game text gives no duration, so one lap, marked
+  provisional per D9); Hurry Up! (a few turns of a 3-second timer, reusing Phase 1's turn timer; CPUs
+  never time out, so it only presses the human).
 
 *Content wave:* Frenemies Pack, Love Island deck, the remaining standing-effect bonus cards, and
 UNO Undercover's Sleep, Toe Hold, Lucky Croc Tooth and the cut Personal Shield.
@@ -409,20 +444,38 @@ box's "2-4 teams" needs more seats (Part 7, D6).
 
 Liar's UNO (face-down plays and bluff calls on the Phase 3 challenge object), simultaneous reveal and
 duels (Kickin' Battle, Locked Up, Power of Friendship, the Transformers Flip wilds), memory quizzes
-(Remember Me). The AI work is the cost here, not the rules.
+(Remember Me). The AI work is the cost here, not the rules. Also the visibility modifiers and cards
+from Ubisoft (spec 11): Fog of War (opponents' card counts hidden too), Flipped! (you see everyone's
+cards but your own), Rayman's Escape (peek at every opponent's hand, then hide your own card count),
+and Valhalla's Battle (a secret color guess; ships with Phase 16).
 
 ### Phase 14: Power frameworks (L)
 
 UNO Ultimate Marvel/DC (personal 56-card character decks via `drawSourceFor`, empty deck eliminates,
 play → power → defeat → Danger order), Elite NFL lineups (3 of 8, single use), and the Fandom NFL team
 rules from spec 08. Ship the framework with a handful of characters first; the add-on characters'
-power text is still incomplete (F3).
+power text is still incomplete (F3). Fenyx's Quest's gods (spec 11) fit here too: each god is sealed
+until you've played 5 cards, then gives a passive power for the match, which needs a per-player
+progress counter alongside the power slot.
 
 ### Phase 15: Prompt-and-fallback cards (S)
 
 One prompt framework for honor-system cards (dares, trivia, sound effects): the card shows its text,
 and the engine applies its draw-penalty fallback as the real effect. Reaction races (Shark Attack,
 Kevin's Chili, Touchdown!) resolve with simulated AI reaction times against a human button press.
+
+### Phase 16: Ubisoft theme systems (L, optional)
+
+Two Ubisoft DLC themes add whole subsystems on top of UNO, now fully specified (spec 11):
+
+* **The Call of Yara:** a per-player currency (300 to start, +100 each turn, per stacked Draw Two and
+  per Jump-In), four two-level services callable on your own turn with a 1-turn cooldown, and the
+  Guerrilla broadcast Wild with six money events. Prices aren't in the install; pick them per D9.
+* **Valhalla:** a numbered map where each number card you play moves your pawn, Cargo pickups,
+  six event spaces, and two upgrades (Battle at 2 Cargo, Fast Travel at 4).
+
+Both need a side panel on the table UI and new AI goals (spending, routing), which is why they sit
+last.
 
 ### Not planned
 
@@ -591,7 +644,10 @@ step, not three mechanics. Passive protection (Power Grab towers, Colors Rule Ye
 Save the Day) checks the *last* card of a stack. Whose turn follows: after block, the blocked seat
 plays normally; after reflect or redirect, play continues from the seat after the one that finally
 draws, which is the same rule as an ordinary draw penalty. (The Defense Pack sheet is silent on turn
-order, spec 01 gap 6, so this is a design choice.)
+order, spec 01 gap 6, so this is a design choice.) Deflects chain: each response applies its own
+operation to the *current* total, so a Punching Things (reflect, ×2) answered by a Wild Blue Yonder
+(pass on) sends the doubled total to the next player, and two Punching Things in a row quadruple it.
+The hand cap (D5) and the Mercy rule are the only limits.
 
 **C3. Out-of-turn priority.** Device race, then response window, then Jump-In. Powers that say "on
 your turn" don't work on an out-of-turn play. No Jump-In during a mass discard or a multi-play chain
@@ -650,6 +706,8 @@ reaching the cap a knockout.
 | Wild Force Trade (any two seats) | Swaps you and the opponent |
 | Reverse Skip (Undercover) | You go again (as coded) |
 | Skip Draw-Two, Reverse Draw-Two (Undercover) | The opponent draws 2 and loses their turn, then you play again (as coded) |
+| Skip n' Flip (Ubisoft) | A Skip redirects to "the next player", who is the one that played the draw card, so it acts like Reverse's reflect |
+| Cross-Fade (Ubisoft, "the player directly across") | Swap with the opponent. With 3 players nobody sits across, so the card is left out of the deck (our rule) |
 | Highland Two-Step, Switcheroo, Tsunami (Undercover) | Need two opponents. Left out of the deck in 2-player games, as Undercover does for the first two |
 | No Mercy Wild Reverse Draw 4 | Its player draws 4 unless the opponent stacks it back (sheet HWV18) |
 | 50/50 coin (#6) | You must be one of the two players (sheet HBF05) |
@@ -673,7 +731,8 @@ UNO-call timings are logged too, so replays don't depend on frame timing.
 default evaluator ("treat as a Wild worth N") exists only so self-play tests can run while a card is
 in development.
 
-**C18. Card mutation and creation** (Redecorate, Double Cross, Clone). A recolored card is given a
+**C18. Card mutation and creation** (Redecorate, Double Cross, Clone; Ubisoft's A Little Help and
+Glitched). A recolored card is given a
 new def for the rest of the game (logged in the replay), so legality, Jump-In's "identical card",
 scoring and AI all just read its current def. A cloned card is a real card from then on: it goes to
 the discard pile and is reshuffled like any other. Card conservation counts card *objects* against

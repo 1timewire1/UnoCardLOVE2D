@@ -201,9 +201,9 @@ on every digital-only title in this survey (exact card names/effects, not just "
 this section is just the headline takeaways:
 
 * **Uno (Ubisoft, #115)** and its many DLC packs (#118-123, #386, #390) ship a combinable "house rules"
-  toggle set, exactly the shape being planned here. Confirmed toggles: Stacking, 7-0, Jump-In (high
-  confidence); Draw to Match, Force Play, No Bluffing (medium confidence, plausible but not verified
-  against the actual options menu). See Part E2.
+  toggle set, exactly the shape being planned here. The decompiled game (`docs/mechanics/11`) confirms
+  six: Stacking, 7-0, Jump-In, Draw to Match, Force Play and No Bluffing, plus a newer Skip n' Flip rule,
+  daily rule presets and per-round rule shuffling. See Part E2.
 * **Uno Mobile (Mattel163, #374)** exposes 7 named house-rule toggles as independent options (Stack,
   Jump-in, 7-0, No Bluffing, Progressive, Draw to Match, Force Play - a near-exact match for the shape
   of this codebase's own settings menu), minus its real-money wagering mode, which is **out of scope**
@@ -547,15 +547,15 @@ on RESKIN entries in bulk.
 | 112 | Uno Triple Play Stealth | MECHANIC | HCC23: Triple Play with the overload warning lights hidden (they stay blue); Wild Give Away is replaced by Wild All Tap. HIGH (sheet). See A5. |
 | 113 | Uno (Xbox 360) | DIGITAL-ONLY | Dev. Carbonated Games/Microsoft (not Gameloft). Standard/Partner/House Rules modes, ranked play, downloadable decks, literal webcam video chat. See Part E1. |
 | 114 | Uno (Gameloft) | DIGITAL-ONLY | 15-round unlock-progression career mode; same product line as #241/#243. See Part E3. |
-| 115 | Uno (Ubisoft) | DIGITAL-ONLY | Base for many DLC packs; combinable house-rules toggles, 2v2 online. See A12, Part E2. |
+| 115 | Uno (Ubisoft) | DIGITAL-ONLY | Base for many DLC packs. Six combinable house rules (Stacking, 7-0, Jump-In, Force Play, No Bluffing, Draw to Match), plus Skip n' Flip, score limits, daily rule presets; 2v2 online. HIGH (decompiled). See A12, Part E2. |
 | 116 | Uno 35th Anniversary (Xbox 360) | DIGITAL-ONLY | Free DLC deck; "35" card forces next player to play a 3 or 5 or draw-and-miss-turn. See Part E1. |
 | 117 | Uno Super Street Fighter 2 Turbo HD Remix | DIGITAL-ONLY | XBLA DLC deck with a bespoke "Hadouken" card (open-ended draw penalty). See Part E1. |
-| 118 | Uno Rabbids | DIGITAL-ONLY | Ubisoft DLC, 4 named unique action cards. See Part E2. |
-| 119 | Uno Just Dance 2017 | DIGITAL-ONLY | Ubisoft DLC, 4 named all-players-simultaneously cards. See Part E2. |
-| 120 | Uno Rayman | DIGITAL-ONLY | Ubisoft DLC, 4 named unique action cards. See Part E2. |
-| 121 | Uno Fenyx's Quest | DIGITAL-ONLY | Ubisoft DLC, 4 selectable passive "god blessing" powers (low-confidence effect text). See Part E2. |
-| 122 | Uno The Call of Yara | DIGITAL-ONLY | Ubisoft DLC, "Pesos" economy + 4 named character abilities + 1 new card. See Part E2. |
-| 123 | Uno Valhalla | DIGITAL-ONLY | Ubisoft DLC, full board + cargo/perks/events - biggest structural departure of any Ubisoft pack. See Part E2. |
+| 118 | Uno Rabbids | DIGITAL-ONLY | Ubisoft DLC: Comin' Through, Explosive Results, Hurry Up!, Wild Blue Yonder (deflects a draw penalty onward). HIGH (decompiled). See Part E2. |
+| 119 | Uno Just Dance 2017 | DIGITAL-ONLY | Ubisoft DLC: Just Dance Machine, Get Down, Cross-Fade, Hot Number (names corrected). HIGH (decompiled). See Part E2. |
+| 120 | Uno Rayman | DIGITAL-ONLY | Ubisoft DLC: Dragon, Punching Things, Escape, A Little Help. HIGH (decompiled). See Part E2. |
+| 121 | Uno Fenyx's Quest | DIGITAL-ONLY | Ubisoft DLC: free a sealed god by playing 5 cards to gain its passive power (Athena, Ares, Aphrodite, Hephaistos), plus Typhon's Trick, Typhon's Curse and Fenyx's Power cards. HIGH (decompiled). See Part E2. |
+| 122 | Uno The Call of Yara | DIGITAL-ONLY | Ubisoft DLC: Yaran Pesos economy (300 start, income per turn, per stacked Draw Two and per Jump-In), 4 two-level character services, and the Guerrilla broadcast Wild with 6 money events. HIGH (decompiled); prices MED. See Part E2. |
+| 123 | Uno Valhalla | DIGITAL-ONLY | Ubisoft DLC: number cards move your pawn on a map; Cargo unlocks Battle (color-guess duel) and Fast Travel; 6 event spaces; Sýnin the Raven Wild. HIGH (decompiled). See Part E2. |
 | 124 | Uno Teenage Mutant Ninja Turtles (Team Attack) | MECHANIC | "Team Attack" multi-card discard wild. See A3. |
 | 125 | Uno Nickelodeon Spongebob Squarepants | RESKIN | N5836 (2010): Jellyfishing x4, every player reveals a jellyfish card or draws 2. HIGH (sheet), MED that this is the printing #125 means. |
 | 126 | Uno Nickelodeon Spongebob Squarepants Special Edition (2002) | RESKIN | Correction: Sababa Toys collector tin with a unique "Super Absorbency" rule - the player with the FEWEST cards absorbs 3 cards (1 from each neighbor + 1 from the draw pile). MED-HIGH. |
@@ -833,11 +833,11 @@ on RESKIN entries in bulk.
 | 383 | Uno Braille | ACCESSIBILITY | Braille + colorblind-friendly icon markings. See A11. |
 | 384 | Radica: Uno 360 | DIGITAL-ONLY | NOT standard rules digitized - 4 discard piles selected by physically rotating the handheld, plus a timed UNO-call penalty. Same family as Triple Play (A5). See Part E4. |
 | 385 | Uno SuperLite 2000 Vol. 16 Game | DIGITAL-ONLY | Japan-only budget PS2 reissue (Success), anime art/VO added; no rule difference found. See Part E4. |
-| 386 | Uno Party Mania! | MECHANIC | Ubisoft DLC: Point Taken, Wild Drawn Together, Wild Pile Up. |
+| 386 | Uno Party Mania! | MECHANIC | Ubisoft DLC: Point Taken, Wild Drawn Together, Wild Pile Up, plus the Speed Play rule (number-only Jump-In) and a deck with no 0s. HIGH (decompiled). See Part E2. |
 | 387 | Uno Disney Princess (2002) | RESKIN | B3280 (2006 "Disney Princess UNO", 110 cards): Dragon x2, each other player discards a Prince card or draws until they can. HIGH (sheet), MED mapping (2006, not 2002). |
 | 388 | Uno Harry Potter (2003) | RESKIN | Same product as #36 (Mattel 42797): Howler and Invisibility cards plus Draw Threes, not Sorting Hat. HIGH (sheet). |
 | 389 | Uno National Parks | RESKIN | Confirmed (Sababa Toys, proceeds to the National Park Foundation): a named "exclusive bear alert card" exists, exact effect not found. MED. |
-| 390 | Uno Show 'Em No Mercy (Ubisoft) | DIGITAL-ONLY | Digital adaptation of the full No Mercy ruleset. See A2. |
+| 390 | Uno Show 'Em No Mercy (Ubisoft) | DIGITAL-ONLY | Digital port of the full No Mercy ruleset: 7 named action cards; the Mercy knockout lasts one round in scored matches. HIGH (decompiled). See A2, Part E2. |
 | 391 | Uno Choo Choo | MECHANIC | T8234: 28 cards (5 animals x 4 colors, 4 Raccoon Draw 1, 4 Conductor Wild); match color or animal; deal 5; a drawn card may be played at once. HIGH (sheet). See A6. |
 | 392 | Seikin Uno (Japan) | RESKIN | Resolved: SEIKIN (Japanese YouTuber/musician) named Mattel Games' official Japan ambassador Jan 11 2023 ("UNO Day"); limited "SEIKIN Cards"/"SEIKIN Dice" promo items with original SEIKIN-devised house rules shipped alongside. HIGH. |
 | 393 | Uno NSYNC | RESKIN | Confirmed (2000 Mattel #42810, bundled with a Justin Timberlake CD); no bonus card found despite confirmed product details - plausibly a genuine plain reskin plus bundled novelty CD. LOW-MED. |
@@ -1106,6 +1106,9 @@ user request, separate from Part E's digital-only pass). Progress:
 * **Flashpoint web games: done.** Four archived web games were decompiled (`docs/mechanics/10`):
   #377 resolved as a rules quiz with no mechanics, Uno^3 and Uno (2020) added as N25-N26, and the
   Undercover web demo confirmed Plunder was cut before the demo shipped.
+* **Ubisoft UNO decompile: done.** The Steam build's own rules text (`docs/mechanics/11`) replaced the
+  search-based Part E2: all six house rules confirmed, Skip n' Flip found, three Just Dance names
+  corrected, and Fenyx's Quest, Call of Yara and Valhalla fully described.
 
 ---
 
@@ -1203,90 +1206,117 @@ and whether Block/Jump are literally renamed Skip/Reverse.
 
 ### E2. Ubisoft family (#115, #118-123, #386, #390)
 
+**Verified from the game's own files.** The installed Steam build (Unity, IL2CPP) was dumped for class
+and enum names, and its English localization (4,077 rules strings) and serialized data were read
+directly. The full write-up is `docs/mechanics/11-ubisoft-uno.md`. This replaces the earlier
+search-based summary, which had three Just Dance card names wrong, Fenyx's Quest at LOW confidence and
+Valhalla mostly unknown. Prices and other tuning values that the game downloads at runtime aren't in
+the install and stay MED.
+
 **#115 — UNO (Ubisoft base game, 2016).** PS4/Xbox One Aug 2016, PC Dec 2016, Switch Nov 2017. Dev.
-Ubisoft Chengdu. Standard 108-card deck. Markets its house rules as explicitly **combinable** ("combine
-Jump-In and Stacking or 7-0 swaps to create your perfect kind of chaos"). Confirmed toggles: **Stacking**
-(Draw Two/Wild Draw Four stack, penalty passes on), **7-0** (7 swaps hands with a chosen opponent, 0
-passes all hands one seat), **Jump-In** (play an exact match out of turn) — these 3 are HIGH confidence,
-cited by Mattel itself as the "classic" fan-contest house rules. **Draw to Match**, **Force Play**, **No
-Bluffing** (disables the Wild Draw Four challenge) are also referenced as being among "six combinable
-house rules" for this game but couldn't be verified against the actual in-game menu — MED.
+Ubisoft Chengdu. Standard 108-card deck. The match setup has **six** combinable house rules (HIGH):
+* **Stacking:** "you may play the same type of card to add to the penalty" (Draw Two on Draw Two, WD4 on
+  WD4: the Progressive form).
+* **7-0**, **Jump-In**, **Draw to Match**.
+* **Force Play:** "If you draw a card on your turn and it's playable, it's automatically played."
+* **No Bluffing:** its code flag is `FREE_WILD_DRAW4`, so Wild Draw Four can be played at any time and
+  there is nothing to challenge (MED: no menu text defines it).
+* **Skip n' Flip** (a newer rule): "Play Skip and Reverse cards on draw cards to pass on the effect to
+  the next player or back to the person who played it."
+* Also on the setup screen: **Score Limit** (one round, or 200/300/500/750/1,000 points), **Today's
+  Rules** (14 named daily presets, whose contents are server data) and **Shuffle** (re-shuffle your
+  chosen rules every round).
+* Further code flags without menu text: Elimination, Variable Score, Drawn Play, and two flags behind the
+  2v2 partner modes.
+* Themes in the code with no rules of their own (cosmetic only): Winter, Brawlhalla, Shovel Knight.
 
-**#118 — Uno Rabbids DLC.** 4 cards, HIGH confidence on names, MED-HIGH on effects:
-* **Comin' Through** — 5 cards randomly distributed from your hand to opponents, then 5 more randomly
-  redistributed among everyone including you.
-* **Explosive Results** — next forced-to-draw player draws 4 total.
-* **Hurry Up!** — for several turns, each player must act within 3 seconds or draws a card and is
-  skipped.
-* **Wild Blue Yonder** — cancels an incoming Draw Two/Wild Draw Four; with no pending penalty to block,
-  functions as a normal Wild.
+**#118 — Uno Rabbids DLC.** HIGH:
+* **Comin' Through** (50): 5 cards are randomly distributed to your opponents, then 5 more randomly to
+  all players, including you.
+* **Explosive Results** (50): the next player to draw a card **for any reason** draws an additional 3.
+* **Hurry Up!** (50): for the next few turns, everyone must finish their turn in 3 seconds or draw a card
+  and be skipped.
+* **Wild Blue Yonder** (50): defend yourself from a Draw Two or WD4 **by passing it along** (a deflect,
+  not a cancel). Played on your turn, it acts as a Wild.
 
-**#119 — Uno Just Dance 2017 DLC.** 4 cards, distinguishing trait: affects **all players at once**
-rather than one target. HIGH names, MED-HIGH effects:
-* **Just Dance Machine** — every player gets a random "experiment" card triggering a random action.
-* **Scream & Shout** — every player except whoever has the lowest card count must randomly discard down
-  to match that lowest count.
-* **Lean On** — each player swaps hands with the player seated directly across from them.
-* **Worth It** — for a duration, only number cards may be played, table-wide.
+**#119 — Uno Just Dance 2017 DLC.** HIGH. The earlier names "Scream & Shout", "Lean On" and "Worth It"
+appear nowhere in the game; they look like Just Dance song titles.
+* **Just Dance Machine:** each player gets an **Experiment** card that produces a random action when
+  played.
+* **Get Down:** everyone except the player with the lowest hand count randomly discards until all hands
+  equal the lowest count.
+* **Cross-Fade:** each player switches hands with the player directly across from them.
+* **Hot Number:** only number cards and theme cards may be played; anyone who plays an action card or
+  Wild must draw a card afterwards (a penalty, not a ban).
 
-**#120 — Uno Rayman DLC.** 4 cards, HIGH names, MED-HIGH effects:
-* **Dragon** — takes every player's hand, shuffles, redistributes randomly.
-* **Punching Things** — reflects an incoming Draw Two/Wild Draw Four back at whoever played it, at
-  double the penalty.
-* **Escape** — peek at one opponent's hand; hides your own hand count from everyone until you call Uno.
-* **A Little Help** — duplicates the effect/appearance of the current top discard card (a free copy).
+**#120 — Uno Rayman DLC.** HIGH:
+* **Dragon:** all hands are shuffled together and randomly redistributed.
+* **Punching Things:** deflect a Draw Two or WD4 back and double the penalty. Played normally, a Wild.
+* **Escape:** a quick peek at **all** your opponents' cards, then hide your card total from everyone
+  (no end condition is given).
+* **A Little Help:** clones the current top card of the discard pile.
 
-**#121 — Uno Fenyx's Quest DLC** (Immortals Fenyx Rising, Jan 2021). Adds a "Golden Isle" board element:
-playing 5 cards frees a chosen god, granting a passive blessing for the rest of the match. **LOW
-confidence on exact effects** (single uncorroborated search synthesis):
-* **Aphrodite** — immunity to "Typhon" damage/penalty effects (exact trigger unconfirmed).
-* **Hephaistos** — every 3 cards you play, discard all your cards of one chosen color.
-* **Athena** — when an opponent draws due to no legal play, they must discard a random card.
-* **Ares** — each time any card is played, two random cards of that color are discarded (scope —
-  own hand vs. table-wide — ambiguous).
+**#121 — Uno Fenyx's Quest DLC** (Immortals Fenyx Rising, Jan 2021). HIGH. Each god starts sealed;
+"play 5 cards to help [god] break her/his seal", and the freed god gives you a passive power for the
+rest of the match. ("Golden Isle" doesn't appear in the game text.)
+* **Athena:** after you play an odd number card, choose a player to skip the round, and discard a random
+  card from your hand.
+* **Ares:** each time you play a card, discard 2 random cards of that color from your own hand.
+* **Aphrodite:** each time you play an Action Card, choose a card to give to any player, and discard a
+  random card from your hand.
+* **Hephaistos:** for every 3 cards you've played, choose a color and discard all your cards of it.
+* Theme cards: **Typhon's Trick** (a chosen player draws 4, then discards 2 random cards), **Typhon's
+  Curse** (while you hold it, you draw a card each time you play) and **Fenyx's Power** (choose 2 cards
+  in your hand to discard).
 
-**#122 — Uno The Call of Yara DLC** (Far Cry 6, ~Oct 2021, $5 standalone). Genuinely structural: adds a
-**Pesos economy** (7 cards + 300 Pesos to start, +100 Pesos each turn) spendable on 4 named character
-abilities, plus 1 new card. MED-HIGH:
-* **Dani Rojas** — 500P: chosen player draws 1-6 cards. 800P: ALL other players draw 1-6.
-* **Philly Barzaga** — 600P: combine 4 colors into an instantly-playable Wild. 1000P: same, but a Wild
-  Draw Four.
-* **Juan Cortez** — 600P: discard 1-3 of your own cards. 1300P: discard 4-6.
-* **Lucky Mama** — 200P: block one chosen player from a "service" next turn. 400P: block ALL others.
-* **Guerrilla Recorder** (new card) — randomly affects every player's Pesos: each may gain a large sum
-  or lose their entire stash.
+**#122 — Uno The Call of Yara DLC** (Far Cry 6, ~Oct 2021, $5 standalone). HIGH unless marked:
+* Currency **Yaran Pesos**: start with 300, +100 each turn, +100 for stacking a Draw Two, +100 for a
+  Jump-In. Services can only be called on your own turn, followed by a 1-turn "Charging" cooldown.
+* Services, two levels each: **Dani Rojas** (a target draws a random number of cards), **Philly
+  Barzaga** (combine 4 colors into a Wild, or a Wild Draw 4), **Juan Cortez** (discard a random number of
+  your cards), **Lucky Mama** (prevent one player's next service call, or all opponents'). The prices
+  and card ranges (500P for 1-6 cards and so on) aren't in the install: MED.
+* The Wild is **"Guerrilla broadcast"** (not "Guerrilla Recorder"). It plays the Guerrilla Radio, which
+  triggers one of 6 events: Mafia deeds (steal all of a target's money), Act of benevolence (everyone
+  gains X), Revolution! (lose X), Corruption (double your money), Opportunism (take X now), Good business
+  (gain X per card in your hand).
 
-**#123 — Uno Valhalla DLC** (Assassin's Creed Valhalla, ~April 2022). **The single biggest structural
-departure of any digital-only UNO found in this whole pass** — Ubisoft's own PR: "for the first time in
-UNO, the board becomes part of the gameplay." Discarding cards moves you across a physical board;
-movement collects **cargo**, spendable on **perks** (including slowing opponents); a **Longboat** passive
-lets enough cargo discard multiple cards at once; random board **events** (e.g. "Glory Regained"/"Raid"
-— steal 2 cargo from an opponent, possibly two distinct events, not fully disambiguated); a new
-**Eivor's Raven** card lets you travel to any board area to claim a reward, bypassing normal movement;
-cargo can also be spent to start a "card fight" to slow an opponent. **Exact win condition and
-cargo/perk costs are unconfirmed** — no source gave a full rules breakdown. MED-HIGH on mechanics
-existing, LOW-MED on exact rules. Flag for follow-up before ever prioritizing this one.
+**#123 — Uno Valhalla DLC** (Assassin's Creed Valhalla, ~April 2022). Fully resolved, HIGH unless marked:
+* Playing a **number card** moves your pawn to the map area with that number.
+* **Cargo** on the map unlocks settlement upgrades: at 2 Cargo the **Longship** unlocks **Battle** (spend
+  your turn attacking an opponent; both secretly pick a color, the defender blocks by matching it, Wilds
+  block every color, and a failed defender draws 1 and burns 1 Cargo); at 4 Cargo the **Longhouse**
+  unlocks **Fast Travel** (each card you play also discards all your other cards of that color).
+* **Event** spaces, 6 events: Brotherhood (+1 Cargo per color in your hand), Raid (steal 2 Cargo),
+  Prosperity (discard 1 card per Cargo), Surprise Attack (a target draws as many cards as they have
+  Cargo), Glory Regained (take Cargo up to the leader's total), Animus Anomaly (discard all your odd
+  number cards).
+* The Wild is **"Sýnin the Raven"** (not "Eivor's Raven"): move to any area regardless of number.
+* Win condition: still empty your hand (MED; no alternative is described).
 
-**#386 — Uno Party! Mania DLC** (July 2024, $4.99 standalone). **3** new action cards, not 4 (confirmed
-by 2 independent searches — if any existing doc text implied a 4th card, that was wrong). HIGH names and
-effects:
-* **Point Taken** — every player points at one other player; each player then draws one card per
-  finger currently pointed at them (stackable, multi-target accusation).
-* **Wild Drawn Together** — choose a new color (standard Wild) and link two players; for the rest of
-  the game, whenever either linked player draws, the other must draw the same amount too.
-* **Wild Pile Up** — starts a "mini-pile" seeded from the top of the draw pile; players take turns
-  adding a matching-color card to pass it along; whoever can't continue absorbs the whole mini-pile.
+**#386 — Uno Party! Mania DLC** (July 2024, $4.99 standalone). "4 crazy rules": 3 cards plus a rule. HIGH:
+* **Point Taken** (20): everyone points at another player; each targeted player draws one card per
+  finger pointed at them. It breaks a Drawn Together link.
+* **Wild Drawn Together** (50): links two players; whenever either draws, the other draws the same
+  amount. Only one link at a time; a new Drawn Together or a Point Taken breaks it.
+* **Wild Pile Up** (50): flip the top draw card to set a mini-pile color; players in turn must add that
+  color, and the first who can't takes the mini-pile. Special cards have no effect in the mini-pile.
+* **Speed Play** (rule): play an identical **number** card out of turn (Jump-In for number cards only).
+* The deck has **no 0 cards**; a 7 still swaps hands.
 
-**#390 — Uno Show 'Em No Mercy DLC** (Ubisoft, Oct 2025). **Verdict: a digital port/adaptation of
-Mattel's existing tabletop "UNO Show 'Em No Mercy"/"No Mercy" ruleset, not a digital-only invention** —
-rules and cards match the known physical variant closely, and no source describes anything unique to
-the digital version specifically. Confirmed rules (HIGH): **Mercy** (25+ cards in hand = eliminated),
-**Draw Until You Can Play**, **7's Swap** (whole-hand swap), **0's Pass** (everyone passes hands).
-Marketing cites "six super-tough action cards"; cross-referencing tabletop No Mercy sources, likely Wild
-Reverse Draw 4, Wild Draw 6, Wild Draw 10, Wild Color Roulette ("sad face" — next player names a color,
-flip draw-pile cards until it appears, take all revealed, lose turn), Skip Everyone, and probably a
-Discard-All matching-color card — MED on the complete 6-card list. Win conditions: empty-hand-first OR
-elimination via the 25-card Mercy threshold.
+**#390 — Uno Show 'Em No Mercy DLC** (Ubisoft, Oct 2025). A digital port of Mattel's tabletop No Mercy.
+HIGH. **7** named action cards, with Ubisoft's points: Draw Four (a **colored** card, 20), Discard All
+(20), Skip Everyone (20; you also take another turn), Wild Draw 6 (50), Wild Draw 10 (50), Wild Reverse
+Draw 4 (50), Wild Color Roulette (50). Stack any draw card of equal or higher value, of any color; draw
+until you can play, then you must play it; 7s swap and 0s pass. **Mercy rule** (25+ cards): the in-match
+pop-up says you're "knocked out of the round… back in play for the next round", so in a scored match
+the knockout lasts one round.
+
+**Not DLC** (HIGH, spec 11 section 7): **Wild Weeks**, a monthly online event with 8 modes (Flipped!, Fog
+of War, Tiny Hands, Big Hands, Attack!, Whirlpool, Glitched, Shuffle Hands); **Twitch chat
+disruptions** (including "Ban <color> Cards" and "<color> Cards Only"); and a **Wild 50/50**
+50th-anniversary theme (two chosen players are "UNO" and "50", a coin is tossed, the loser draws 4),
+matching the physical card in #6.
 
 ### E3. Mobile / handheld family (#114, #241, #243, #374, #375, #376, #404)
 
@@ -1580,6 +1610,7 @@ confidence tags and sheet codes, live in `docs/mechanics/`:
 | `08-fandom-line.md` | Every UNO Fandom deck, including each Fandom NFL team's own rule card |
 | `09-uno-undercover.md` | UNO Undercover (#235) from the decompiled game: all 15 Command Cards as coded, the paired-card mechanic, the cut content behind #497, base rules and the AI handicap |
 | `10-flashpoint-web-games.md` | Four web games archived in BlueMaxima Flashpoint: the UNO Showdown quiz (#377), Uno^3 (N25), Uno 2020 (N26) and the UNO Undercover web demo |
+| `11-ubisoft-uno.md` | Ubisoft's UNO (#115) and its DLC themes from the decompiled Steam build: house-rule flags, every theme's cards, Fenyx's gods, Call of Yara's economy, Valhalla's board, Party! Mania, No Mercy, Wild Weeks |
 
 ### F1. Facts from the specs that change how things get built
 
